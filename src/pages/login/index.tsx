@@ -10,11 +10,11 @@ const Login = () => {
                 alignItems="center"
             >
                 <Box
-                    height={600}
-                    width={400}
+                    height="auto"
+                    width="40%"
                     alignItems="center"
                     //gap={8}
-                    marginTop={12}
+                    marginTop="5%"
                     p={2}
                     //sx={{ border: '2px solid grey' }}
                 >
