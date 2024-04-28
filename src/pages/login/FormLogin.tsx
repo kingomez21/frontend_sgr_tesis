@@ -1,6 +1,10 @@
 import { Button, Paper, Stack, TextField, Typography } from "@mui/material"
+import {useNavigate} from "react-router-dom"
 
 const FormLogin = () => {
+    const navigate = useNavigate()
+
+
     return (
         <Paper sx={{ padding: 2 }}>
             <Stack direction="column" justifyContent="center" alignItems="center">
@@ -11,7 +15,6 @@ const FormLogin = () => {
                 <Typography>
                     Digita tus credenciales para ingresar al sistema
                 </Typography>
-                <br />
                 <br />
                 <Typography>
                     Usuario
@@ -34,7 +37,6 @@ const FormLogin = () => {
                     fullWidth 
                 />
                 <br />
-                <br />
                 <Button fullWidth variant="contained">
                     Ingresar
                 </Button>
@@ -43,7 +45,7 @@ const FormLogin = () => {
                     o regístrate
                 </Typography>
                 <br />
-                <Button fullWidth color="inherit" variant="contained">
+                <Button fullWidth color="inherit" variant="contained" onClick={() => navigate('/register')}>
                     Registrarse
                 </Button>
             </Stack>
