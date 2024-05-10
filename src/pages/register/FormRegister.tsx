@@ -57,15 +57,15 @@ const RegisterForm = () => {
     const [lastName, setLastName] = useState("")
     const [cellphone, setCellphone] = useState("")
     const [phone, setPhone] = useState("")
-    const [document, setDocument] = useState({})
-    const [genderV, setGenderV] = useState({})
-    const [blood, setBlood] = useState({})
-    const [maritalStatus, setMaritalStatus] = useState({})
+    const [document, setDocument] = useState(null)
+    const [genderV, setGenderV] = useState(null)
+    const [blood, setBlood] = useState(null)
+    const [maritalStatus, setMaritalStatus] = useState(null)
     const [birthday, setBirthday] = useState("")
     const [email, setEmail] = useState("")
     const [direction, setDirection] = useState("")
     const [barrio, setBarrio] = useState("")
-    const [company, setCompany] = useState({})
+    const [company, setCompany] = useState(null)
     const [jopPosition, setJopPosition] = useState("")
     const [admissionDate, setAdmissionDate] = useState("")
 
@@ -93,6 +93,8 @@ const RegisterForm = () => {
             "company": company,
             "email": email
         }
+        //console.log(data)
+        
         createPerson({
             variables: {
                 persona: data
@@ -192,7 +194,8 @@ const RegisterForm = () => {
                         <Select
                             label="Seleccione el tipo de documento"
                             onChange={(e) => {
-                                setDocument(e.target.value)
+                                const document_value: any = e.target.value
+                                setDocument(document_value)
                             }}
                         >
                             {document_type?.map((v) => (
@@ -224,7 +227,8 @@ const RegisterForm = () => {
                         <Select
                             label="Seleccione su genero"
                             onChange={(e) => {
-                                setGenderV(e.target.value)
+                                const gender_value: any = e.target.value 
+                                setGenderV(gender_value)
                             }}
                         >
                             {gender?.map((v) => (
@@ -247,7 +251,8 @@ const RegisterForm = () => {
                         <Select
                             label="Seleccione su tipo de sangre"
                             onChange={(e) => {
-                                setBlood(e.target.value)
+                                const blood: any = e.target.value
+                                setBlood(blood)
                             }}
                         >
                             {blood_type?.map((v) => (
@@ -270,7 +275,8 @@ const RegisterForm = () => {
                         <Select
                             label="Seleccione su estado civil"
                             onChange={(e) => {
-                                setMaritalStatus(e.target.value)
+                                const marital_value: any = e.target.value
+                                setMaritalStatus(marital_value)
                             }}
                         >
                             {marital_status?.map((v) => (
@@ -378,7 +384,8 @@ const RegisterForm = () => {
                         <Select
                             label="Seleccione la empresa"
                             onChange={(e) => {
-                                setCompany(e.target.value)
+                                const company_value: any = e.target.value
+                                setCompany(company_value)
                             }}
                         >
                             {loading ? <MenuItem disabled> Cargando.. </MenuItem> : (
