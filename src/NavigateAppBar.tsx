@@ -5,14 +5,14 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { gql, useMutation } from '@apollo/client';
+import { gql, useLazyQuery } from '@apollo/client';
 import { useEffect } from 'react';
 import { useContextUserAuth } from './store';
+import { useNavigate } from 'react-router-dom';
 
 const PERSON_AUTH = gql`
-mutation($user: String){
+query($user: String){
   getUserAuthInfo(username: $user){
-    info{
       id
     idPerson{
       id
@@ -38,30 +38,31 @@ mutation($user: String){
       phoneNumber
       society
     }
-      
-    }
-    
   }
 }
 `
 
 export const NavigateAppBar = () => {
 
+  const navigate = useNavigate()
   const payload = useContextUserAuth((state) => state.payload)
   const setData = useContextUserAuth((state) => state.setData)
-  const [getUserAuthInfo,] = useMutation(PERSON_AUTH)
+  const [getUserAuthInfo,] = useLazyQuery(PERSON_AUTH)
 
-  useEffect( () => {
-    getUserAuthInfo({
-      variables: {
-        user: payload
-      }
-    }).then( (data) => {
-      setData(data.data.getUserAuthInfo)
-    }).catch((err) => console.error(err))
-    .finally()
-
-  }, [] )
+  useEffect(() => {
+    if (payload === null) {
+      navigate('/login')
+    } else {
+      getUserAuthInfo({
+        variables: {
+          user: payload
+        }
+      }).then((data) => {
+        setData(data.data.getUserAuthInfo)
+      }).catch((err) => console.error(err))
+        .finally()
+    }
+  }, [])
 
   return (
     <Box >

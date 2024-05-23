@@ -3,7 +3,8 @@ import { Button, Paper, Stack, TextField, Typography } from "@mui/material"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useContextUserAuth } from "../../store"
-//import { useContextUserAuth } from "../../store"
+import Progress from "../../components/Progress"
+import Message from "../../components/Message"
 
 const LOGIN = gql`
     mutation($user: String!, $pass: String!){
@@ -14,7 +15,6 @@ const LOGIN = gql`
     }
 `
 
-
 type login = {
     user: string
     pass: string
@@ -22,17 +22,27 @@ type login = {
 
 
 const FormLogin = () => {
+
     const navigate = useNavigate()
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-
+    const [open, setOpen] = useState(false)
+    const [openErr, setOpenErr] = useState(false)
+    const [msgErr, setMsgErr] = useState("")
     const [tokenAuth,] = useMutation(LOGIN)
     
     const setToken = useContextUserAuth((state) => state.setToken)
     const setPayload = useContextUserAuth((state) => state.setPayload)
 
-    const submit = () => {
+    const handleClose = () => {
+        setOpen(false);
+    };
+      const handleOpen = () => {
+        setOpen(true);
+    };
 
+    const submit = () => {
+        handleOpen()
         const data_form: login = {
             user: username,
             pass: password
@@ -40,17 +50,27 @@ const FormLogin = () => {
         tokenAuth({
             variables: data_form
         }).then((data) => {
-            setToken(data.data.tokenAuth.token)
-            setPayload(data.data.tokenAuth.payload.username)
+                setToken(data.data.tokenAuth.token)
+                setPayload(data.data.tokenAuth.payload.username)
+                navigate('/')
         })
-            .catch((err) => console.log(err))
-            .finally(() => navigate('/'))
+            .catch(() => {
+                setOpenErr(true)
+                setMsgErr("Usuario o contraseña incorrectas")
+                setTimeout(() => {
+                    setOpenErr(false)
+                }, 5000)
+            })
+            .finally(() => {
+                handleClose()
+            })
 
 
     }
 
     return (
         <Paper sx={{ padding: 2 }}>
+            <Message band={openErr} message={msgErr} status={false}/>
             <Stack direction="column" justifyContent="center" alignItems="center">
                 <Typography variant="h5">
                     <strong>Inicio de sesión</strong>
@@ -95,6 +115,7 @@ const FormLogin = () => {
                     Ingresar
                 </Button>
                 <br />
+                <Progress open={open}/>
                 <Typography>
                     o regístrate
                 </Typography>

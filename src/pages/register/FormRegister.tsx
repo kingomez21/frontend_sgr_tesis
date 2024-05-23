@@ -4,6 +4,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { document_type, gender, blood_type, marital_status } from "./constant"
 import { useQuery, gql, useMutation } from "@apollo/client"
 import { useState } from "react";
+import Message from "../../components/Message";
 
 const GET_COMPANYS = gql`
     query getCompany{
@@ -48,9 +49,13 @@ type inputPerson = {
 }
 
 const RegisterForm = () => {
+
     const navigate = useNavigate()
     const { data, loading } = useQuery(GET_COMPANYS)
     const [createPerson, ] = useMutation(REGISTER_PERSON)
+
+    const [open, setOpen] = useState(false)
+    const [statusErr, setStatusErr] = useState(false)
 
     const [identity, setIdentity] = useState(0)
     const [fullName, setFullName] = useState("")
@@ -73,8 +78,16 @@ const RegisterForm = () => {
         return navigate(-1)
     }
 
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
     const submit = async () => {
-        
+        handleOpen()
         const data: inputPerson = {
             "identityNumber": identity,
             "firstName": fullName,
@@ -93,20 +106,25 @@ const RegisterForm = () => {
             "company": company,
             "email": email
         }
-        //console.log(data)
         
         createPerson({
             variables: {
                 persona: data
             }
         })
-        .then( (data) => console.log(data) )
-        .catch( (error) => console.log(error))
+        .then( () => {
+            setTimeout( () => handleClose(), 6000)
+        })
+        .catch( () => {
+            setStatusErr(true)
+            setTimeout( () => handleClose(), 5000)
+        })
         
     }
 
     return (
         <Paper sx={{ padding: 2 }}>
+            <Message band={open} message={statusErr ? "Ha ocurrido un error inesperado" : "Guardado exitosamente"} status={statusErr ? false : true}/>
             <Stack direction="row" spacing={3}>
                 <Button startIcon={<ArrowBackIcon />} onClick={() => back()}></Button>
                 <Typography variant="h5">
@@ -132,6 +150,7 @@ const RegisterForm = () => {
                         type="number"
                         label="No. de Identificacion"
                         variant="outlined"
+                        required
                         fullWidth
                         onChange={(e) => {
                             setIdentity(parseInt(e.target.value))
@@ -142,6 +161,7 @@ const RegisterForm = () => {
                         type="text"
                         label="Nombre Completo"
                         variant="outlined"
+                        required
                         fullWidth
                         onChange={(e) => {
                             setFullName(e.target.value)
@@ -152,6 +172,7 @@ const RegisterForm = () => {
                         type="text"
                         label="Apellidos"
                         variant="outlined"
+                        required
                         fullWidth
                         onChange={(e) => {
                             setLastName(e.target.value)
@@ -170,6 +191,7 @@ const RegisterForm = () => {
                         placeholder="Ingrese numero celular"
                         type="text"
                         label="Numero Celular"
+                        required
                         variant="outlined"
                         fullWidth
                         onChange={(e) => {
@@ -188,6 +210,7 @@ const RegisterForm = () => {
                     />
 
                     <FormControl
+                        required
                         fullWidth
                     >
                         <InputLabel>Seleccione el tipo de documento</InputLabel>
@@ -221,6 +244,7 @@ const RegisterForm = () => {
                     spacing={4}
                 >
                     <FormControl
+                        required
                         fullWidth
                     >
                         <InputLabel>Seleccione su genero</InputLabel>
@@ -245,6 +269,7 @@ const RegisterForm = () => {
                     </FormControl>
 
                     <FormControl
+                        required
                         fullWidth
                     >
                         <InputLabel>Seleccione su tipo de sangre</InputLabel>
@@ -269,6 +294,7 @@ const RegisterForm = () => {
                     </FormControl>
 
                     <FormControl
+                        required
                         fullWidth
                     >
                         <InputLabel>Seleccione su estado civil</InputLabel>
@@ -306,6 +332,7 @@ const RegisterForm = () => {
                         label="Fecha de nacimiento"
                         variant="outlined"
                         fullWidth
+                        required
                         InputLabelProps={{
                             shrink: true,
                         }}
@@ -318,6 +345,7 @@ const RegisterForm = () => {
                         type="email"
                         label="Correo Electronico"
                         variant="outlined"
+                        required
                         fullWidth
                         onChange={(e) => {
                             setEmail(e.target.value)
@@ -345,6 +373,7 @@ const RegisterForm = () => {
                         type="text"
                         label="Direccion de residencia"
                         variant="outlined"
+                        required
                         fullWidth
                         onChange={(e) => {
                             setDirection(e.target.value)
@@ -355,6 +384,7 @@ const RegisterForm = () => {
                         type="text"
                         label="Barrio de residencia"
                         variant="outlined"
+                        required
                         fullWidth
                         onChange={(e) => {
                             setBarrio(e.target.value)
@@ -378,6 +408,7 @@ const RegisterForm = () => {
                     spacing={4}
                 >
                     <FormControl
+                        required
                         fullWidth
                     >
                         <InputLabel>Seleccione la empresa</InputLabel>
@@ -418,6 +449,7 @@ const RegisterForm = () => {
                         type="date"
                         label="Fecha de ingreso a la empresa"
                         variant="outlined"
+                        required
                         fullWidth
                         InputLabelProps={{
                             shrink: true,

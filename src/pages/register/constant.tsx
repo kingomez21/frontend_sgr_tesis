@@ -13,3 +13,7 @@ export const blood_type = [
 export const marital_status = [
     "Soltero", "Casado"
 ]
+
+export const cargo = [
+    "empleado", "administrador"
+]
