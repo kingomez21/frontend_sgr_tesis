@@ -8,7 +8,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { gql, useLazyQuery } from '@apollo/client';
 import { useEffect } from 'react';
 import { useContextUserAuth } from './store';
-import { useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import Users from './pages/users';
 
 const PERSON_AUTH = gql`
 query($user: String){
@@ -47,11 +48,12 @@ export const NavigateAppBar = () => {
   const navigate = useNavigate()
   const payload = useContextUserAuth((state) => state.payload)
   const setData = useContextUserAuth((state) => state.setData)
+  const title = useContextUserAuth((state) => state.title)
   const [getUserAuthInfo,] = useLazyQuery(PERSON_AUTH)
 
   useEffect(() => {
     if (payload === null) {
-      navigate('/login')
+      //navigate('/login')
     } else {
       getUserAuthInfo({
         variables: {
@@ -66,7 +68,7 @@ export const NavigateAppBar = () => {
 
   return (
     <Box >
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             size="large"
@@ -78,11 +80,16 @@ export const NavigateAppBar = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News
+            {title}
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
+      <Box sx={{marginTop: 12}}>
+        <Routes>
+          <Route path='/usuarios/*' element={<Users />} />
+        </Routes>
+      </Box>
     </Box>
   );
 }
