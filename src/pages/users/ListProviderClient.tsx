@@ -1,4 +1,5 @@
 import { Button, Grid, List, ListItem, ListItemButton, ListItemText, Stack, Typography } from "@mui/material"
+import { useNavigate } from "react-router-dom"
 
 type props = {
     data: any[]
@@ -6,11 +7,13 @@ type props = {
 
 const ListProviderClient = ({ data }: props) => {
 
+    const navigate = useNavigate()
+
     const actions = () => {
         return (
             <>
                 <Stack alignItems="center" >
-                    <Button size="small" variant="outlined" color="error">
+                    <Button size="small" variant="contained" color="error">
                         <Typography>Eliminar</Typography>
                     </Button>
                 </Stack>
@@ -34,7 +37,7 @@ const ListProviderClient = ({ data }: props) => {
                                 disablePadding
                             >
                                 <ListItemButton
-                                    onClick={() => alert("abrio")}
+                                    onClick={() => navigate(`${value.type}/${value.id}`)}
                                 >
                                     <ListItemText primary="cliente #1" secondary="Cliente" />
                                 </ListItemButton>

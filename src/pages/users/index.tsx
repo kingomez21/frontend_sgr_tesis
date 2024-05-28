@@ -6,87 +6,19 @@ import { useEffect } from "react"
 import { Route, Routes, useNavigate } from "react-router-dom"
 import FormClient from "./FormClient"
 import FormProvider from "./FormProvider"
+import VerClientProvider from "./VerClientProvider"
+import VerUsers from "./VerUsers"
 
 const data = [
     {
         id: 1,
-        name: "prueba"
+        name: "prueba",
+        type: "proveedor"
     },
     {
         id: 2,
-        name: "prueba"
-    },
-    {
-        id: 3,
-        name: "prueba"
-    },
-    {
-        id: 4,
-        name: "prueba"
-    },
-    {
-        id: 5,
-        name: "prueba"
-    }
-    ,
-    {
-        id: 6,
-        name: "prueba"
-    }
-    ,
-    {
-        id: 7,
-        name: "prueba"
-    }
-    ,
-    {
-        id: 8,
-        name: "prueba"
-    }
-    ,
-    {
-        id: 9,
-        name: "prueba"
-    }
-    ,
-    {
-        id: 10,
-        name: "prueba"
-    }
-    ,
-    {
-        id: 11,
-        name: "prueba"
-    }
-    ,
-    {
-        id: 12,
-        name: "prueba"
-    }
-    ,
-    {
-        id: 13,
-        name: "prueba"
-    }
-    ,
-    {
-        id: 14,
-        name: "prueba"
-    }
-    ,
-    {
-        id: 15,
-        name: "prueba"
-    }
-    ,
-    {
-        id: 16,
-        name: "prueba"
-    }
-    ,
-    {
-        id: 17,
-        name: "prueba"
+        name: "prueba",
+        type: "proveedor"
     }
 
 ]
@@ -158,6 +90,8 @@ const Users = () => {
             <Routes>
                 <Route path="/crear-cliente" element={<FormClient />} />
                 <Route path="/crear-proveedor" element={<FormProvider />} />
+                <Route path="/:type/:id" element={<VerClientProvider />} />
+                <Route path="/empleado/:id" element={<VerUsers />} />
             </Routes>
         </Box>
     )

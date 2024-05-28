@@ -1,10 +1,13 @@
 import { Button, Grid, List, ListItem, ListItemButton, ListItemText, Stack, Typography } from "@mui/material"
+import { useNavigate } from "react-router-dom"
 
 type props = {
     data: any[]
 }
 
 const ListUsers = ({data}: props) => {
+
+    const navigate = useNavigate()
 
     const actions = () => {
         return (
@@ -32,7 +35,7 @@ const ListUsers = ({data}: props) => {
                                 disablePadding
                             >
                                 <ListItemButton
-        
+                                    onClick={() => navigate(`empleado/${value.id}`)}
                                 >
                                     <ListItemText primary="Usuario #1" secondary="Usuario" />
                                 </ListItemButton>
