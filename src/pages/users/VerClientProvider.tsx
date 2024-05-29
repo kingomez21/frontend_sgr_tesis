@@ -2,73 +2,157 @@ import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabe
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useParams } from "react-router-dom"
 import { useState } from "react";
+import { gql, useMutation, useQuery } from "@apollo/client";
 
-const exampleTypeClient = [
+const typesCP = [
+    "---",
     "PERSONA NATURAL",
     "EMPRESA"
 ]
 
 type dataProps = {
     id?: string
-    type: number
-    fullname: string
-    adress: string
+    type: any
+    fullName: string
+    address: string
     place: string
-    email: string
-    cellphone: string
+    nit?: string
+    description: string
+    email?: string
+    cellphone?: string
+}
+
+type updateData = {
+    type?: string
+    fullName: string
+    nit: string
+    address: string
+    place: string
+
 }
 
 type props = {
     data: dataProps
+    types?: string
 }
+
+const GET_ONE_CLIENT = gql`
+query getOne($id: Int) {
+    getOne: getOneClient(idClient: $id){
+      id
+      idCompany{
+        name
+      }
+      fullName
+      address
+      place
+      nit
+      description
+      type: idClientType{
+        id
+        name
+      }
+    }
+  }
+
+`
+
+const GET_ONE_PROVIDER = gql`
+query getOneProvider($id: Int) {
+    getOne: getOneProvider(idProvider: $id){
+      id
+      idCompany{
+        name
+      }
+      fullName
+      address
+      place
+      nit
+      description
+      type: idProviderType{
+        id
+        name
+      }
+    }
+  }
+
+`
 
 const VerClientProvider = () => {
 
-    const { id } = useParams()
-
-    const data: dataProps = {
-        id,
-        type: 1,
-        fullname: "Anything",
-        adress: "asdasdasd",
-        place: "asdasda",
-        email: "asds@gmail.com",
-        cellphone: "3123445544"
-    }
-
-    const [dataexample,] = useState(data)
-
+    const { id, type } = useParams()
+    const {data, loading} = useQuery(type === "cliente" ? GET_ONE_CLIENT : GET_ONE_PROVIDER, {
+        variables: {
+            id: parseInt(id)
+        }
+    })
+    
     return (
-        <View data={dataexample} />
+        <> 
+            {loading ? <Typography>Cargando...</Typography> : <View data={data.getOne} types={type} />}
+        </>
     )
 }
 
-const View = ({data}: props) => {
+const UPDATE_CLIENT = gql`
+mutation ($id: String, $input: InputClient){
+    result: updateClient(idClient: $id, clientUpdate: $input){
+      message
+    }
+  }
 
+`
+
+const UPDATE_PROVIDER = gql`
+mutation ($id: String, $input: inputProvider){
+    result: updateProvider(idProvider: $id, providerUpdate: $input){
+      message
+    }
+  }
+
+`
+
+const View = ({data, types}: props) => {
+    
     const navigate = useNavigate()
     const [editable, setEditable] = useState(false)
     
-    const [type, setType] = useState(data.type)
-    const [fullName, setFullName] = useState(data.fullname)
-    const [adress, setAdress] = useState(data.adress)
+    const [result,] = useMutation(types === "cliente" ? UPDATE_CLIENT : UPDATE_PROVIDER)
+
+    const [type, setType] = useState(data.type.id)
+    const [fullName, setFullName] = useState(data.fullName)
+    const [address, setAddress] = useState(data.address)
     const [place, setPlace] = useState(data.place)
-    const [email, setEmail] = useState(data.email)
-    const [cellphone, setCellPhone] = useState(data.cellphone)
+    const [nit, setNit] = useState(data.nit)
+    //const [email, setEmail] = useState(data.email)
+    //const [cellphone, setCellPhone] = useState(data.cellphone)
 
     const handlerEdit = () => {
         setEditable(true)
     }
 
     const submit = () => {
-        let dataForm = {
-            type,
+        let dataForm: updateData = {
+            //type,
             fullName,
-            adress,
+            address,
             place,
-            email,
-            cellphone
+            nit
+            /*email,
+            cellphone*/
         }
         console.log(dataForm)
+        result({
+            variables: {
+                id: data.id,
+                input: dataForm
+            }
+        })
+        .then( (data) => {
+            console.log(data.data.result.message)
+        })
+        .catch( (err) => console.log(err))
+        .finally()
     }
 
     return (
@@ -76,7 +160,7 @@ const View = ({data}: props) => {
             <DialogTitle>
                 <Stack direction="row" spacing={2} padding={2} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
-                    <Typography>INFORMACION DE {fullName}</Typography>
+                    <Typography>INFORMACION DE {fullName.toUpperCase()}</Typography>
                 </Stack>
             </DialogTitle>
             <DialogContent>
@@ -98,7 +182,7 @@ const View = ({data}: props) => {
                                 value={type}
                                 disabled={!editable}
                             >
-                                {exampleTypeClient?.map((v, i) => (
+                                {typesCP?.map((v, i) => (
                                     <MenuItem
                                         key={i}
                                         value={i}
@@ -133,10 +217,10 @@ const View = ({data}: props) => {
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
-                                setAdress(e.target.value)
+                                setAddress(e.target.value)
                             }}
                             disabled={!editable}
-                            value={adress}
+                            value={address}
                         />
                         <TextField
                             placeholder="Ingrese la ciudad de residencia"
@@ -150,8 +234,21 @@ const View = ({data}: props) => {
                             disabled={!editable}
                             value={place}
                         />
-                    </Stack>
 
+                        <TextField
+                            placeholder="Ingrese su Nit"
+                            type="text"
+                            label="Nit"
+                            variant="outlined"
+                            fullWidth
+                            onChange={(e) => {
+                                setNit(e.target.value)
+                            }}
+                            disabled={!editable}
+                            value={nit}
+                        />
+                    </Stack>
+                    {/*
                     <br />
                     <br />
 
@@ -180,7 +277,7 @@ const View = ({data}: props) => {
                             disabled={!editable}
                             value={cellphone}
                         />
-                    </Stack>
+                    </Stack>*/}
                     <br />
                     <br />
                     <Stack justifyContent="center">

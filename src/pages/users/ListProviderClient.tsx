@@ -1,8 +1,20 @@
 import { Button, Grid, List, ListItem, ListItemButton, ListItemText, Stack, Typography } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 
+type ClientProvider = {
+    id: number
+    identity: number
+    idType: string
+    idCompany: string
+    fullName: string
+    nit: string
+    address: string
+    place: string
+    description: string
+}
+
 type props = {
-    data: any[]
+    data: ClientProvider[]
 }
 
 const ListProviderClient = ({ data }: props) => {
@@ -20,13 +32,13 @@ const ListProviderClient = ({ data }: props) => {
             </>
         )
     }
-
+    
     return (
         <>
             <Stack direction="row">
                 <List component={Grid} container sx={{overflow: 'auto'}}>
                     {
-                        data.map((value) => (
+                        data?.map((value) => (
                             <ListItem
                                 item
                                 key={value.id}
@@ -37,9 +49,9 @@ const ListProviderClient = ({ data }: props) => {
                                 disablePadding
                             >
                                 <ListItemButton
-                                    onClick={() => navigate(`${value.type}/${value.id}`)}
+                                    onClick={() => navigate(`${value.description}/${value.identity}`)}
                                 >
-                                    <ListItemText primary="cliente #1" secondary="Cliente" />
+                                    <ListItemText primary={`${value.fullName}`} secondary={`${value.description}`} />
                                 </ListItemButton>
                             </ListItem>
                         ))

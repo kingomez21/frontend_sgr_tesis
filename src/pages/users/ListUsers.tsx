@@ -9,10 +9,10 @@ const ListUsers = ({data}: props) => {
 
     const navigate = useNavigate()
 
-    const actions = () => {
+    const actions = (idUser: number) => {
         return (
             <Stack>
-                <Button variant="contained">
+                <Button variant="contained" onClick={() => navigate(`permisos/${idUser}`)}>
                     <Typography>Asignar permisos</Typography>
                 </Button>
             </Stack>
@@ -31,7 +31,7 @@ const ListUsers = ({data}: props) => {
                                 component={Grid}
                                 xs={12} 
                                 md={6}
-                                secondaryAction={actions()}
+                                secondaryAction={actions(value.id)}
                                 disablePadding
                             >
                                 <ListItemButton
