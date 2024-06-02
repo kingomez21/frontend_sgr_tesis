@@ -1,8 +1,9 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useParams } from "react-router-dom"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { gql, useMutation, useQuery } from "@apollo/client";
+import Message from "../../components/Message";
 
 const typesCP = [
     "---",
@@ -81,10 +82,14 @@ query getOneProvider($id: Int) {
 const VerClientProvider = () => {
 
     const { id, type } = useParams()
-    const {data, loading} = useQuery(type === "cliente" ? GET_ONE_CLIENT : GET_ONE_PROVIDER, {
+    const {data, loading, refetch} = useQuery(type === "cliente" ? GET_ONE_CLIENT : GET_ONE_PROVIDER, {
         variables: {
             id: parseInt(id)
         }
+    })
+
+    useEffect(() => {
+        refetch()
     })
     
     return (
@@ -127,11 +132,24 @@ const View = ({data, types}: props) => {
     //const [email, setEmail] = useState(data.email)
     //const [cellphone, setCellPhone] = useState(data.cellphone)
 
+    const [open, setOpen] = useState(false)
+    const [msg, setMsg] = useState("")
+    const [statusErr, setStatusErr] = useState(false)
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
     const handlerEdit = () => {
         setEditable(true)
     }
 
     const submit = () => {
+        handleOpen()
         let dataForm: updateData = {
             //type,
             fullName,
@@ -141,7 +159,7 @@ const View = ({data, types}: props) => {
             /*email,
             cellphone*/
         }
-        console.log(dataForm)
+        //console.log(dataForm)
         result({
             variables: {
                 id: data.id,
@@ -149,14 +167,20 @@ const View = ({data, types}: props) => {
             }
         })
         .then( (data) => {
-            console.log(data.data.result.message)
+            setMsg(data.data.result.message)
+            setTimeout( () => handleClose(), 6000)
         })
-        .catch( (err) => console.log(err))
-        .finally()
+        .catch( () => {
+            setStatusErr(true)
+            setMsg("Ocurrio un error inesperado")
+            setTimeout( () => handleClose(), 6000)
+        })
+        
     }
 
     return (
         <Dialog open fullScreen>
+            <Message band={open} message={msg} status={statusErr ? false : true} />
             <DialogTitle>
                 <Stack direction="row" spacing={2} padding={2} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>

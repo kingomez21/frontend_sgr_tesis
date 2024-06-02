@@ -1,18 +1,30 @@
 import { Button, Grid, List, ListItem, ListItemButton, ListItemText, Stack, Typography } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 
-type props = {
-    data: any[]
+type person = {
+    firstName: string
+    lastName: string
 }
 
-const ListUsers = ({data}: props) => {
+type dataUser = {
+    id: string
+    idPerson: person
+    isActive: boolean
+}
+
+type props = {
+    data: dataUser[]
+    idCompany: string
+}
+
+const ListUsers = ({data, idCompany}: props) => {
 
     const navigate = useNavigate()
 
-    const actions = (idUser: number) => {
+    const actions = (idUser: string, namePerson: string) => {
         return (
             <Stack>
-                <Button variant="contained" onClick={() => navigate(`permisos/${idUser}`)}>
+                <Button variant="contained" onClick={() => navigate(`permisos/${namePerson}/${idUser}`)}>
                     <Typography>Asignar permisos</Typography>
                 </Button>
             </Stack>
@@ -31,13 +43,13 @@ const ListUsers = ({data}: props) => {
                                 component={Grid}
                                 xs={12} 
                                 md={6}
-                                secondaryAction={actions(value.id)}
+                                secondaryAction={actions(value.id, `${value.idPerson.firstName.trim()} ${value.idPerson.lastName.trim()}`)}
                                 disablePadding
                             >
                                 <ListItemButton
-                                    onClick={() => navigate(`empleado/${value.id}`)}
+                                    onClick={() => navigate(`empleado/${value.id}/${idCompany}`)}
                                 >
-                                    <ListItemText primary="Usuario #1" secondary="Usuario" />
+                                    <ListItemText primary={`${value.idPerson.firstName} ${value.idPerson.lastName}`} secondary={value.isActive ? "Activo": "Despedido"} />
                                 </ListItemButton>
                             </ListItem>
                         ))

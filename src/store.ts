@@ -1,7 +1,7 @@
 import {create} from 'zustand'
 
 type contextUserType = {
-    data: object
+    data: any
     token: string
     payload: string
     title: string

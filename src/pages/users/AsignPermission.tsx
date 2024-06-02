@@ -1,62 +1,68 @@
 import { Button, Dialog, DialogContent, DialogTitle, FormControl, Grid, InputLabel, List, ListItem, ListItemButton, ListItemText, MenuItem, Paper, Select, Stack, TextField, Typography } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Route, Routes, useNavigate, useParams } from "react-router-dom"
+import { gql, useQuery } from "@apollo/client";
+import { useEffect } from "react";
 
 const exampleRole = [
     "Modulo historial", "Modulo registro"
 ]
 
-type dataType = {
-    message: string
-}
-
 type permision = {
-    id: number
-    name: string
+    id: string
+    nameView: string
 }
 
 type props = {
-    data?: dataType
+    namePerson?: string
     dataPermision?: permision[]
 }
 
+const GET_PERMISSIONS = gql`
+query getPermissionUser($idUser: String){
+    getPermissions: getPermissionUser(idUser: $idUser){
+      id
+      nameView
+    }
+  }
+`
+
 const AsignPermission = () => {
 
-    const { id } = useParams()
+    const { id, namePerson } = useParams()
+    const {data, loading, refetch} = useQuery(GET_PERMISSIONS, {
+        variables: {
+            idUser: id
+        }
+    })
+
+    useEffect(()=>{
+        refetch()
+    }, [])
 
     return (
-        <FormAsingPermission data={{ "message": `PERMISOS DEL EMPLEADO JUAN CAMILO MESSI RIVERA ${id}` }} />
+        <>
+        { loading ? <Typography>Cargando...</Typography> :
+            <FormAsingPermission namePerson={namePerson} dataPermision={data.getPermissions}  />}
+        </>
     )
 }
 
-const FormAsingPermission = ({ data }: props) => {
+const FormAsingPermission = ({ namePerson, dataPermision }: props) => {
 
     const navigate = useNavigate()
-
-    const dataPermision: permision[] = [
-        {
-            id: 1,
-            name: "modulo registro"
-        },
-        {
-            id: 2,
-            name: "modulo historial"
-        }
-    ]
 
     return (
         <Dialog open fullScreen>
             <DialogTitle>
                 <Stack direction="row" spacing={1} padding={2} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
-                    <Typography>{data.message}</Typography>
+                    <Typography>LISTADO DE PERMISOS DEL USUARIO {namePerson.toUpperCase()}</Typography>
                 </Stack>
             </DialogTitle>
             <DialogContent>
                 <Paper>
                     <ListPermission dataPermision={dataPermision} />
-
-
                 </Paper>
                 <br />
                 <Stack justifyContent="center">
@@ -99,7 +105,7 @@ const ListPermission = ({ dataPermision }: props) => {
                         disablePadding
                     >
                         <ListItemButton>
-                            <ListItemText primary="Modulo #1" secondary="Activo" />
+                            <ListItemText primary={value.nameView} secondary="Activo" />
                         </ListItemButton>
                     </ListItem>
                 ))

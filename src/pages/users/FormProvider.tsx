@@ -2,35 +2,88 @@ import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabe
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom"
 import { useState } from "react";
+import { gql, useMutation } from "@apollo/client";
+import { useContextUserAuth } from "../../store";
+import Message from "../../components/Message";
 
-const exampleTypeProvider = [
-    "PERSONA NATURAL", "EMPRESA"
+const TypeProvider = [
+    "-----", "PERSONA NATURAL", "EMPRESA"
 ]
+
+type inputProvider = {
+    idTypeProvider: string
+    idCompany: string
+    fullName: string
+    nit: string
+    address: string
+    place: string
+}
+
+const CREATE_PROVIDER = gql`
+mutation CreateProvider($input: inputProvider){
+    createProvider(provider: $input){
+      message
+    }
+  }
+
+`
 
 const FormProvider = () => {
     const navigate = useNavigate()
+    const data = useContextUserAuth((state) => state.data)
+    const [createProvider,] = useMutation(CREATE_PROVIDER)
 
-    const [typeProvider, setTypeProvider] = useState("1")
+    const [typeProvider, setTypeProvider] = useState("0")
     const [fullName, setFullName] = useState("")
-    const [adress, setAdress] = useState("")
+    const [address, setAddress] = useState("")
     const [place, setPlace] = useState("")
-    const [email, setEmail] = useState("")
-    const [cellphone, setCellPhone] = useState("")
+    const [nit, setNit] = useState("")
+    //const [email, setEmail] = useState("")
+    //const [cellphone, setCellPhone] = useState("")
+
+    const [open, setOpen] = useState(false)
+    const [msg, setMsg] = useState("")
+    const [statusErr, setStatusErr] = useState(false)
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
 
     const submit = () => {
-        let data = {
-            id_type_provider: typeProvider,
-            full_name: fullName,
-            adress: adress,
-            city: place,
-            email,
-            cellphone
+        handleOpen()
+        let dataForm: inputProvider = {
+            idTypeProvider: `${typeProvider}`,
+            idCompany: data.idCompany ? data.idCompany.id : "1",
+            fullName,
+            nit,
+            address,
+            place
         }
-        console.log(data)
+        //console.log(dataForm)
+        createProvider({
+            variables: {
+                input: dataForm
+            }
+        })
+        .then( (data) => {
+            setMsg(data.data.createProvider.message)
+            setTimeout( () => handleClose(), 6000)
+        })
+        .catch( () => {
+            setStatusErr(true)
+            setMsg("Ocurrio un error inesperado")
+            setTimeout( () => handleClose(), 6000)
+        } )
+        
     }
 
     return (
         <Dialog open fullScreen>
+            <Message band={open} message={msg} status={statusErr ? false : true} />
             <DialogTitle>
                 <Stack direction="row" spacing={2} padding={2} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
@@ -55,7 +108,7 @@ const FormProvider = () => {
                                 }}
                                 value={typeProvider}
                             >
-                                {exampleTypeProvider?.map((v, i) => (
+                                {TypeProvider?.map((v, i) => (
                                     <MenuItem
                                         key={i}
                                         value={i}
@@ -88,7 +141,7 @@ const FormProvider = () => {
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
-                                setAdress(e.target.value)
+                                setAddress(e.target.value)
                             }}
                         />
                         <TextField
@@ -101,8 +154,19 @@ const FormProvider = () => {
                                 setPlace(e.target.value)
                             }}
                         />
+                        <TextField
+                            placeholder="Ingrese su NIT"
+                            type="text"
+                            label="Nit"
+                            variant="outlined"
+                            fullWidth
+                            onChange={(e) => {
+                                setNit(e.target.value)
+                            }}
+                        />
                     </Stack>
-
+                    
+                    {/*
                     <br />
                     <br />
 
@@ -127,7 +191,7 @@ const FormProvider = () => {
                                 setCellPhone(e.target.value)
                             }}
                         />
-                    </Stack>
+                    </Stack>*/}
                     <br />
                     <br />
                     <Stack justifyContent="center">

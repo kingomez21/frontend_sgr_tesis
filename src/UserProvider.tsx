@@ -110,6 +110,6 @@ type contextUserType = {
 
   }
 
-  export function useContextUserAuth() {
+  export function useContextUserAuthNOUSE() {
     return useContext(ContextUser)
   }
