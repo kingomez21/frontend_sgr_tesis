@@ -1,7 +1,7 @@
 import { Box, Button, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField, Typography } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { document_type, gender, blood_type, marital_status } from "./constant"
+import { document_type, gender, blood_type, marital_status, cargo } from "./constant"
 import { useQuery, gql, useMutation } from "@apollo/client"
 import { useState } from "react";
 import Message from "../../components/Message";
@@ -62,16 +62,16 @@ const RegisterForm = () => {
     const [lastName, setLastName] = useState("")
     const [cellphone, setCellphone] = useState("")
     const [phone, setPhone] = useState("")
-    const [document, setDocument] = useState(null)
-    const [genderV, setGenderV] = useState(null)
-    const [blood, setBlood] = useState(null)
-    const [maritalStatus, setMaritalStatus] = useState(null)
+    const [document, setDocument] = useState("---")
+    const [genderV, setGenderV] = useState("---")
+    const [blood, setBlood] = useState("---")
+    const [maritalStatus, setMaritalStatus] = useState("---")
     const [birthday, setBirthday] = useState("")
     const [email, setEmail] = useState("")
     const [direction, setDirection] = useState("")
     const [barrio, setBarrio] = useState("")
-    const [company, setCompany] = useState(null)
-    const [jopPosition, setJopPosition] = useState("")
+    const [company, setCompany] = useState(2)
+    const [jopPosition, setJopPosition] = useState("2")
     const [admissionDate, setAdmissionDate] = useState("")
 
     const back = () => {
@@ -106,7 +106,7 @@ const RegisterForm = () => {
             "company": company,
             "email": email
         }
-        
+        //console.log(data)
         createPerson({
             variables: {
                 persona: data
@@ -220,6 +220,7 @@ const RegisterForm = () => {
                                 const document_value: any = e.target.value
                                 setDocument(document_value)
                             }}
+                            value={document}
                         >
                             {document_type?.map((v) => (
                                 <MenuItem
@@ -254,6 +255,7 @@ const RegisterForm = () => {
                                 const gender_value: any = e.target.value 
                                 setGenderV(gender_value)
                             }}
+                            value={genderV}
                         >
                             {gender?.map((v) => (
                                 <MenuItem
@@ -279,6 +281,7 @@ const RegisterForm = () => {
                                 const blood: any = e.target.value
                                 setBlood(blood)
                             }}
+                            value={blood}
                         >
                             {blood_type?.map((v) => (
                                 <MenuItem
@@ -304,6 +307,7 @@ const RegisterForm = () => {
                                 const marital_value: any = e.target.value
                                 setMaritalStatus(marital_value)
                             }}
+                            value={maritalStatus}
                         >
                             {marital_status?.map((v) => (
                                 <MenuItem
@@ -418,6 +422,7 @@ const RegisterForm = () => {
                                 const company_value: any = e.target.value
                                 setCompany(company_value)
                             }}
+                            value={company}
                         >
                             {loading ? <MenuItem disabled> Cargando.. </MenuItem> : (
                                 data?.getCompany?.map((v: company) => (
@@ -435,16 +440,32 @@ const RegisterForm = () => {
 
                     </FormControl>
 
-                    <TextField
-                        placeholder="Seleccione su cargo"
-                        type="text"
-                        label="Cargo"
-                        variant="outlined"
+                    <FormControl
+                        required
                         fullWidth
-                        onChange={(e) => {
-                            setJopPosition(e.target.value)
-                        }}
-                    />
+                    >
+                        <InputLabel>Seleccione su cargo</InputLabel>
+                        <Select
+                            label="Seleccione su estado civil"
+                            onChange={(e) => {
+                                const job_position: any = e.target.value
+                                setJopPosition(""+job_position)
+                            }}
+                            value={jopPosition}
+                        >
+                            {cargo?.map((v, i) => (
+                                <MenuItem
+                                    key={i}
+                                    value={i}
+                                >
+                                    {v}
+                                </MenuItem>
+                            ))}
+
+                        </Select>
+
+                    </FormControl>
+
                     <TextField
                         type="date"
                         label="Fecha de ingreso a la empresa"

@@ -1,19 +1,19 @@
 export const document_type = [
-    "CC", "TI", "PASAPORTE"
+    "---", "CC", "TI", "PASAPORTE"
 ]
 
 export const gender = [
-    "Masculino", "Femenino", "LGTBI"
+    "---","Masculino", "Femenino", "LGTBI"
 ]
 
 export const blood_type = [
-    "O+", "AB", "O-", "A", "B"
+    "---", "O+", "AB", "O-", "A", "B"
 ]
 
 export const marital_status = [
-    "Soltero", "Casado"
+    "---", "Soltero", "Casado"
 ]
 
 export const cargo = [
-    "empleado", "administrador"
+    "---", "Administrador", "Empleado",
 ]

@@ -11,6 +11,10 @@ const typesCP = [
     "EMPRESA"
 ]
 
+const statusActive = [
+    "false", "true"
+]
+
 type dataProps = {
     id?: string
     type: any
@@ -21,6 +25,7 @@ type dataProps = {
     description: string
     email?: string
     cellphone?: string
+    isActive?: boolean
 }
 
 type updateData = {
@@ -29,7 +34,7 @@ type updateData = {
     nit: string
     address: string
     place: string
-
+    isActive?: string
 }
 
 type props = {
@@ -53,6 +58,7 @@ query getOne($id: Int) {
         id
         name
       }
+      isActive
     }
   }
 
@@ -74,6 +80,7 @@ query getOneProvider($id: Int) {
         id
         name
       }
+      isActive
     }
   }
 
@@ -129,6 +136,7 @@ const View = ({data, types}: props) => {
     const [address, setAddress] = useState(data.address)
     const [place, setPlace] = useState(data.place)
     const [nit, setNit] = useState(data.nit)
+    const [isActive, setIsActive] = useState(""+data.isActive)
     //const [email, setEmail] = useState(data.email)
     //const [cellphone, setCellPhone] = useState(data.cellphone)
 
@@ -155,7 +163,8 @@ const View = ({data, types}: props) => {
             fullName,
             address,
             place,
-            nit
+            nit,
+            
             /*email,
             cellphone*/
         }
@@ -228,6 +237,33 @@ const View = ({data, types}: props) => {
                             disabled={!editable}
                             value={fullName}
                         />
+                        <FormControl
+                            required
+                            fullWidth
+                        >
+                            <InputLabel>Estado</InputLabel>
+                            <Select
+                                label="Estado"
+                                onChange={(e) => {
+                                    const status: any = e.target.value
+                                    setIsActive(status)
+                                }}
+                                value={isActive}
+                                disabled={!editable}
+                            >
+                                {statusActive?.map((v, i) => {
+                                    const valor = v === "true" ? "ACTIVO" : "INACTIVO"
+                                    return (
+                                        <MenuItem
+                                            key={i}
+                                            value={v}
+                                        >
+                                            {valor}
+                                        </MenuItem>
+                                    )
+                                })}
+                            </Select>
+                        </FormControl>
                     </Stack>
 
                     <br />

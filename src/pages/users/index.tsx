@@ -114,6 +114,7 @@ query getAllDataClientProvider{
         fullName
         place
         address
+        isActive
     }
   }
 

@@ -2,10 +2,14 @@ import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabe
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { blood_type, document_type, gender, marital_status } from "../register/constant";
+import { blood_type, cargo, document_type, gender, marital_status } from "../register/constant";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useContextUserAuth } from "../../store";
 import Message from "../../components/Message";
+
+const statusActive = [
+    "false", "true"
+]
 
 type dataPerson = {
     id?: string
@@ -25,6 +29,7 @@ type dataPerson = {
     bloodType: any
     company?: any
     email: string
+    isActive?: string
 }
 
 type props = {
@@ -69,21 +74,21 @@ query getUser ($idUser: String, $company: String){
 
 const VerUsers = () => {
     const { id, company } = useParams()
-    
-    const {data, loading, refetch} = useQuery(GET_ONE_USER, {
+
+    const { data, loading, refetch } = useQuery(GET_ONE_USER, {
         variables: {
             idUser: id,
             company: company
         }
     })
-    
+
     useEffect(() => {
         refetch()
     }, [])
 
     return (
         <>
-        {loading ? <Typography>Cargando...</Typography>  : <View datas={data} /> }
+            {loading ? <Typography>Cargando...</Typography> : <View datas={data} />}
         </>
     )
 }
@@ -97,12 +102,21 @@ mutation updateUserInfo($idUser: String, $company: String, $input: InputPerson){
 
 `
 
-const View = ({datas}: props) => {
+const DELETE_USER = gql`
+mutation deleteUser($idUser: String){
+    deleteUser(idUser: $idUser){
+        message
+    }
+  }
+`
+
+const View = ({ datas }: props) => {
 
     const navigate = useNavigate()
     const [editable, setEditable] = useState(false)
-    const  data = useContextUserAuth((state) => state.data)
+    const data = useContextUserAuth((state) => state.data)
     const [updateUserInfo,] = useMutation(UPDATE_USER)
+    const [deleteUser,] = useMutation(DELETE_USER)
 
     const dataUser: dataPerson = {
         "id": datas.getUser.id,
@@ -137,6 +151,7 @@ const View = ({datas}: props) => {
     const [barrio, setBarrio] = useState(dataUser.neighborhood)
     const [jopPosition, setJopPosition] = useState(dataUser.jobPosition)
     const [admissionDate, setAdmissionDate] = useState(dataUser.admissionDate)
+    const [isActive, setIsActive] = useState(""+datas.getUser.isActive)
 
     const [open, setOpen] = useState(false)
     const [msg, setMsg] = useState("")
@@ -171,7 +186,8 @@ const View = ({datas}: props) => {
             "birthday": birthday,
             "maritalStatus": maritalStatus,
             "bloodType": blood,
-            "email": email
+            "email": email,
+            "isActive": isActive
         }
         
         updateUserInfo({
@@ -181,27 +197,50 @@ const View = ({datas}: props) => {
                 input: dataForm
             }
         })
-        .then((data)=> {
-            setMsg(data.data.updateUserInfo.message)
-            setTimeout( () => handleClose(), 6000)
+            .then((data) => {
+                setMsg(data.data.updateUserInfo.message)
+                setTimeout(() => handleClose(), 6000)
+            })
+            .catch(() => {
+                setStatusErr(true)
+                setMsg("Ocurrio un error inesperado")
+                setTimeout(() => handleClose(), 6000)
+            })
+
+    }
+
+    const delete_user = () => {
+        handleOpen()
+        deleteUser({
+            variables: {
+                idUser: datas.getUser.id
+            }
         })
-        .catch(() => {
-            setStatusErr(true)
-            setMsg("Ocurrio un error inesperado")
-            setTimeout( () => handleClose(), 6000)
-        })
-        
+            .then((data) => {
+                setMsg(data.data.deleteUser.message)
+                setTimeout(() => handleClose(), 6000)
+            })
+            .catch(() => {
+                setStatusErr(true)
+                setMsg("Ocurrio un error inesperado")
+                setTimeout(() => handleClose(), 6000)
+            })
     }
 
 
     return (
         <Dialog open fullScreen>
-            
+
             <DialogTitle>
-            <Message key={1} band={open} message={msg} status={statusErr ? false : true} />
-                <Stack direction="row" spacing={2} padding={2} margin={2}>
-                    <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
-                    <Typography>INFORMACION DE {firstName} {lastName}</Typography>
+                <Message band={open} message={msg} status={statusErr ? false : true} />
+                <Stack direction="row" justifyContent="space-between" spacing={2} padding={2} margin={2}>
+                    <Stack direction="row" >
+                        <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
+                        <Typography>INFORMACION DE {firstName.toUpperCase()} {lastName.toUpperCase()} - {datas.getUser.isActive ? "ACTIVO" : "DESPEDIDO"}</Typography>
+                    </Stack>
+                    <Button variant="contained" color="error" onClick={() => delete_user()}>
+                        Eliminar
+                    </Button>
                 </Stack>
             </DialogTitle>
             <DialogContent>
@@ -211,7 +250,7 @@ const View = ({datas}: props) => {
                     <Stack
                         marginRight={1}
                         marginLeft={1}
-                    > 
+                    >
                         <Typography>
                             INFORMACION PERSONAL
                         </Typography>
@@ -519,18 +558,32 @@ const View = ({datas}: props) => {
                         alignItems="center"
                         spacing={4}
                     >
-                        <TextField
-                            placeholder="Seleccione su cargo"
-                            type="text"
-                            label="Cargo"
-                            variant="outlined"
+                        <FormControl
+                            required
                             fullWidth
-                            onChange={(e) => {
-                                setJopPosition(e.target.value)
-                            }}
-                            value={jopPosition}
-                            disabled={!editable}
-                        />
+                        >
+                            <InputLabel>Seleccione su cargo</InputLabel>
+                            <Select
+                                label="Seleccione su cargo"
+                                onChange={(e) => {
+                                    const job_position: any = e.target.value
+                                    setJopPosition("" + job_position)
+                                }}
+                                value={jopPosition}
+                                disabled={!editable}
+                            >
+                                {cargo?.map((v, i) => (
+                                    <MenuItem
+                                        key={i}
+                                        value={v}
+                                    >
+                                        {v}
+                                    </MenuItem>
+                                ))}
+
+                            </Select>
+
+                        </FormControl>
                         <TextField
                             type="date"
                             label="Fecha de ingreso a la empresa"
@@ -546,6 +599,37 @@ const View = ({datas}: props) => {
                             value={admissionDate}
                             disabled={!editable}
                         />
+                        <FormControl
+                            required
+                            fullWidth
+                        >
+                            <InputLabel>Estado</InputLabel>
+                            <Select
+                                label="Estado"
+                                onChange={(e) => {
+                                    const active: any = e.target.value
+                                    setIsActive(active)
+                                }}
+                                value={isActive}
+                                disabled={!editable}
+                            >
+                                {statusActive?.map((v, i) => {
+                                    const valor = v === "true" ? "ACTIVO" : "DESPEDIDO"
+                                    return (
+                                        <MenuItem
+                                            key={i}
+                                            value={v}
+                                        >
+                                            {valor}
+                                        </MenuItem>
+                                    )
+                                }
+                                )
+                                }
+
+                            </Select>
+
+                        </FormControl>
                     </Stack>
                     <br />
                     <br />
