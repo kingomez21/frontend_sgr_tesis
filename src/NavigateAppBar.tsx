@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { useContextUserAuth } from './store';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Users from './pages/users';
-import { Avatar, Container, Menu, MenuItem, Tooltip } from '@mui/material';
+import { Avatar, Container, Menu, MenuItem, Stack, Tooltip } from '@mui/material';
 import AdbIcon from '@mui/icons-material/Adb';
 import Registers from './pages/registers';
 import History from './pages/history';
@@ -45,6 +45,12 @@ query($user: String){
       phoneNumber
       society
     }
+    rol: idUserRol{
+      id
+      idRol{
+        rolName
+      }
+    }
   }
 }
 `
@@ -76,11 +82,15 @@ export const NavigateAppBar = () => {
   const payload = useContextUserAuth((state) => state.payload)
   const setData = useContextUserAuth((state) => state.setData)
   const title = useContextUserAuth((state) => state.title)
-  const [getUserAuthInfo,] = useLazyQuery(PERSON_AUTH)
+  const data = useContextUserAuth((state) => state.data)
+  //const setPermissions = useContextUserAuth((state) => state.setPermissions)
+  const [getUserAuthInfo,{loading}] = useLazyQuery(PERSON_AUTH)
+  //const [permissionsUser,] = useLazyQuery(GET_PERMISSIONS_USER)
+
 
   useEffect(() => {
     if (payload === null) {
-      //navigate('/login')
+      navigate('/login')
     } else {
       getUserAuthInfo({
         variables: {
@@ -215,6 +225,7 @@ export const NavigateAppBar = () => {
       <Box>
         <Box sx={{ marginTop: 12 }}>
           <Routes>
+            <Route path='/' element={<MainWindow data={loading ? null : data} />} />
             <Route path='/usuarios/*' element={<Users />} />
             <Route path='/registro/*' element={<Registers />} />
             <Route path='/historial/*' element={<History />} />
@@ -225,6 +236,21 @@ export const NavigateAppBar = () => {
       </Box>
     </Box>
   );
+}
+
+type props = {
+  data: any
+  permission?: any
+}
+
+const MainWindow = ({data}: props) => {
+  return (
+    <Stack direction="column" marginTop={30} justifyContent="center" alignItems="center" >
+      <img src="/reutilizar.png" height={90} width={90} alt="" />
+      <a href="https://www.flaticon.es/iconos-gratis/reciclaje" title="reciclaje iconos">Reciclaje iconos creados por Flat Icons - Flaticon</a>
+      <Typography variant='h3'>Bienvenido {data !== null ? `${data.idPerson.firstName} ${data.idPerson.lastName}` : "Prueba"}</Typography>
+    </Stack>
+  )
 }
 
 export default NavigateAppBar
