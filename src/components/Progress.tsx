@@ -2,9 +2,10 @@ import { Backdrop, CircularProgress, Typography } from "@mui/material"
 
 type props = {
     open: boolean
+    message?: string
 }
 
-const Progress = ({open}: props) => {
+const Progress = ({open, message}: props) => {
     return (
         <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -12,7 +13,7 @@ const Progress = ({open}: props) => {
         >
             <CircularProgress />
             <Typography>
-                Validando informacion...
+                {message ? message : "Validando informacion...."}
             </Typography>
 
         </Backdrop>
