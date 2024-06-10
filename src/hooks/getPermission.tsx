@@ -1,7 +1,6 @@
 import { gql, useQuery } from "@apollo/client"
 import { useEffect} from "react"
 import { useContextUserAuth } from "../store"
-import { Typography } from "@mui/material"
 
 const GET_PERMISSIONS_USER = gql`
 query getPermissionOneUser($idUserRol: String){
@@ -41,7 +40,7 @@ export const getPermission = (nameModulePermission: string) => {
     refetch()
   }, [nameModulePermission])
 
-  return loading ? (<Typography>Validando permisos</Typography>) : PermissionsView({dataPermissions: data.permissionsUser, namePermission: nameModulePermission})
+  return loading ? false : PermissionsView({dataPermissions: data.permissionsUser, namePermission: nameModulePermission})
 
 }
 
