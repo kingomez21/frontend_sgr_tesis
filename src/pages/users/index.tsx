@@ -1,9 +1,9 @@
-import { Box, Button, Paper, Stack, Typography } from "@mui/material"
+import { Box, Button, IconButton, InputAdornment, Paper, Stack, TextField, Typography } from "@mui/material"
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ListProviderClient from "./ListProviderClient"
 import ListUsers from "./ListUsers"
 import { useContextUserAuth } from "../../store"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Route, Routes, useNavigate } from "react-router-dom"
 import FormClient from "./FormClient"
 import FormProvider from "./FormProvider"
@@ -12,6 +12,7 @@ import VerUsers from "./VerUsers"
 import AsignPermission from "./AsignPermission"
 import { gql, useQuery } from "@apollo/client"
 import { getPermission } from "../../hooks/getPermission";
+import SearchIcon from '@mui/icons-material/Search';
 
 const GET_COUNTS_CLIENTS_PROVIDERS = gql`
 query getCounts{
@@ -41,9 +42,9 @@ const Users = () => {
     const setTitle = useContextUserAuth((state) => state.setTitle)
     const data = useContextUserAuth((state) => state.data)
     //const permissions = useContextUserAuth((state) => state.permissions)
-    
+
     const isOk = getPermission("modulo usuario")
-    
+
     useEffect(() => {
         setTitle("GESTION DE USUARIOS")
     }, [])
@@ -66,8 +67,8 @@ const Users = () => {
                     </Button>
                 </Stack>
                 <ListCounts title="LISTADO DE CLIENTES Y PROVEEDORES" counts={{
-                    totalCount: "CANTIDAD", 
-                    typeOne: "PROVEEDORES", 
+                    totalCount: "CANTIDAD",
+                    typeOne: "PROVEEDORES",
                     typeTwo: "CLIENTES"
                 }} query={GET_COUNTS_CLIENTS_PROVIDERS} />
                 <Stack marginLeft={5} marginRight={5}>
@@ -79,10 +80,10 @@ const Users = () => {
                     totalCount: "CANTIDAD",
                     typeOne: "ACTIVOS",
                     typeTwo: "DESPEDIDOS"
-                }} query={GET_COUNTS_USERS} variables={{variables: {company: data !== null ? data.idCompany.id : "1"}}}/>
+                }} query={GET_COUNTS_USERS} variables={{ variables: { company: data !== null ? data.idCompany.id : "1" } }} />
                 <Stack marginLeft={5} marginRight={5}>
                     <Paper sx={{ marginTop: 2 }}>
-                        <DataListUsers idCompany={ data !== null ? data.idCompany.id : "1"} />
+                        <DataListUsers idCompany={data !== null ? data.idCompany.id : "1"} />
                     </Paper>
                 </Stack>
                 <br />
@@ -95,10 +96,10 @@ const Users = () => {
                     <Route path="/permisos/:namePerson/:id/*" element={<AsignPermission />} />
                 </Routes>
             </Box>
-            ) : 
-            
-            (<Typography>No tienes permisos</Typography>) 
-        
+        ) :
+
+            (<Typography>No tienes permisos</Typography>)
+
     )
 }
 
@@ -123,14 +124,28 @@ query getAllDataClientProvider{
 const DataLisClientProvider = () => {
 
     const { data, loading, refetch } = useQuery(GET_DATA_CLIENTS_PROVIDER)
-
+    const [search, setSearch] = useState("")
     return (
         <>
-            <Stack direction="row" justifyContent="end">
+            <Stack direction="row" justifyContent="space-between">
+                <TextField
+                    label="Buscador"
+                    sx={{ width: "50%", marginLeft: "1%" }}
+                    type="text"
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Buscar proveedores o clientes"
+                    InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <IconButton ><SearchIcon /></IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                />
                 <Button size="large" startIcon={<RefreshIcon />} onClick={() => refetch()} ></Button>
             </Stack>
-
-            {loading ? <Typography>Cargando....</Typography> : <ListProviderClient data={data.getAllDataClientProvider} />}
+            &nbsp;
+            {loading ? <Typography>Cargando....</Typography> : <ListProviderClient data={data.getAllDataClientProvider} search={search} />}
         </>
     )
 }
@@ -151,23 +166,38 @@ query getAllUsers($company: String){
 
 type propsListUsers = {
     idCompany: any
-} 
+}
 
-const DataListUsers = ({idCompany}: propsListUsers) => {
-    
-    const {data, loading, refetch} = useQuery(GET_ALL_USERS_PER_COMPANY, {
-        variables:{
+const DataListUsers = ({ idCompany }: propsListUsers) => {
+
+    const { data, loading, refetch } = useQuery(GET_ALL_USERS_PER_COMPANY, {
+        variables: {
             company: idCompany
         }
     })
+    const [search, setSearch] = useState("")
 
     return (
         <>
-            <Stack direction="row" justifyContent="end">
+            <Stack direction="row" justifyContent="space-between">
+            <TextField
+                    label="Buscador"
+                    sx={{ width: "50%", marginLeft: "1%" }}
+                    type="text"
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Buscar proveedores o clientes"
+                    InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <IconButton ><SearchIcon /></IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                />
                 <Button size="large" startIcon={<RefreshIcon />} onClick={() => refetch()} ></Button>
             </Stack>
-
-            {loading ? <Typography>Cargando...</Typography> : <ListUsers data={data.getAllUsers} idCompany={idCompany}/>}
+            &nbsp;
+            {loading ? <Typography>Cargando...</Typography> : <ListUsers data={data.getAllUsers} idCompany={idCompany} search={search} />}
         </>
     )
 }
@@ -185,11 +215,11 @@ type propsListCounts = {
     variables?: any
 }
 
-const ListCounts = ({title, counts, query, variables}: propsListCounts) => {
+const ListCounts = ({ title, counts, query, variables }: propsListCounts) => {
 
-    const {data, loading, refetch} = useQuery(query, variables)
+    const { data, loading, refetch } = useQuery(query, variables)
 
-    useEffect(()=>{
+    useEffect(() => {
         refetch()
     }, [])
 
