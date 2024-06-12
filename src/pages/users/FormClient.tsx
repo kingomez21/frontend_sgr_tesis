@@ -18,6 +18,8 @@ type inputClient = {
     fullName: string
     nit: string
     address: string
+    email?: string
+    cellphone?: string
     place: string
 }
 
@@ -41,8 +43,8 @@ const FormClient = () => {
     const [address, setAddress] = useState("")
     const [nit, setNit] = useState("")
     const [place, setPlace] = useState("")
-    //const [email, setEmail] = useState("")
-    //const [cellphone, setCellPhone] = useState("")
+    const [email, setEmail] = useState("")
+    const [cellphone, setCellPhone] = useState("")
 
     const [open, setOpen] = useState(false)
     const [msg, setMsg] = useState("")
@@ -64,7 +66,9 @@ const FormClient = () => {
             fullName,
             nit,
             address,
-            place
+            place,
+            cellphone,
+            email
            
         }
         //console.log(dataForm)
@@ -170,7 +174,7 @@ const FormClient = () => {
                         />
                     </Stack>
 
-                    {/*<br />
+                    <br />
                     <br />
 
                     <Stack direction="row" spacing={2}>
@@ -194,7 +198,7 @@ const FormClient = () => {
                                 setCellPhone(e.target.value)
                             }}
                         />
-                    </Stack>*/}
+                    </Stack>
                     <br />
                     <br />
                     <Stack justifyContent="center">
