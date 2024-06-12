@@ -34,6 +34,8 @@ type updateData = {
     nit: string
     address: string
     place: string
+    email?: string
+    cellphone?: string
     isActive?: string
 }
 
@@ -58,6 +60,8 @@ query getOne($id: Int) {
         id
         name
       }
+      cellphone
+      email
       isActive
     }
   }
@@ -80,6 +84,8 @@ query getOneProvider($id: Int) {
         id
         name
       }
+      cellphone
+      email
       isActive
     }
   }
@@ -137,8 +143,8 @@ const View = ({data, types}: props) => {
     const [place, setPlace] = useState(data.place)
     const [nit, setNit] = useState(data.nit)
     const [isActive, setIsActive] = useState(""+data.isActive)
-    //const [email, setEmail] = useState(data.email)
-    //const [cellphone, setCellPhone] = useState(data.cellphone)
+    const [email, setEmail] = useState(data.email?data.email:"")
+    const [cellphone, setCellPhone] = useState(data.cellphone?data.cellphone:"")
 
     const [open, setOpen] = useState(false)
     const [msg, setMsg] = useState("")
@@ -164,9 +170,8 @@ const View = ({data, types}: props) => {
             address,
             place,
             nit,
-            
-            /*email,
-            cellphone*/
+            email,
+            cellphone
         }
         //console.log(dataForm)
         result({
@@ -308,7 +313,6 @@ const View = ({data, types}: props) => {
                             value={nit}
                         />
                     </Stack>
-                    {/*
                     <br />
                     <br />
 
@@ -337,7 +341,7 @@ const View = ({data, types}: props) => {
                             disabled={!editable}
                             value={cellphone}
                         />
-                    </Stack>*/}
+                    </Stack>
                     <br />
                     <br />
                     <Stack justifyContent="center">
