@@ -49,10 +49,10 @@ const ListProviderClient = ({ data, search }: props) => {
 
     const dataSearch = useMemo(() => {
         if (search === null || search === "") return data
-        return fuse.search(search).map((value)=> value.item)
+        return fuse.search(search).map((value) => value.item)
     }, [search])
 
-    
+
 
     const handleClose = () => {
         setOpen(false);
@@ -100,23 +100,31 @@ const ListProviderClient = ({ data, search }: props) => {
                 <Message band={open} message={msg} status={statusErr ? false : true} />
                 <List component={Grid} container sx={{ overflow: 'auto', maxHeight: 400 }} >
                     {
-                        dataSearch?.map((value) => (
-                            <ListItem
-                                item
-                                key={value.id}
-                                component={Grid}
-                                xs={12}
-                                md={6}
-                                secondaryAction={actions("" + value.identity, value.description)}
-                                disablePadding
-                            >
-                                <ListItemButton
-                                    onClick={() => navigate(`${value.description}/${value.identity}`)}
+                        dataSearch?.length > 0 ? (
+
+                            dataSearch?.map((value) => (
+                                <ListItem
+                                    item
+                                    key={value.id}
+                                    component={Grid}
+                                    xs={12}
+                                    md={6}
+                                    secondaryAction={actions("" + value.identity, value.description)}
+                                    disablePadding
                                 >
-                                    <ListItemText primary={`${value.fullName}`} secondary={`${value.description} - ${value.isActive ? "ACTIVO" : "INACTIVO"}`} />
-                                </ListItemButton>
-                            </ListItem>
-                        ))
+                                    <ListItemButton
+                                        onClick={() => navigate(`${value.description}/${value.identity}`)}
+                                    >
+                                        <ListItemText primary={`${value.fullName}`} secondary={`${value.description} - ${value.isActive ? "ACTIVO" : "INACTIVO"}`} />
+                                    </ListItemButton>
+                                </ListItem>
+                            ))
+
+                        ) : (
+                            <Stack direction="row" justifyContent="center" alignItems="center">
+                                <Typography>No hay clientes o proveedores disponibles</Typography>
+                            </Stack>
+                        )
                     }
                 </List>
             </Stack>

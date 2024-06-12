@@ -51,23 +51,32 @@ const ListUsers = ({data, idCompany, search}: props) => {
             <Stack direction="row" >
                 <List component={Grid} container sx={{ overflow: 'auto', maxHeight: 400 }}>
                     {
-                        dataSearch?.map((value) => (
-                            <ListItem
-                                item
-                                key={value.id}
-                                component={Grid}
-                                xs={12} 
-                                md={6}
-                                secondaryAction={actions(value.id, `${value.idPerson.firstName.trim()} ${value.idPerson.lastName.trim()}`)}
-                                disablePadding
-                            >
-                                <ListItemButton
-                                    onClick={() => navigate(`empleado/${value.id}/${idCompany}`)}
+                        dataSearch?.length > 0 ? (
+
+                            dataSearch?.map((value) => (
+                                <ListItem
+                                    item
+                                    key={value.id}
+                                    component={Grid}
+                                    xs={12} 
+                                    md={6}
+                                    secondaryAction={actions(value.id, `${value.idPerson.firstName.trim()} ${value.idPerson.lastName.trim()}`)}
+                                    disablePadding
                                 >
-                                    <ListItemText primary={`${value.idPerson.firstName} ${value.idPerson.lastName}`} secondary={value.isActive ? "Activo": "Despedido"} />
-                                </ListItemButton>
-                            </ListItem>
-                        ))
+                                    <ListItemButton
+                                        onClick={() => navigate(`empleado/${value.id}/${idCompany}`)}
+                                    >
+                                        <ListItemText primary={`${value.idPerson.firstName} ${value.idPerson.lastName}`} secondary={value.isActive ? "Activo": "Despedido"} />
+                                    </ListItemButton>
+                                </ListItem>
+                            ))
+
+                        ) : (
+                            <Stack direction="row" justifyContent="center" >
+                                <Typography>No hay usuarios disponibles</Typography>
+                            </Stack>
+                        )
+                        
                     }
                 </List>
             </Stack>

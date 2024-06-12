@@ -123,7 +123,14 @@ query getAllDataClientProvider{
 
 const DataLisClientProvider = () => {
 
-    const { data, loading, refetch } = useQuery(GET_DATA_CLIENTS_PROVIDER)
+    const token = useContextUserAuth((state) => state.token)
+    const { data, loading, refetch } = useQuery(GET_DATA_CLIENTS_PROVIDER, {
+        context: {
+            headers: {
+                "Authorization": `JWT ${token}` 
+            }
+        }
+    })
     const [search, setSearch] = useState("")
     return (
         <>
@@ -145,7 +152,7 @@ const DataLisClientProvider = () => {
                 <Button size="large" startIcon={<RefreshIcon />} onClick={() => refetch()} ></Button>
             </Stack>
             &nbsp;
-            {loading ? <Typography>Cargando....</Typography> : <ListProviderClient data={data.getAllDataClientProvider} search={search} />}
+            {loading ? <Typography>Cargando....</Typography> : <ListProviderClient data={data ? data.getAllDataClientProvider: []} search={search} />}
         </>
     )
 }
@@ -170,9 +177,15 @@ type propsListUsers = {
 
 const DataListUsers = ({ idCompany }: propsListUsers) => {
 
+    const token = useContextUserAuth((state) => state.token)
     const { data, loading, refetch } = useQuery(GET_ALL_USERS_PER_COMPANY, {
         variables: {
             company: idCompany
+        },
+        context: {
+            headers: {
+                "Authorization": `JWT ${token}` 
+            }
         }
     })
     const [search, setSearch] = useState("")
@@ -197,7 +210,7 @@ const DataListUsers = ({ idCompany }: propsListUsers) => {
                 <Button size="large" startIcon={<RefreshIcon />} onClick={() => refetch()} ></Button>
             </Stack>
             &nbsp;
-            {loading ? <Typography>Cargando...</Typography> : <ListUsers data={data.getAllUsers} idCompany={idCompany} search={search} />}
+            {loading ? <Typography>Cargando...</Typography> : <ListUsers data={data ? data.getAllUsers : []} idCompany={idCompany} search={search} />}
         </>
     )
 }

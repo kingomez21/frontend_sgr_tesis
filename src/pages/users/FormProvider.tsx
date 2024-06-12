@@ -17,6 +17,8 @@ type inputProvider = {
     nit: string
     address: string
     place: string
+    email?: string
+    cellphone?: string
 }
 
 const CREATE_PROVIDER = gql`
@@ -38,8 +40,8 @@ const FormProvider = () => {
     const [address, setAddress] = useState("")
     const [place, setPlace] = useState("")
     const [nit, setNit] = useState("")
-    //const [email, setEmail] = useState("")
-    //const [cellphone, setCellPhone] = useState("")
+    const [email, setEmail] = useState("")
+    const [cellphone, setCellPhone] = useState("")
 
     const [open, setOpen] = useState(false)
     const [msg, setMsg] = useState("")
@@ -61,7 +63,9 @@ const FormProvider = () => {
             fullName,
             nit,
             address,
-            place
+            place,
+            email,
+            cellphone
         }
         //console.log(dataForm)
         createProvider({
@@ -166,7 +170,6 @@ const FormProvider = () => {
                         />
                     </Stack>
                     
-                    {/*
                     <br />
                     <br />
 
@@ -191,7 +194,7 @@ const FormProvider = () => {
                                 setCellPhone(e.target.value)
                             }}
                         />
-                    </Stack>*/}
+                    </Stack>
                     <br />
                     <br />
                     <Stack justifyContent="center">

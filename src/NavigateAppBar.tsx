@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { gql, useLazyQuery } from '@apollo/client';
+import { gql, useLazyQuery} from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useContextUserAuth } from './store';
 import { Route, Routes, useNavigate } from 'react-router-dom';
@@ -48,6 +48,7 @@ query($user: String){
     rol: idUserRol{
       id
       idRol{
+        id
         rolName
       }
     }
@@ -55,8 +56,18 @@ query($user: String){
 }
 `
 
+/*const CLOSE_SESSION = gql`
+
+mutation closeSession{
+  close: closeSession{
+    message
+  }
+}
+
+`*/
+
 const pages = ['usuarios', 'registro', 'historial', 'reporte', 'inventario'];
-const settings = ['PERFIL', 'SALIR'];
+const settings = ['SALIR'];
 
 export const NavigateAppBar = () => {
 
@@ -83,10 +94,28 @@ export const NavigateAppBar = () => {
   const setData = useContextUserAuth((state) => state.setData)
   const title = useContextUserAuth((state) => state.title)
   const data = useContextUserAuth((state) => state.data)
+  //const token = useContextUserAuth((state) => state.token)
   //const setPermissions = useContextUserAuth((state) => state.setPermissions)
-  const [getUserAuthInfo,{loading}] = useLazyQuery(PERSON_AUTH)
+  const [getUserAuthInfo, { loading }] = useLazyQuery(PERSON_AUTH)
   //const [permissionsUser,] = useLazyQuery(GET_PERMISSIONS_USER)
+  /*const [close,] = useMutation(CLOSE_SESSION, {
+    context: {
+      "Authorization": `JWT ${token}`
+    },
+    onCompleted: (data) => {
+      if (data) console.log(data.close.message)
+    }
+  })
 
+  const closeSession = async () => {
+    const res = await close()
+    console.log(res)
+    
+    .then()
+    .catch((err) => console.log(err))
+    .finally()
+    //if(res.data.close.message) console.log(res)
+  }*/
 
   useEffect(() => {
     if (payload === null) {
@@ -108,7 +137,7 @@ export const NavigateAppBar = () => {
       <AppBar position="fixed">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            
+
             <Typography
               variant="h6"
               noWrap
@@ -189,7 +218,9 @@ export const NavigateAppBar = () => {
                 </Button>
               ))}
             </Box>
-
+            {data ? (<Typography textAlign="center" >{data.idPerson.firstName.toUpperCase()}</Typography>) : "USUARIO"}
+            &nbsp;
+            &nbsp;
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -214,7 +245,9 @@ export const NavigateAppBar = () => {
               >
                 {settings.map((setting) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                    <Button variant='text' size='small' onClick={() => navigate('/login')}>
+                      <Typography textAlign="center" >{setting}</Typography>
+                    </Button>
                   </MenuItem>
                 ))}
               </Menu>
@@ -243,7 +276,7 @@ type props = {
   permission?: any
 }
 
-const MainWindow = ({data}: props) => {
+const MainWindow = ({ data }: props) => {
   return (
     <Stack direction="column" marginTop={30} justifyContent="center" alignItems="center" >
       <img src="/reutilizar.png" height={90} width={90} alt="" />
