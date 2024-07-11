@@ -17,7 +17,8 @@ type idLoteSellType = {
     sold: boolean
 }
 
-type materialType = {
+export type materialType = {
+    id?: string
     name: string
 }
 
@@ -34,7 +35,7 @@ export type ClassificationsType = {
     idUserInfo: PersonType
     idRawMaterial: rawMaterialType
     idCompany: companyType
-    idLoteSell: idLoteSellType
+    idLoteSell?: idLoteSellType
     createdAt: string
 }
 

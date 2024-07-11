@@ -13,9 +13,9 @@ const ListClassifications = ({data, viewStyle}: props) => {
 
     const navigate = useNavigate()
 
-    const actions = (vendido:boolean) => {
+    const actions = (vendido: any) => {
         return (
-            vendido ? <CheckCircleOutlineIcon htmlColor="green"/> : <WatchLaterIcon htmlColor="gray"/>
+            vendido !== null ? vendido.sold ? <CheckCircleOutlineIcon htmlColor="green"/> : <WatchLaterIcon htmlColor="gray"/> : <WatchLaterIcon htmlColor="gray"/>
         )
     }
 
@@ -31,7 +31,7 @@ const ListClassifications = ({data, viewStyle}: props) => {
                                     component={Grid}
                                     xs={12} 
                                     md={6}
-                                    secondaryAction={actions(value.idLoteSell.sold)}
+                                    secondaryAction={actions(value.idLoteSell)}
                                     sx={viewStyle || viewStyle !== undefined ? {
                                         "& > .MuiButtonBase-root": {
                                             border: 1,
@@ -48,7 +48,7 @@ const ListClassifications = ({data, viewStyle}: props) => {
                                     >
                                         <ListItemText 
                                             primary={`
-                                                ${value.idRawMaterial.idMaterialType.name.toUpperCase()} - ${value.idRawMaterial.kgQuantity} KG 
+                                                ${value.idRawMaterial.idMaterialType.name.toUpperCase()} - ${value.totalWeight} KG 
                                                 CLASIFICADO POR: ${value.idUserInfo.idPerson.firstName.toUpperCase()} ${value.idUserInfo.idPerson.lastName.toUpperCase()}
                                             `} 
                                             secondary={`FECHA: ${new Date(value.createdAt).toLocaleDateString()}`} 

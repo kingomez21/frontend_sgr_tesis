@@ -16,6 +16,7 @@ const GET_ALL_CLASSIFICATIONS_WITH_STATE = gql`
             }
             idRawMaterial{
                 idMaterialType{
+                    id
                     name
                 }
                 materialName
@@ -48,6 +49,7 @@ const GET_ALL_CLASSIFICATIONS_WITHOUT_STATE = gql`
             }
             idRawMaterial{
                 idMaterialType{
+                    id
                     name
                 }
                 materialName
@@ -92,13 +94,22 @@ type InventoryContextTypes = {
     dataLoteSell: LoteSellType[]
     updated: string
     setUpdated?: any
+    aggProductsLote: ClassificationsType[]
+    setAggProductsLote?: any
+    deleteProductsLote?: any
+    stock: ClassificationsType[]
+    setStock?: any
+    deleteStock?: any
+    aggStockAfter?: any
+    deleteAllProductsLote?: any
 }
 const InventoryContextData: InventoryContextTypes = {
     dataClassicationsStock: [],
     dataClassifications: [],
     dataLoteSell: [],
     updated: "",
-
+    aggProductsLote: [],
+    stock: []
 }
 
 const InventoryContext = createContext(InventoryContextData)
@@ -111,10 +122,37 @@ export const InventoryProvider = ({children}: any) => {
     const [dataClassications_state, setDataClassifications_state] = useState([])
     const [dataClassifications, setDataClassifications] = useState([])
     const [dataLoteSell, setDataLoteSell] = useState([])
+    const [aggProductsLote, setAggProduct] = useState([])
+    const [stock, setStock] = useState([])
 
     const [classifications_state] = useLazyQuery(GET_ALL_CLASSIFICATIONS_WITH_STATE)
     const [classifications] = useLazyQuery(GET_ALL_CLASSIFICATIONS_WITHOUT_STATE)
     const [lotes] = useLazyQuery(GET_ALL_LOTE_SELL)
+
+    const aggProduct = (v: ClassificationsType[]) => {
+        setAggProduct((prevState) => prevState.concat(v))
+    }
+
+    const deleteProductsLote = (v: number) => {
+        setAggProduct((prevState) => prevState.filter((_, i) => i !== v))
+    }
+
+    const deleteAllProductsLote = () => {
+        setAggProduct([])
+    }
+
+    const aggStock = (t: string) => {
+        setStock(dataClassications_state.filter((value) => value.idRawMaterial.idMaterialType.id === t))
+
+    }
+
+    const deleteStock = (v: number) => {
+        setStock((prevState) => prevState.filter((_, i) => i !== v))
+    }
+
+    const aggStockAfter = (v: ClassificationsType) => {
+        setStock((prevState) => prevState.concat(v))
+    }
 
     useEffect( () => {
         classifications_state({
@@ -151,7 +189,7 @@ export const InventoryProvider = ({children}: any) => {
         .finally()
 
     }, [updated])
-
+    
     return (
         <InventoryContext.Provider 
             value={{
@@ -159,7 +197,15 @@ export const InventoryProvider = ({children}: any) => {
                 dataClassifications,
                 dataLoteSell,
                 updated,
-                setUpdated
+                setUpdated,
+                aggProductsLote,
+                setAggProductsLote: aggProduct,
+                deleteProductsLote,
+                stock,
+                setStock: aggStock,
+                deleteStock,
+                aggStockAfter, 
+                deleteAllProductsLote
             }}
         >
             {children}

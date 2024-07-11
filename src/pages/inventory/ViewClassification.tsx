@@ -73,10 +73,6 @@ const ViewInformation = ({ data }: propsInfo) => {
     const [person, setPerson] = useState(data.idUserInfo.idPerson.firstName + " " + data.idUserInfo.idPerson.lastName)
     const [pricePerKg, setPricePerKg] = useState(data.idRawMaterial.materialPricePerKg)
 
-    const [numberLote, setNumberLote] = useState(data.idLoteSell.id)
-    const [prdQuantity, setPrdQuantity] = useState(data.idLoteSell.productsQuantity)
-    const [sold,] = useState(data.idLoteSell.sold)
-
     return (
         <Dialog open fullScreen>
             <DialogTitle>
@@ -155,11 +151,11 @@ const ViewInformation = ({ data }: propsInfo) => {
                             label="Numero de lote"
                             variant="outlined"
                             fullWidth
-                            onChange={(e) => {
+                            /*onChange={(e) => {
                                 setNumberLote(e.target.value)
-                            }}
+                            }}*/
                             disabled={true}
-                            value={numberLote}
+                            value={data.idLoteSell !== null ? data.idLoteSell.id : "NINGUNO"}
                         />
                         <TextField
                             placeholder="Cantidad de productos"
@@ -167,11 +163,11 @@ const ViewInformation = ({ data }: propsInfo) => {
                             label="Cantidad de productos"
                             variant="outlined"
                             fullWidth
-                            onChange={(e) => {
+                            /*onChange={(e) => {
                                 setPrdQuantity(parseInt(e.target.value))
-                            }}
+                            }}*/
                             disabled={true}
-                            value={prdQuantity}
+                            value={data.idLoteSell !== null ? data.idLoteSell.productsQuantity : "NINGUNO"}
                         />
                         <TextField
                             placeholder="Vendido"
@@ -180,7 +176,7 @@ const ViewInformation = ({ data }: propsInfo) => {
                             variant="outlined"
                             fullWidth
                             disabled={true}
-                            value={sold ? "SI" : "NO"}
+                            value={data.idLoteSell !== null ? data.idLoteSell.sold ? "SI" : "NO" : "NINGUNO"}
                         />
                     </Stack>
                 </Box>

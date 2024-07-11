@@ -7,6 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Fuse from "fuse.js";
 import { useMemo, useState } from "react";
 import ViewClassification from "./ViewClassification";
+import CreateLote from "./CreateLote";
 
 type props = {
     title: string
@@ -41,8 +42,8 @@ const ViewListCompletedClassificated = ({ title, type }: props) => {
         if (type === 1) return (
             <Stack direction="row" spacing={2}>
                 <Typography>CANTIDAD: {dataClassifications.length} </Typography>
-                <Typography>VENDIDOS: {dataClassifications.filter((value) => value.idLoteSell.sold === true).length}</Typography>
-                <Typography>SIN VENDER: {dataClassifications.filter((value) => value.idLoteSell.sold !== true).length} </Typography>
+                <Typography>VENDIDOS: {dataClassifications.filter((value) => value.idLoteSell?.sold === true).length}</Typography>
+                <Typography>SIN VENDER: {dataClassifications.filter((value) => value.idLoteSell?.sold !== true || value.idLoteSell === null).length} </Typography>
             </Stack>
         )
 
@@ -50,7 +51,7 @@ const ViewListCompletedClassificated = ({ title, type }: props) => {
             <Stack direction="row">
                 <Typography sx={{ marginTop: 0.7 }}>CANTIDAD: {dataClassicationsStock.length} </Typography>
                 &nbsp;&nbsp;&nbsp;
-                <Button variant="contained" >CREAR LOTE DE VENTA</Button>
+                <Button onClick={() => navigate('crear-lote')} variant="contained" >CREAR LOTE DE VENTA</Button>
             </Stack>
         )
     }
@@ -100,6 +101,7 @@ const ViewListCompletedClassificated = ({ title, type }: props) => {
             </DialogContent>
             <Routes>    
                 <Route path="/clasificacion/:id" element={<ViewClassification />} />
+                <Route path="/crear-lote" element={<CreateLote />} />
             </Routes>
         </Dialog>
     )
