@@ -85,7 +85,7 @@ const FormLogin = () => {
                 </Typography>
                 <br />
                 <TextField
-                    label="Usuario"
+                    label="Correo Electronico"
                     variant="outlined"
                     type="email"
                     required={true}

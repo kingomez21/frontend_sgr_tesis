@@ -60,7 +60,7 @@ const FormClient = () => {
 
     const submit = () => {
         handleOpen()
-        let dataForm: inputClient = {
+        const dataForm: inputClient = {
             idTypeClient: `${typeClient}`,
             idCompany: data.idCompany ? data.idCompany.id : "1",
             fullName,
@@ -111,7 +111,7 @@ const FormClient = () => {
                             <Select
                                 label="Seleccione el tipo de documento"
                                 onChange={(e) => {
-                                    const typeClient: any = e.target.value
+                                    const typeClient = e.target.value
                                     setTypeClient(typeClient)
                                 }}
                                 value={typeClient}

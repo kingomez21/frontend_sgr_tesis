@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
-import HistoryContext from "./historyContext"
+import HistoryContext from "./HistoryContext"
 import { useContextUserAuth } from "../../../store"
 
 const GET_ALL_CLASSIFICATIONS = gql`

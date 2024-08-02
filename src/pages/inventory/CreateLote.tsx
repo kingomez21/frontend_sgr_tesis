@@ -74,7 +74,7 @@ const ViewForm = ({ materialTypesObj }: propsViewForm) => {
 
     const submit = () => {
         handleOpen()
-        let data = {
+        const data = {
             idMaterialType: materialType,
             productsQuantity: addProducts.length,
             totalWeightLote: addProducts.map((value) => value.totalWeight).reduce((acum, curr) => acum + curr, 0),
