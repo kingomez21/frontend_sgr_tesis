@@ -21,7 +21,7 @@ const Inventory = () => {
     useEffect(() => {
         setTitle("GESTION DE INVENTARIO")
 
-    }, [])
+    })
 
     return (
         isOk ? (

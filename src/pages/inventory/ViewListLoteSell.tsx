@@ -17,14 +17,14 @@ const ViewListLoteSell = () => {
 
     const navigate = useNavigate()
     const [search, setSearch] = useState("")
-    const {dataLoteSell} = useInventoryContext()
+    const {dataLoteSell, updated} = useInventoryContext()
 
     const fuse = new Fuse(dataLoteSell, optionsFuse)
     
     const dataSearh = useMemo(() => {
         if (search === null || search === "") return dataLoteSell
         return fuse.search(search).map((value) => value.item)
-    }, [search])
+    }, [search, updated])
 
     return (
         <Dialog open fullScreen>
@@ -64,7 +64,7 @@ const ViewListLoteSell = () => {
 
             </DialogContent>
             <Routes>
-                <Route path="/lote/:id" element={<ViewLoteSell />} />
+                <Route path="/lote/:id/*" element={<ViewLoteSell />} />
             </Routes>
         </Dialog>
     )

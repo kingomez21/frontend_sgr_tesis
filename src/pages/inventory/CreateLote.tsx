@@ -8,6 +8,7 @@ import { ClassificationsType, materialType } from "./Itypes";
 import { useEffect, useMemo, useState } from "react";
 import { useInventoryContext } from "./Icontext";
 import { useContextUserAuth } from "../../store";
+import Message from "../../components/Message";
 
 const GET_ALL_MATERIALS_TYPE = gql`
 
@@ -51,7 +52,7 @@ const ViewForm = ({ materialTypesObj }: propsViewForm) => {
 
     const navigate = useNavigate()
     const dataUserInfo = useContextUserAuth((state) => state.data)
-    const { aggProductsLote, setStock, stock, deleteAllProductsLote } = useInventoryContext()
+    const { aggProductsLote, setStock, stock, deleteAllProductsLote, setUpdated } = useInventoryContext()
     const [lote,] = useMutation(CREATE_LOTE_SELL)
 
     const [materialType, setMaterialType] = useState("10")
@@ -59,7 +60,20 @@ const ViewForm = ({ materialTypesObj }: propsViewForm) => {
         return aggProductsLote.filter((value) => value.idRawMaterial.idMaterialType.id === materialType)
     }, [aggProductsLote])
 
+    const [open, setOpen] = useState(false)
+    const [msg, setMsg] = useState("")
+    const [statusErr, setStatusErr] = useState(false)
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
     const submit = () => {
+        handleOpen()
         let data = {
             idMaterialType: materialType,
             productsQuantity: addProducts.length,
@@ -67,15 +81,23 @@ const ViewForm = ({ materialTypesObj }: propsViewForm) => {
             idProducts: addProducts.map((value) => value.id).toString(),
             idCompany: dataUserInfo.idCompany.id
         }
-        console.log(data)
         lote({
             variables:{
                 lote: data
             }
         })
-        .then((data) => console.log(data.data.lote))
-        .catch((err) => console.error(err))
-        .finally()
+        .then((data) => {
+            setMsg(data.data.lote.message)
+            setTimeout( () => handleClose(), 6000)
+            deleteAllProductsLote()
+            setUpdated("create-lote")
+        })
+        .catch(() => {
+            setStatusErr(true)
+            setMsg("Ocurrio un error inesperado")
+            setTimeout( () => handleClose(), 6000)
+        })
+       
         
     }
 
@@ -86,6 +108,7 @@ const ViewForm = ({ materialTypesObj }: propsViewForm) => {
 
     return (
         <Dialog open fullScreen>
+            <Message band={open} message={msg} status={statusErr ? false : true} />
             <DialogTitle>
                 <Stack direction="row" spacing={2} padding={2} margin={2} justifyContent="space-between">
                     <Stack direction="row">
@@ -169,11 +192,11 @@ const ViewListProducts = ({ data, typeFuntions }: propsListProduct) => {
 
         return (
             typeFuntions ? (
-                <Button variant="contained"  onClick={() => Agg()}>
+                <Button variant="contained" size="small"  onClick={() => Agg()}>
                     <AddIcon />
                 </Button>
             ) : (
-                <Button variant="contained" color="error" onClick={() => Delete()}>
+                <Button variant="contained" size="small" color="error" onClick={() => Delete()}>
                     <RemoveIcon />
                 </Button>
             )

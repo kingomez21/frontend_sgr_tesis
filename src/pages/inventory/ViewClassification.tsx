@@ -142,6 +142,8 @@ const ViewInformation = ({ data }: propsInfo) => {
                         />
                     </Stack>
                     <br /><br />
+                    { data.idLoteSell?.sold !== null && data.idLoteSell?.sold === true ? 
+                     <>
                     <Typography>INFORMACION DE LOTE DE VENTA</Typography>
                     <br />
                     <Stack direction="row" spacing={2}>
@@ -179,6 +181,9 @@ const ViewInformation = ({ data }: propsInfo) => {
                             value={data.idLoteSell !== null ? data.idLoteSell.sold ? "SI" : "NO" : "NINGUNO"}
                         />
                     </Stack>
+                    </>
+                    : (<></>)
+                    }
                 </Box>
 
             </DialogContent>

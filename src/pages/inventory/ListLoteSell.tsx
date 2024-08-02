@@ -20,7 +20,7 @@ const ListLoteSell = ({data, viewStyle}: props) => {
 
     return (
         <Stack direction="row" >
-                <List component={Grid} container sx={{ overflow: 'auto', maxHeight: 400 }}>
+                <List component={Grid} container sx={{ overflow: 'auto', maxHeight: 500 }}>
                     {
                         data?.length > 0 ? (
                             data?.map((value) => (

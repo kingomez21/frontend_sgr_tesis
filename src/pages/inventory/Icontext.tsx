@@ -1,4 +1,4 @@
-import { gql, useLazyQuery } from "@apollo/client"
+import { gql, useQuery } from "@apollo/client"
 import { createContext, useContext, useEffect, useState } from "react"
 import { ClassificationsType, LoteSellType } from "./Itypes"
 import { useContextUserAuth } from "../../store"
@@ -93,15 +93,15 @@ type InventoryContextTypes = {
     dataClassifications: ClassificationsType[]
     dataLoteSell: LoteSellType[]
     updated: string
-    setUpdated?: any
+    setUpdated?
     aggProductsLote: ClassificationsType[]
-    setAggProductsLote?: any
-    deleteProductsLote?: any
+    setAggProductsLote?
+    deleteProductsLote?
     stock: ClassificationsType[]
-    setStock?: any
-    deleteStock?: any
-    aggStockAfter?: any
-    deleteAllProductsLote?: any
+    setStock?
+    deleteStock?
+    aggStockAfter?
+    deleteAllProductsLote?
 }
 const InventoryContextData: InventoryContextTypes = {
     dataClassicationsStock: [],
@@ -115,19 +115,29 @@ const InventoryContextData: InventoryContextTypes = {
 const InventoryContext = createContext(InventoryContextData)
 
 
-export const InventoryProvider = ({children}: any) => {
+export const InventoryProvider = ({children}) => {
 
     const [updated, setUpdated] = useState("")
     const data = useContextUserAuth((state) => state.data)
-    const [dataClassications_state, setDataClassifications_state] = useState([])
-    const [dataClassifications, setDataClassifications] = useState([])
-    const [dataLoteSell, setDataLoteSell] = useState([])
     const [aggProductsLote, setAggProduct] = useState([])
     const [stock, setStock] = useState([])
 
-    const [classifications_state] = useLazyQuery(GET_ALL_CLASSIFICATIONS_WITH_STATE)
-    const [classifications] = useLazyQuery(GET_ALL_CLASSIFICATIONS_WITHOUT_STATE)
-    const [lotes] = useLazyQuery(GET_ALL_LOTE_SELL)
+    const cls_state = useQuery(GET_ALL_CLASSIFICATIONS_WITH_STATE, {
+        variables: {
+            state: false,
+            idCompany: `${data.idCompany.id}`
+        }
+    })
+    const cls = useQuery(GET_ALL_CLASSIFICATIONS_WITHOUT_STATE, {
+        variables:{
+            idCompany: `${data.idCompany.id}`
+        }
+    })
+    const lotes = useQuery(GET_ALL_LOTE_SELL, {
+        variables: {
+            idCompany: `${data.idCompany.id}`
+        }
+    })
 
     const aggProduct = (v: ClassificationsType[]) => {
         setAggProduct((prevState) => prevState.concat(v))
@@ -142,7 +152,7 @@ export const InventoryProvider = ({children}: any) => {
     }
 
     const aggStock = (t: string) => {
-        setStock(dataClassications_state.filter((value) => value.idRawMaterial.idMaterialType.id === t))
+        setStock(cls_state.data.classifications.filter((value) => value.idRawMaterial.idMaterialType.id === t))
 
     }
 
@@ -155,47 +165,17 @@ export const InventoryProvider = ({children}: any) => {
     }
 
     useEffect( () => {
-        classifications_state({
-            variables: {
-                state: false,
-                idCompany: `${data.idCompany.id}`
-            }
-        }).then( (data) => {
-            setDataClassifications_state(data.data.classifications)
-            data.refetch()
-        }).catch((err) => console.error(err))
-        .finally()
-
-        classifications({
-            variables:{
-                idCompany: `${data.idCompany.id}`
-            }
-        }).then( (data) => {
-            setDataClassifications(data.data.classifications)
-            data.refetch()
-        }).catch((err) => console.error(err))
-        .finally()
-
-        lotes({
-            variables: {
-                idCompany: `${data.idCompany.id}`
-            }
-        })
-        .then((data) => {
-            setDataLoteSell(data.data.lotes)
-            data.refetch()
-        })
-        .catch((err) => console.log(err))
-        .finally()
-
+        cls_state.refetch()
+        cls.refetch()
+        lotes.refetch()
     }, [updated])
     
     return (
         <InventoryContext.Provider 
             value={{
-                dataClassicationsStock: dataClassications_state,
-                dataClassifications,
-                dataLoteSell,
+                dataClassicationsStock: cls_state.loading ? [] : cls_state.data.classifications,
+                dataClassifications: cls.loading ? [] : cls.data.classifications,
+                dataLoteSell: lotes.loading ? [] : lotes.data.lotes,
                 updated,
                 setUpdated,
                 aggProductsLote,

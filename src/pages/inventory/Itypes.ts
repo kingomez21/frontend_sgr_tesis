@@ -11,7 +11,7 @@ type companyType = {
     nit: string
 }
 
-type idLoteSellType = {
+export type idLoteSellType = {
     id: string
     productsQuantity: number
     sold: boolean
@@ -39,6 +39,28 @@ export type ClassificationsType = {
     createdAt: string
 }
 
+type ClientType = {
+    nit: string
+    fullName: string
+    address: string
+    place: string
+    cellphone: string
+    email: string
+}
+
+type PayType = {
+    name: string
+}
+
+type ReceiptSellType = {
+    id: string
+    client: ClientType
+    date: string
+    perkg: number
+    totalPrice: number
+    pay: PayType
+}
+
 export type LoteSellType = {
     id: string
     material: materialType
@@ -46,6 +68,7 @@ export type LoteSellType = {
     total: number
     sold: boolean
     cls?: ClassificationsType[]
+    sell?: ReceiptSellType[]
     createdAt: string
 } 
 
