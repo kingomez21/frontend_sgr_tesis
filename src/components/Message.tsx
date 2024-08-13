@@ -9,6 +9,7 @@ type props = {
 const Message = ({ band, message, status }: props) => {
 
     const handleClose = (event, reason?: string) => {
+        event
         if (reason === 'clickaway') {
             return;
         }
