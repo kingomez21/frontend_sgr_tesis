@@ -91,31 +91,18 @@ export const NavigateAppBar = () => {
 
   const navigate = useNavigate()
   const payload = useContextUserAuth((state) => state.payload)
+  const setPayload = useContextUserAuth((state) => state.setPayload)
   const setData = useContextUserAuth((state) => state.setData)
   const title = useContextUserAuth((state) => state.title)
   const data = useContextUserAuth((state) => state.data)
-  //const token = useContextUserAuth((state) => state.token)
-  //const setPermissions = useContextUserAuth((state) => state.setPermissions)
-  const [getUserAuthInfo, { loading }] = useLazyQuery(PERSON_AUTH)
-  //const [permissionsUser,] = useLazyQuery(GET_PERMISSIONS_USER)
-  /*const [close,] = useMutation(CLOSE_SESSION, {
-    context: {
-      "Authorization": `JWT ${token}`
-    },
-    onCompleted: (data) => {
-      if (data) console.log(data.close.message)
-    }
-  })
 
-  const closeSession = async () => {
-    const res = await close()
-    console.log(res)
-    
-    .then()
-    .catch((err) => console.log(err))
-    .finally()
-    //if(res.data.close.message) console.log(res)
-  }*/
+  const [getUserAuthInfo, { loading }] = useLazyQuery(PERSON_AUTH)
+  
+  const logout = () => {
+      setPayload(null)
+      setData(null)
+      navigate('/login')
+  }
 
   useEffect(() => {
     if (payload === null) {
@@ -245,7 +232,7 @@ export const NavigateAppBar = () => {
               >
                 {settings.map((setting) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Button variant='text' size='small' onClick={() => navigate('/login')}>
+                    <Button variant='text' size='small' onClick={() => logout()}>
                       <Typography textAlign="center" >{setting}</Typography>
                     </Button>
                   </MenuItem>
@@ -272,8 +259,8 @@ export const NavigateAppBar = () => {
 }
 
 type props = {
-  data: any
-  permission?: any
+  data
+  permission?
 }
 
 const MainWindow = ({ data }: props) => {

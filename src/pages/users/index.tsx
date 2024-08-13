@@ -10,7 +10,7 @@ import FormProvider from "./FormProvider"
 import VerClientProvider from "./VerClientProvider"
 import VerUsers from "./VerUsers"
 import AsignPermission from "./AsignPermission"
-import { gql, useQuery } from "@apollo/client"
+import { DocumentNode, gql, useQuery } from "@apollo/client"
 import { getPermission } from "../../hooks/getPermission";
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -47,7 +47,7 @@ const Users = () => {
 
     useEffect(() => {
         setTitle("GESTION DE USUARIOS")
-    }, [])
+    })
 
     return (
         isOk ? (
@@ -172,7 +172,7 @@ query getAllUsers($company: String){
 `
 
 type propsListUsers = {
-    idCompany: any
+    idCompany: string
 }
 
 const DataListUsers = ({ idCompany }: propsListUsers) => {
@@ -224,8 +224,8 @@ type counters = {
 type propsListCounts = {
     title: string
     counts: counters
-    query: any
-    variables?: any
+    query: DocumentNode
+    variables?
 }
 
 const ListCounts = ({ title, counts, query, variables }: propsListCounts) => {

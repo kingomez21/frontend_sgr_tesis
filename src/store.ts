@@ -1,18 +1,18 @@
 import {create} from 'zustand'
 
 type contextUserType = {
-    data: any
+    data
     token: string
     payload: string
     title: string
-    permissions: any
-    refreshPermission: any
-    setData: (value: {}) => void
-    setToken: (value: any) => void
-    setPayload: (value: any) => void
-    setTitle: (value: any) => void
-    setPermissions: (value: any) => void
-    setRefreshPermission: (value: any) => void
+    permissions
+    refreshPermission
+    setData: (value) => void
+    setToken: (value) => void
+    setPayload: (value) => void
+    setTitle: (value) => void
+    setPermissions: (value) => void
+    setRefreshPermission: (value) => void
 }
 
 
