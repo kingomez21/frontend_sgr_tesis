@@ -1,25 +1,156 @@
-import { Box, Typography } from "@mui/material"
-import { useEffect } from "react"
+import { Box, Grid, Stack, TextField, Typography } from "@mui/material"
+import { useEffect, useState } from "react"
 import { useContextUserAuth } from "../../store"
 import { getPermission } from "../../hooks/getPermission"
+import dayjs from "dayjs"
+import { gql, useQuery } from "@apollo/client"
+import PieGraphics from "./graphics/PieGraphics"
+import BarGraphics from "./graphics/BarGraphics"
+import { Bar, Rectangle } from "recharts"
 
 const Reports = () => {
 
     const setTitle = useContextUserAuth((state) => state.setTitle)
-    //const permissions = useContextUserAuth((state) => state.permissions)
     const isOk = getPermission("modulo reporte")
 
+    const [dateInit, setDateInit] = useState(dayjs().subtract((new Date().getDate() - 1), "d").format("YYYY-MM-DDThh:mm"))
+    const [dateEnd, setDateEnd] = useState(dayjs().format("YYYY-MM-DDThh:mm"))
+    
     useEffect(() => {
         setTitle("GESTION DE REPORTES")
-    }, [])
+    },)
     return (
-        isOk ?(
-        <Box>
-            <Typography>Funciona</Typography>
-        </Box>
+        isOk ? (
+            <Box marginLeft={5} marginRight={5}>
+                <Stack direction="row" justifyContent="flex-end">
+                    <Stack direction="row" spacing={2}>
+                        <TextField
+                            type="datetime-local"
+                            value={dateInit}
+                            onChange={(e) => setDateInit(e.target.value)}
+                        />
+                        <TextField
+                            type="datetime-local"
+                            value={dateEnd}
+                            onChange={(e) => setDateEnd(e.target.value)}
+                        />
+                    </Stack>
+                </Stack>
+                <br />
+                <Grid container columns={{xs: 6, sm: 12, md: 12}} spacing={2}>
+                    <Grid item xs={6} >
+                        <ViewEmployes />
+                    </Grid>
+
+                    <Grid item xs={6} >
+                        <ViewSpendOrSell dateInit={dayjs(dateInit).format("YYYY-MM-DD HH:mm:ss[TZ]")} dateEnd={dayjs(dateEnd).format("YYYY-MM-DD HH:mm:ss[TZ]")} />
+                    </Grid>
+
+                    <Grid item xs={6} sm={12} md={12}>
+                        <ViewMaterialTypeSold dateInit={dayjs(dateInit).format("YYYY-MM-DD HH:mm:ss[TZ]")} dateEnd={dayjs(dateEnd).format("YYYY-MM-DD HH:mm:ss[TZ]")} />
+                    </Grid>
+
+                </Grid>
+
+            </Box>
         ) :
-        <Typography>No tiene permisos</Typography>
+            <Typography>No tiene permisos</Typography>
     )
 }
+
+const GET_STATE_EMPLOYES = gql`
+query GetStateEmployed($idCompany: String){
+  state: getStateEmployed(idCompany: $idCompany){
+    name
+    value
+  }
+}
+
+`
+
+const ViewEmployes = () => {
+    const dataUser = useContextUserAuth((state) => state.data)
+    const data = useQuery(GET_STATE_EMPLOYES, {
+        variables: {
+            idCompany: `${dataUser.idCompany.id}`
+        }
+    })
+    return (
+        data.loading ? "Cargando.." : <PieGraphics data={data.data.state} title="ESTADO DE LOS EMPLEDOS"/>
+
+    )
+}
+
+type ViewsType = {
+    dateInit: string
+    dateEnd: string
+}
+
+const GET_SPEND_OR_SELL = gql`
+    query getSpendOrsell($idCompany: String, $dateInit: String, $dateEnd: String){
+        getSpendOrSell(dateInit: $dateInit , dateEnd: $dateEnd, idCompany: $idCompany){
+            name
+            compra
+            venta
+    }
+    }
+
+`
+
+const ViewSpendOrSell = ({dateInit, dateEnd}: ViewsType) => {
+
+    const dataUser = useContextUserAuth((state) => state.data)
+    const {data, loading} = useQuery(GET_SPEND_OR_SELL, {
+        variables: {
+            idCompany: `${dataUser.idCompany.id}`,
+            dateInit,
+            dateEnd
+        }
+    })
+
+
+    return (
+        loading ? (
+            "Cargando.."
+        ) : (
+        <BarGraphics data={data.getSpendOrSell} title={"CANTIDAD POR TIPO DE PAGO DE COMPRA VS VENTA"}>
+            <Bar dataKey="compra" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+            <Bar dataKey="venta" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
+        </BarGraphics>
+        )
+    )
+}
+
+const GET_MATERIAL_TYPE_SOLD = gql`
+    query getMaterialTypeSold($idCompany: String, $dateInit: String, $dateEnd: String){
+        getMaterialTypeSold(idCompany: $idCompany, dateInit: $dateInit, dateEnd: $dateEnd){
+            name
+            vendidos
+            sinVender
+        }
+}   
+`
+
+const ViewMaterialTypeSold = ({dateInit, dateEnd}: ViewsType) => {
+    const dataUser = useContextUserAuth((state) => state.data)
+    const {data, loading} = useQuery(GET_MATERIAL_TYPE_SOLD, {
+        variables: {
+            idCompany: `${dataUser.idCompany.id}`,
+            dateInit,
+            dateEnd
+        }
+    })
+    return (
+        loading ? (
+            "Cargando.."
+        ) : (
+            <BarGraphics data={data.getMaterialTypeSold} title={"CANTIDAD DE LOTES VENDIDOS VS SIN VENDER"}>
+                <Bar dataKey="vendidos" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+                <Bar dataKey="sinVender" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
+            </BarGraphics>
+        )
+    )
+}
+
 
 export default Reports
