@@ -234,7 +234,7 @@ const ListCounts = ({ title, counts, query, variables }: propsListCounts) => {
 
     useEffect(() => {
         refetch()
-    }, [])
+    },)
 
     return (
         <Stack direction="row" justifyContent="space-between" marginLeft={5} marginRight={5} marginTop={5}>

@@ -9,7 +9,7 @@ type barProps = {
 
 const BarGraphics = ({data, title, children}: barProps) => {
     return (
-        <Paper>
+        <Paper sx={{pb: 3}}>
             <br />
             <Stack direction="row" justifyContent="center">
                 <Typography>{title}</Typography>

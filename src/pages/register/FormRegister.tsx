@@ -33,18 +33,18 @@ type inputPerson = {
     identityNumber: number
     firstName: string
     lastName: string
-    documentType: any
+    documentType
     homeAddress: string
     neighborhood: string
     phoneNumber1: string
     phoneNumber2: string
-    gender: any
+    gender
     admissionDate: string
     jobPosition: string
     birthday: string
-    maritalStatus: any
-    bloodType: any
-    company: any
+    maritalStatus
+    bloodType
+    company
     email: string
 }
 
@@ -70,7 +70,7 @@ const RegisterForm = () => {
     const [email, setEmail] = useState("")
     const [direction, setDirection] = useState("")
     const [barrio, setBarrio] = useState("")
-    const [company, setCompany] = useState(2)
+    const [company, setCompany] = useState("2")
     const [jopPosition, setJopPosition] = useState("2")
     const [admissionDate, setAdmissionDate] = useState("")
 
@@ -217,7 +217,7 @@ const RegisterForm = () => {
                         <Select
                             label="Seleccione el tipo de documento"
                             onChange={(e) => {
-                                const document_value: any = e.target.value
+                                const document_value = e.target.value
                                 setDocument(document_value)
                             }}
                             value={document}
@@ -252,7 +252,7 @@ const RegisterForm = () => {
                         <Select
                             label="Seleccione su genero"
                             onChange={(e) => {
-                                const gender_value: any = e.target.value 
+                                const gender_value = e.target.value 
                                 setGenderV(gender_value)
                             }}
                             value={genderV}
@@ -278,7 +278,7 @@ const RegisterForm = () => {
                         <Select
                             label="Seleccione su tipo de sangre"
                             onChange={(e) => {
-                                const blood: any = e.target.value
+                                const blood = e.target.value
                                 setBlood(blood)
                             }}
                             value={blood}
@@ -304,7 +304,7 @@ const RegisterForm = () => {
                         <Select
                             label="Seleccione su estado civil"
                             onChange={(e) => {
-                                const marital_value: any = e.target.value
+                                const marital_value = e.target.value
                                 setMaritalStatus(marital_value)
                             }}
                             value={maritalStatus}
@@ -419,7 +419,7 @@ const RegisterForm = () => {
                         <Select
                             label="Seleccione la empresa"
                             onChange={(e) => {
-                                const company_value: any = e.target.value
+                                const company_value = e.target.value
                                 setCompany(company_value)
                             }}
                             value={company}
@@ -448,7 +448,7 @@ const RegisterForm = () => {
                         <Select
                             label="Seleccione su estado civil"
                             onChange={(e) => {
-                                const job_position: any = e.target.value
+                                const job_position = e.target.value
                                 setJopPosition(""+job_position)
                             }}
                             value={jopPosition}

@@ -388,7 +388,7 @@ const FormCreateSell = ({ clients, paytypes, idCompany, idLote}: propsFormSell) 
 
     const submit = () => {
         handleOpen()
-        let data = {
+        const data = {
             idClient,
             idPayType,
             perkg,

@@ -17,7 +17,7 @@ const statusActive = [
 
 type dataProps = {
     id?: string
-    type: any
+    type
     fullName: string
     address: string
     place: string
@@ -164,7 +164,7 @@ const View = ({data, types}: props) => {
 
     const submit = () => {
         handleOpen()
-        let dataForm: updateData = {
+        const dataForm: updateData = {
             //type,
             fullName,
             address,
@@ -214,7 +214,7 @@ const View = ({data, types}: props) => {
                             <Select
                                 label="Seleccione el tipo de documento"
                                 onChange={(e) => {
-                                    const typeClient: any = e.target.value
+                                    const typeClient = e.target.value
                                     setType(typeClient)
                                 }}
                                 value={type}
@@ -250,7 +250,7 @@ const View = ({data, types}: props) => {
                             <Select
                                 label="Estado"
                                 onChange={(e) => {
-                                    const status: any = e.target.value
+                                    const status = e.target.value
                                     setIsActive(status)
                                 }}
                                 value={isActive}

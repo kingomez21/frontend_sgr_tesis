@@ -21,7 +21,7 @@ type props = {
     namePerson?: string
     dataPermision?: permision[]
     idUser?: string
-    refresh?: any
+    refresh?
 }
 
 const GET_PERMISSIONS = gql`
@@ -242,7 +242,7 @@ const ViewPermission = ({dataPermision}: props) => {
                         <Select
                             label="Seleccione un estado"
                             onChange={(e) => {
-                                const state: any = e.target.value
+                                const state = e.target.value
                                 setValueState(state)
                             }}
                             value={valueState}
@@ -353,7 +353,7 @@ const ViewFormAsingPermission = ({ idUser }: props) => {
                         <Select
                             label="Seleccione el modulo"
                             onChange={(e) => {
-                                const moduloName: any = e.target.value
+                                const moduloName = e.target.value
                                 setNameView(moduloName)
                             }}
                             value={nameView}

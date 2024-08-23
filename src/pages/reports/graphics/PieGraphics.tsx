@@ -14,7 +14,7 @@ type pieProps = {
 const PieGraphics = ({ data, title }: pieProps) => {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#1a1a92', '#289415'];
     return (
-        <Paper sx={{p: 0, m: 0}}>
+        <Paper sx={{pb: 3, m: 0}}>
             <br />
             <Stack direction="row" justifyContent="center">
                 <Typography>{title}</Typography>
