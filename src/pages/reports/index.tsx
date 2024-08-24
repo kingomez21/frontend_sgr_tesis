@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, TextField, Typography } from "@mui/material"
+import { Box, Button, Grid, Stack, TextField, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useContextUserAuth } from "../../store"
 import { getPermission } from "../../hooks/getPermission"
@@ -7,22 +7,46 @@ import { gql, useQuery } from "@apollo/client"
 import PieGraphics from "./graphics/PieGraphics"
 import BarGraphics from "./graphics/BarGraphics"
 import { Bar, Rectangle } from "recharts"
+import DataLoading from "../../components/DataLoading"
 
 const Reports = () => {
 
     const setTitle = useContextUserAuth((state) => state.setTitle)
+    const dataUser = useContextUserAuth((state) => state.data)
     const isOk = getPermission("modulo reporte")
 
     const [dateInit, setDateInit] = useState(dayjs().subtract((new Date().getDate() - 1), "d").format("YYYY-MM-DDThh:mm"))
     const [dateEnd, setDateEnd] = useState(dayjs().format("YYYY-MM-DDThh:mm"))
-    
+
+    const downloadExcel = (e) => {
+        e.preventDefault();
+        fetch("http://localhost:8000/api/v1/excel/"+ dataUser.idCompany.id)
+            .then((res) => {
+                if (!res.ok)
+                    return alert("error")
+
+                res.blob().then((blob) => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `ReporteExcel_${dayjs().format("YYYY-MM-DDThh:mm")}.xlsx`;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                });
+            })
+            .finally()
+    }
+
     useEffect(() => {
         setTitle("GESTION DE REPORTES")
     },)
     return (
         isOk ? (
             <Box marginLeft={5} marginRight={5} paddingBottom={2}>
-                <Stack direction="row" justifyContent="flex-end">
+                <Stack direction="row" justifyContent="space-between">
+                    <Button onClick={(e) => downloadExcel(e)}>
+                        <Typography>DESCARGAR EXCEL</Typography>
+                    </Button>
                     <Stack direction="row" spacing={2}>
                         <TextField
                             type="datetime-local"
@@ -37,7 +61,7 @@ const Reports = () => {
                     </Stack>
                 </Stack>
                 <br />
-                <Grid container columns={{xs: 6, sm: 12, md: 12}} spacing={2}>
+                <Grid container columns={{ xs: 6, sm: 12, md: 12 }} spacing={2}>
 
                     <Grid item xs={6} >
                         <ViewEmployes />
@@ -58,9 +82,17 @@ const Reports = () => {
                     <Grid item xs={6} sm={6} md={6}>
                         <ViewClassificationProcedureType dateInit={dayjs(dateInit).format("YYYY-MM-DD HH:mm:ss[TZ]")} dateEnd={dayjs(dateEnd).format("YYYY-MM-DD HH:mm:ss[TZ]")} />
                     </Grid>
-                    
+
                     <Grid item xs={6} >
                         <ViewTypesProviders />
+                    </Grid>
+
+                    <Grid item xs={6} sm={12} md={12}>
+                        <ViewCollectionsPerProvider dateInit={dayjs(dateInit).format("YYYY-MM-DD HH:mm:ss[TZ]")} dateEnd={dayjs(dateEnd).format("YYYY-MM-DD HH:mm:ss[TZ]")} />
+                    </Grid>
+
+                    <Grid item xs={6} sm={12} md={12}>
+                        <ViewSellPerClients dateInit={dayjs(dateInit).format("YYYY-MM-DD HH:mm:ss[TZ]")} dateEnd={dayjs(dateEnd).format("YYYY-MM-DD HH:mm:ss[TZ]")} />
                     </Grid>
 
                     <Grid item xs={6} >
@@ -101,7 +133,7 @@ const ViewEmployes = () => {
         }
     })
     return (
-        data.loading ? "Cargando.." : <PieGraphics data={data.data.state} title="ESTADO DE LOS EMPLEDOS"/>
+        data.loading ? <DataLoading /> : <PieGraphics data={data.data.state} title="ESTADO DE LOS EMPLEDOS" />
 
     )
 }
@@ -122,10 +154,10 @@ const GET_SPEND_OR_SELL = gql`
 
 `
 
-const ViewSpendOrSell = ({dateInit, dateEnd}: ViewsType) => {
+const ViewSpendOrSell = ({ dateInit, dateEnd }: ViewsType) => {
 
     const dataUser = useContextUserAuth((state) => state.data)
-    const {data, loading} = useQuery(GET_SPEND_OR_SELL, {
+    const { data, loading } = useQuery(GET_SPEND_OR_SELL, {
         variables: {
             idCompany: `${dataUser.idCompany.id}`,
             dateInit,
@@ -136,12 +168,12 @@ const ViewSpendOrSell = ({dateInit, dateEnd}: ViewsType) => {
 
     return (
         loading ? (
-            "Cargando.."
+            <DataLoading />
         ) : (
-        <BarGraphics data={data.getSpendOrSell} title={"CANTIDAD POR TIPO DE PAGO DE COMPRA VS VENTA"}>
-            <Bar dataKey="compra" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
-            <Bar dataKey="venta" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
-        </BarGraphics>
+            <BarGraphics data={data.getSpendOrSell} title={"CANTIDAD POR TIPO DE PAGO DE COMPRA VS VENTA"}>
+                <Bar dataKey="compra" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+                <Bar dataKey="venta" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
+            </BarGraphics>
         )
     )
 }
@@ -156,9 +188,9 @@ const GET_MATERIAL_TYPE_SOLD = gql`
 }   
 `
 
-const ViewMaterialTypeSold = ({dateInit, dateEnd}: ViewsType) => {
+const ViewMaterialTypeSold = ({ dateInit, dateEnd }: ViewsType) => {
     const dataUser = useContextUserAuth((state) => state.data)
-    const {data, loading} = useQuery(GET_MATERIAL_TYPE_SOLD, {
+    const { data, loading } = useQuery(GET_MATERIAL_TYPE_SOLD, {
         variables: {
             idCompany: `${dataUser.idCompany.id}`,
             dateInit,
@@ -167,7 +199,7 @@ const ViewMaterialTypeSold = ({dateInit, dateEnd}: ViewsType) => {
     })
     return (
         loading ? (
-            "Cargando.."
+            <DataLoading />
         ) : (
             <BarGraphics data={data.getMaterialTypeSold} title={"CANTIDAD DE LOTES VENDIDOS VS SIN VENDER"}>
                 <Bar dataKey="vendidos" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
@@ -187,9 +219,9 @@ query getClassificationProcedureType($idCompany: String, $dateInit: String, $dat
 
 `
 
-const ViewClassificationProcedureType = ({dateInit, dateEnd}: ViewsType) => {
+const ViewClassificationProcedureType = ({ dateInit, dateEnd }: ViewsType) => {
     const dataUser = useContextUserAuth((state) => state.data)
-    const {data, loading} = useQuery(GET_CLASSIFICATION_PROCEDURE_TYPE, {
+    const { data, loading } = useQuery(GET_CLASSIFICATION_PROCEDURE_TYPE, {
         variables: {
             idCompany: `${dataUser.idCompany.id}`,
             dateInit,
@@ -198,7 +230,7 @@ const ViewClassificationProcedureType = ({dateInit, dateEnd}: ViewsType) => {
     })
     return (
         loading ? (
-            "Cargando..."
+            <DataLoading />
         ) : (
             <BarGraphics data={data.count} title={"CANTIDAD DE PRODUCTOS CLASIFICADOS POR TIPO DE PROCEDIMIENTO"}>
                 <Bar dataKey="cantidad" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
@@ -207,7 +239,7 @@ const ViewClassificationProcedureType = ({dateInit, dateEnd}: ViewsType) => {
     )
 }
 
-const GET_TYPE_PROVIDERS =gql`
+const GET_TYPE_PROVIDERS = gql`
 query getTypeProviders($idCompany: String){
   getTypeProviders(idCompany: $idCompany){
     name
@@ -219,14 +251,14 @@ query getTypeProviders($idCompany: String){
 
 const ViewTypesProviders = () => {
     const dataUser = useContextUserAuth((state) => state.data)
-    const {data, loading} = useQuery(GET_TYPE_PROVIDERS, {
+    const { data, loading } = useQuery(GET_TYPE_PROVIDERS, {
         variables: {
             idCompany: `${dataUser.idCompany.id}`,
         }
     })
     return (
         loading ? (
-            "Cargando.."
+            <DataLoading />
         ) : (
             <PieGraphics data={data.getTypeProviders} title="CANTIDAD POR TIPO DE PROVEEDOR" />
         )
@@ -245,14 +277,14 @@ query getTypeClients($idCompany: String){
 
 const ViewTypeClients = () => {
     const dataUser = useContextUserAuth((state) => state.data)
-    const {data, loading} = useQuery(GET_TYPE_CLIENTS, {
+    const { data, loading } = useQuery(GET_TYPE_CLIENTS, {
         variables: {
             idCompany: `${dataUser.idCompany.id}`,
         }
     })
     return (
         loading ? (
-            "Cargando.."
+            <DataLoading />
         ) : (
             <PieGraphics data={data.getTypeClients} title="CANTIDAD POR TIPO DE CLIENTE" />
         )
@@ -269,10 +301,10 @@ query getClassificationMaterialType($idCompany: String, $dateInit: String, $date
 }
 `
 
-const ViewClassificationMaterialType = ({dateInit, dateEnd}: ViewsType) => {
+const ViewClassificationMaterialType = ({ dateInit, dateEnd }: ViewsType) => {
 
     const dataUser = useContextUserAuth((state) => state.data)
-    const {data, loading} = useQuery(GET_CLASSIFICATION_MATERIAL_TYPE, {
+    const { data, loading } = useQuery(GET_CLASSIFICATION_MATERIAL_TYPE, {
         variables: {
             idCompany: `${dataUser.idCompany.id}`,
             dateInit,
@@ -281,7 +313,7 @@ const ViewClassificationMaterialType = ({dateInit, dateEnd}: ViewsType) => {
     })
     return (
         loading ? (
-            "Cargando..."
+            <DataLoading />
         ) : (
             <BarGraphics data={data.count} title={"CANTIDAD DE PRODUCTOS CLASIFICADOS POR TIPO DE MATERIAL"}>
                 <Bar dataKey="cantidad" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
@@ -300,9 +332,9 @@ query getRawMaterialType($idCompany: String, $dateInit: String, $dateEnd: String
 
 `
 
-const ViewRawMaterialPerType = ({dateInit, dateEnd}: ViewsType) => {
+const ViewRawMaterialPerType = ({ dateInit, dateEnd }: ViewsType) => {
     const dataUser = useContextUserAuth((state) => state.data)
-    const {data, loading} = useQuery(GET_RAW_MATERIAL_PER_TYPE, {
+    const { data, loading } = useQuery(GET_RAW_MATERIAL_PER_TYPE, {
         variables: {
             idCompany: `${dataUser.idCompany.id}`,
             dateInit,
@@ -311,7 +343,7 @@ const ViewRawMaterialPerType = ({dateInit, dateEnd}: ViewsType) => {
     })
     return (
         loading ? (
-            "Cargando.."
+            <DataLoading />
         ) : (
             <PieGraphics data={data.count} title="CANTIDAD DE MATERIA PRIMA POR TIPO DE MATERIAL" />
         )
@@ -328,10 +360,10 @@ query getClassificationUser($idCompany: String, $dateInit: String, $dateEnd: Str
 }
 `
 
-const ViewUserClassificationSoldOrNotSold = ({dateInit, dateEnd}: ViewsType) => {
+const ViewUserClassificationSoldOrNotSold = ({ dateInit, dateEnd }: ViewsType) => {
 
     const dataUser = useContextUserAuth((state) => state.data)
-    const {data, loading} = useQuery(GET_USER_CLASSIFICATION_SOLD, {
+    const { data, loading } = useQuery(GET_USER_CLASSIFICATION_SOLD, {
         variables: {
             idCompany: `${dataUser.idCompany.id}`,
             dateInit,
@@ -340,7 +372,7 @@ const ViewUserClassificationSoldOrNotSold = ({dateInit, dateEnd}: ViewsType) => 
     })
     return (
         loading ? (
-            "Cargando.."
+            <DataLoading />
         ) : (
             <BarGraphics data={data.count} title={"CANTIDAD DE CLASIFICACIONES POR EMPLEADO VENDIDOS VS SIN VENDER"}>
                 <Bar dataKey="vendidos" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
@@ -349,5 +381,65 @@ const ViewUserClassificationSoldOrNotSold = ({dateInit, dateEnd}: ViewsType) => 
         )
     )
 }
+
+const GET_COLLECTIONS_PER_PROVIDERS = gql`
+query getCollectionsPerProvider($idCompany: String, $dateInit: String, $dateEnd: String){
+  count: getCollectionPerProvider(idCompany: $idCompany, dateInit: $dateInit, dateEnd: $dateEnd){
+    name
+    cantidad
+  }
+}
+`
+
+const ViewCollectionsPerProvider = ({ dateInit, dateEnd }: ViewsType) => {
+
+    const dataUser = useContextUserAuth((state) => state.data)
+    const { data, loading } = useQuery(GET_COLLECTIONS_PER_PROVIDERS, {
+        variables: {
+            idCompany: `${dataUser.idCompany.id}`,
+            dateInit,
+            dateEnd
+        }
+    })
+    return (
+        loading ? (
+            <DataLoading />
+        ) : (
+            <BarGraphics data={data.count} title={"CANTIDAD DE RECOLECCIONES POR PROVEEDOR"}>
+                <Bar dataKey="cantidad" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+            </BarGraphics>
+        )
+    )
+}
+
+const GET_SELL_PER_CLIENTS = gql`
+query getSellPerClients($idCompany: String, $dateInit: String, $dateEnd: String){
+  count: getSellPerClients(idCompany: $idCompany, dateInit: $dateInit, dateEnd: $dateEnd){
+    name
+    cantidad
+  }
+}
+`
+const ViewSellPerClients = ({ dateInit, dateEnd }: ViewsType) => {
+
+    const dataUser = useContextUserAuth((state) => state.data)
+    const { data, loading } = useQuery(GET_SELL_PER_CLIENTS, {
+        variables: {
+            idCompany: `${dataUser.idCompany.id}`,
+            dateInit,
+            dateEnd
+        }
+    })
+    return (
+        loading ? (
+            <DataLoading />
+        ) : (
+            <BarGraphics data={data.count} title={"CANTIDAD DE VENTAS POR CLIENTE"}>
+                <Bar dataKey="cantidad" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+            </BarGraphics>
+        )
+    )
+}
+
 
 export default Reports
