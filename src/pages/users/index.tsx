@@ -1,7 +1,7 @@
 import { Box, Button, IconButton, InputAdornment, Paper, Stack, TextField, Typography } from "@mui/material"
 import RefreshIcon from '@mui/icons-material/Refresh';
-import ListProviderClient from "./ListProviderClient"
-import ListUsers from "./ListUsers"
+import ListProviderClient, { ClientProvider } from "./ListProviderClient"
+import ListUsers, { dataUser } from "./ListUsers"
 import { useContextUserAuth } from "../../store"
 import { useEffect, useState } from "react"
 import { Route, Routes, useNavigate } from "react-router-dom"
@@ -13,6 +13,7 @@ import AsignPermission from "./AsignPermission"
 import { DocumentNode, gql, useQuery } from "@apollo/client"
 import { getPermission } from "../../hooks/getPermission";
 import SearchIcon from '@mui/icons-material/Search';
+import Fuse from "fuse.js";
 
 const GET_COUNTS_CLIENTS_PROVIDERS = gql`
 query getCounts{
@@ -121,6 +122,11 @@ query getAllDataClientProvider{
 
 `
 
+const optionsFuse = {
+    includeScore: true,
+    keys: ['identity', 'fullName', 'description', 'nit']
+};
+
 const DataLisClientProvider = () => {
 
     const token = useContextUserAuth((state) => state.token)
@@ -132,6 +138,15 @@ const DataLisClientProvider = () => {
         }
     })
     const [search, setSearch] = useState("")
+
+    const fuse = new Fuse(loading ? [] : data.getAllDataClientProvider, optionsFuse)
+
+    /*const dataSearch = useMemo(() => {
+        if (loading) return []
+        if (search === null || search === "") return data.getAllDataClientProvider
+        return fuse.search(search).map((value) => value.item)
+    }, [search])*/
+
     return (
         <>
             <Stack direction="row" justifyContent="space-between">
@@ -152,7 +167,7 @@ const DataLisClientProvider = () => {
                 <Button size="large" startIcon={<RefreshIcon />} onClick={() => refetch()} ></Button>
             </Stack>
             &nbsp;
-            {loading ? <Typography>Cargando....</Typography> : <ListProviderClient data={data ? data.getAllDataClientProvider: []} search={search} />}
+            {loading ? <Typography>Cargando....</Typography> : <ListProviderClient data={(search === null || search === "") ? loading ? [] : data.getAllDataClientProvider : fuse.search<ClientProvider>(search).map(({item}) => item)} search={search} />}
         </>
     )
 }
@@ -175,6 +190,11 @@ type propsListUsers = {
     idCompany: string
 }
 
+const optionsFuse2 = {
+    includeScore: true,
+    keys: ['id', 'idPerson.firstName', 'idPerson.lastName']
+}
+
 const DataListUsers = ({ idCompany }: propsListUsers) => {
 
     const token = useContextUserAuth((state) => state.token)
@@ -189,6 +209,14 @@ const DataListUsers = ({ idCompany }: propsListUsers) => {
         }
     })
     const [search, setSearch] = useState("")
+
+    const fuse = new Fuse(loading ? [] : data.getAllUsers, optionsFuse2)
+    
+    /*const dataSearch = useMemo(() => {
+        if (loading) return []
+        if (search === null || search === "") return data.getAllUsers
+        return fuse.search(search).map((value)=> value.item)
+    }, [search])*/
 
     return (
         <>
@@ -210,7 +238,7 @@ const DataListUsers = ({ idCompany }: propsListUsers) => {
                 <Button size="large" startIcon={<RefreshIcon />} onClick={() => refetch()} ></Button>
             </Stack>
             &nbsp;
-            {loading ? <Typography>Cargando...</Typography> : <ListUsers data={data ? data.getAllUsers : []} idCompany={idCompany} search={search} />}
+            {loading ? <Typography>Cargando...</Typography> : <ListUsers data={(search === null || search === "") ? loading ? [] : data.getAllUsers : fuse.search<dataUser>(search).map(({item})=> item) } idCompany={idCompany} search={search} />}
         </>
     )
 }

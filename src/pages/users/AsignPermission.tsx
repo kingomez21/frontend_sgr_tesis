@@ -1,14 +1,33 @@
-import { Button, Dialog, DialogContent, DialogTitle, FormControl, Grid, InputLabel, List, ListItem, ListItemButton, ListItemText, MenuItem, Paper, Select, Stack, TextField, Typography } from "@mui/material"
+import { 
+    Button, 
+    Dialog, 
+    DialogContent, 
+    DialogTitle, 
+    FormControl, 
+    Grid, 
+    InputLabel, 
+    List, 
+    ListItem, 
+    ListItemButton, 
+    ListItemText, 
+    MenuItem, 
+    Paper, 
+    Select, 
+    Stack, 
+    Typography 
+} from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import RefreshIcon from '@mui/icons-material/Refresh';
+import BlockIcon from '@mui/icons-material/Block';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Route, Routes, useNavigate, useParams } from "react-router-dom"
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
 import Message from "../../components/Message";
 
-const roles = [
+/*const roles = [
     "---", "MODULO HISTORIAL", "MODULO REGISTRO", "MODULO REPORTE", "MODULO USUARIO", "MODULO INVENTARIO"
-]
+]*/
 
 type permision = {
     id: string
@@ -44,10 +63,6 @@ const AsignPermission = () => {
         }
     })
 
-    /*useEffect(() => {
-        refetch()
-    }, [])*/
-
     return (
         <>
             {loading ? <Typography>Cargando...</Typography> :
@@ -56,7 +71,7 @@ const AsignPermission = () => {
     )
 }
 
-const FormAsingPermission = ({ idUser, namePerson, dataPermision, refresh }: props) => {
+const FormAsingPermission = ({ namePerson, dataPermision, refresh }: props) => {
 
     const navigate = useNavigate()
 
@@ -78,13 +93,13 @@ const FormAsingPermission = ({ idUser, namePerson, dataPermision, refresh }: pro
                     </>
                 </Paper>
                 <br />
-                <Stack justifyContent="center">
+                {/*<Stack justifyContent="center">
                     <Button size="large" variant="contained" onClick={() => navigate('asignar-permiso')}>
                         <Typography>ASIGNAR PERMISO</Typography>
                     </Button>
-                </Stack>
+                </Stack>*/}
                 <Routes>
-                    <Route path="/asignar-permiso" element={<ViewFormAsingPermission idUser={idUser} />} />
+                    {/*<Route path="/asignar-permiso" element={<ViewFormAsingPermission idUser={idUser} />} /> */}
                     <Route path="/ver-permiso/:idPermiso" element={<ViewPermission dataPermision={dataPermision} />} />
                 </Routes>
             </DialogContent>
@@ -92,19 +107,19 @@ const FormAsingPermission = ({ idUser, namePerson, dataPermision, refresh }: pro
     )
 }
 
-const DELETE_PERMISSION = gql`
+/*const DELETE_PERMISSION = gql`
 mutation deletePermission($idPermission: String){
     deletePermission: deletePermissionUser(idPermission: $idPermission){
       message
     }
   }
 
-`
+`*/
 
 const ListPermission = ({ dataPermision }: props) => {
 
     const navigate = useNavigate()
-    const [deletePermission] =  useMutation(DELETE_PERMISSION)
+    /*const [deletePermission] =  useMutation(DELETE_PERMISSION)
     const [open, setOpen] = useState(false)
     const [msg, setMsg] = useState("")
     const [statusErr, setStatusErr] = useState(false)
@@ -133,20 +148,18 @@ const ListPermission = ({ dataPermision }: props) => {
             setMsg("Ocurrio un error inesperado")
             setTimeout(() => handleClose(), 6000)
         })
-    }
+    }*/
 
-    const actions = (id: string) => {
+    const actions = (active: boolean) => {
         return (
-            <Button variant="contained" color="error" onClick={() => delete_permission(id)}>
-                <Typography>ELIMINAR</Typography>
-            </Button>
+            active ? <CheckCircleOutlineIcon htmlColor="green"/> : <BlockIcon htmlColor="red" />
         )
     }
 
     return (
 
         <List component={Grid} container>
-            <Message band={open} message={msg} status={statusErr ? false : true} />
+            {/*<Message band={open} message={msg} status={statusErr ? false : true} />*/}
             {
                 dataPermision.map((value) => (
                     <ListItem
@@ -155,7 +168,7 @@ const ListPermission = ({ dataPermision }: props) => {
                         component={Grid}
                         xs={12}
                         md={6}
-                        secondaryAction={actions(value.id)}
+                        secondaryAction={actions(value.isActive)}
                         disablePadding
                     >
                         <ListItemButton
@@ -274,7 +287,7 @@ const ViewPermission = ({dataPermision}: props) => {
     )
 }
 
-type inputPermission = {
+/*type inputPermission = {
     nameView: string
     description: string
 }
@@ -393,6 +406,6 @@ const ViewFormAsingPermission = ({ idUser }: props) => {
 
         </Dialog>
     )
-}
+}*/
 
 export default AsignPermission

@@ -1,4 +1,5 @@
-import { Box, Button, Grid, Stack, TextField, Typography } from "@mui/material"
+import { Box, Button, CircularProgress, Grid, Stack, TextField, Typography } from "@mui/material"
+import PrintIcon from "@mui/icons-material/Print";
 import { useEffect, useState } from "react"
 import { useContextUserAuth } from "../../store"
 import { getPermission } from "../../hooks/getPermission"
@@ -8,6 +9,7 @@ import PieGraphics from "./graphics/PieGraphics"
 import BarGraphics from "./graphics/BarGraphics"
 import { Bar, Rectangle } from "recharts"
 import DataLoading from "../../components/DataLoading"
+import getUri from "../../hooks/getUri";
 
 const Reports = () => {
 
@@ -15,12 +17,15 @@ const Reports = () => {
     const dataUser = useContextUserAuth((state) => state.data)
     const isOk = getPermission("modulo reporte")
 
+    const [status, setStatus] = useState(false)
+
     const [dateInit, setDateInit] = useState(dayjs().subtract((new Date().getDate() - 1), "d").format("YYYY-MM-DDThh:mm"))
     const [dateEnd, setDateEnd] = useState(dayjs().format("YYYY-MM-DDThh:mm"))
 
     const downloadExcel = (e) => {
         e.preventDefault();
-        fetch("http://localhost:8000/api/v1/excel/"+ dataUser.idCompany.id)
+        setStatus(true)
+        fetch( getUri() + "excel/"+ dataUser.idCompany.id)
             .then((res) => {
                 if (!res.ok)
                     return alert("error")
@@ -34,7 +39,7 @@ const Reports = () => {
                     window.URL.revokeObjectURL(url);
                 });
             })
-            .finally()
+            .finally(() => setStatus(false))
     }
 
     useEffect(() => {
@@ -44,8 +49,13 @@ const Reports = () => {
         isOk ? (
             <Box marginLeft={5} marginRight={5} paddingBottom={2}>
                 <Stack direction="row" justifyContent="space-between">
-                    <Button onClick={(e) => downloadExcel(e)}>
-                        <Typography>DESCARGAR EXCEL</Typography>
+                    <Button onClick={(e) => downloadExcel(e)} startIcon={
+                        status ? (
+                            <CircularProgress size={24} />
+                        ) : (
+                            <PrintIcon />
+                        )}>
+                        <Typography>{status ? "CARGANDO.." : "DESCARGAR EXCEL"}</Typography>
                     </Button>
                     <Stack direction="row" spacing={2}>
                         <TextField
