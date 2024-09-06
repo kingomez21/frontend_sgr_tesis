@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import { BrowserRouter } from 'react-router-dom'
+import getUri from './hooks/getUri.ts'
 
 const client = new ApolloClient({
-  uri: "http://localhost:8000/api/v1/gql/",
+  uri: getUri() + "gql/",
   cache: new InMemoryCache()
 })
 

@@ -524,7 +524,7 @@ const View = ({ id, data }: props) => {
                     <TextField
 
                       type="text"
-                      label="Fecha de Registro"
+                      label="Nombre del Modulo"
                       variant="outlined"
                       fullWidth
                       value={value.nameView}
@@ -533,7 +533,7 @@ const View = ({ id, data }: props) => {
                     <TextField
 
                       type="text"
-                      label="Fecha de Registro"
+                      label="Estado"
                       variant="outlined"
                       fullWidth
                       value={value.isActive ? "ACTIVO" : "INACTIVO"}

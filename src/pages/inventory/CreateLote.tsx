@@ -146,7 +146,7 @@ const ViewForm = ({ materialTypesObj }: propsViewForm) => {
                             </Select>
                         </FormControl>
                         <Button variant="contained" onClick={() => submit()}>
-                            <Typography>GUARDAR INFORMACION</Typography>
+                            <Typography>CREAR LOTE</Typography>
                         </Button>
                     </Stack>
                     <br /><br />
