@@ -70,7 +70,7 @@ const RegisterForm = () => {
     const [email, setEmail] = useState("")
     const [direction, setDirection] = useState("")
     const [barrio, setBarrio] = useState("")
-    const [company, setCompany] = useState("2")
+    const [company, setCompany] = useState("1")
     const [jopPosition, setJopPosition] = useState("2")
     const [admissionDate, setAdmissionDate] = useState("")
 
