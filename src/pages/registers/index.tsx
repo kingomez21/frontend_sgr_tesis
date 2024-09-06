@@ -21,8 +21,7 @@ const Registers = () => {
 
     useEffect(() => {
         setTitle("GESTION DE REGISTROS")
-
-    }, [])
+    },)
     return (
         isOk ? (
             <RegisterProvider>

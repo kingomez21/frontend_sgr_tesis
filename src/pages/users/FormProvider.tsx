@@ -57,7 +57,7 @@ const FormProvider = () => {
 
     const submit = () => {
         handleOpen()
-        let dataForm: inputProvider = {
+        const dataForm: inputProvider = {
             idTypeProvider: `${typeProvider}`,
             idCompany: data.idCompany ? data.idCompany.id : "1",
             fullName,
@@ -107,7 +107,7 @@ const FormProvider = () => {
                             <Select
                                 label="Seleccione el tipo de documento"
                                 onChange={(e) => {
-                                    const typeClient: any = e.target.value
+                                    const typeClient = e.target.value
                                     setTypeProvider(typeClient)
                                 }}
                                 value={typeProvider}

@@ -1,6 +1,4 @@
 import { Button, Grid, List, ListItem, ListItemButton, ListItemText, Stack, Typography } from "@mui/material"
-import Fuse from "fuse.js"
-import { useMemo } from "react"
 import { useNavigate } from "react-router-dom"
 
 type person = {
@@ -8,7 +6,7 @@ type person = {
     lastName: string
 }
 
-type dataUser = {
+export type dataUser = {
     id: string
     idPerson: person
     isActive: boolean
@@ -17,24 +15,13 @@ type dataUser = {
 type props = {
     data: dataUser[]
     idCompany: string
-    search: string
+    search?: string
 }
 
-const optionsFuse = {
-    includeScore: true,
-    keys: ['id', 'idPerson.firstName', 'idPerson.lastName']
-}
 
-const ListUsers = ({data, idCompany, search}: props) => {
+const ListUsers = ({data, idCompany}: props) => {
 
     const navigate = useNavigate()
-
-    const fuse = new Fuse(data, optionsFuse)
-
-    const dataSearch = useMemo(() => {
-        if (search === null || search === "") return data
-        return fuse.search(search).map((value)=> value.item)
-    }, [search])
 
     const actions = (idUser: string, namePerson: string) => {
         return (
@@ -51,9 +38,9 @@ const ListUsers = ({data, idCompany, search}: props) => {
             <Stack direction="row" >
                 <List component={Grid} container sx={{ overflow: 'auto', maxHeight: 400 }}>
                     {
-                        dataSearch?.length > 0 ? (
+                        data?.length > 0 ? (
 
-                            dataSearch?.map((value) => (
+                            data?.map((value) => (
                                 <ListItem
                                     item
                                     key={value.id}
