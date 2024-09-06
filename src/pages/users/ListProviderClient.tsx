@@ -1,11 +1,10 @@
 import { gql, useMutation } from "@apollo/client"
 import { Button, Grid, List, ListItem, ListItemButton, ListItemText, Stack, Typography } from "@mui/material"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Message from "../../components/Message"
-import Fuse from 'fuse.js'
 
-type ClientProvider = {
+export type ClientProvider = {
     id: number
     identity: number
     idType: string
@@ -20,7 +19,7 @@ type ClientProvider = {
 
 type props = {
     data: ClientProvider[]
-    search: string
+    search?: string
 }
 
 const DELETE_P_C = gql`
@@ -31,12 +30,8 @@ mutation deletePC($idPC: String, $status: String, $typePC: String){
   }
 
 `
-const optionsFuse = {
-    includeScore: true,
-    keys: ['identity', 'fullName', 'description', 'nit']
-};
 
-const ListProviderClient = ({ data, search }: props) => {
+const ListProviderClient = ({ data }: props) => {
 
     const navigate = useNavigate()
     const [deletePC] = useMutation(DELETE_P_C)
@@ -44,14 +39,6 @@ const ListProviderClient = ({ data, search }: props) => {
     const [open, setOpen] = useState(false)
     const [msg, setMsg] = useState("")
     const [statusErr, setStatusErr] = useState(false)
-
-    const fuse = new Fuse(data, optionsFuse)
-
-    const dataSearch = useMemo(() => {
-        if (search === null || search === "") return data
-        return fuse.search(search).map((value) => value.item)
-    }, [search])
-
 
 
     const handleClose = () => {
@@ -100,9 +87,9 @@ const ListProviderClient = ({ data, search }: props) => {
                 <Message band={open} message={msg} status={statusErr ? false : true} />
                 <List component={Grid} container sx={{ overflow: 'auto', maxHeight: 400 }} >
                     {
-                        dataSearch?.length > 0 ? (
+                        data?.length > 0 ? (
 
-                            dataSearch?.map((value) => (
+                            data?.map((value) => (
                                 <ListItem
                                     item
                                     key={value.id}

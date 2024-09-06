@@ -16,24 +16,24 @@ type dataPerson = {
     identityNumber?: number
     firstName: string
     lastName: string
-    documentType: any
+    documentType
     homeAddress: string
     neighborhood: string
     phoneNumber1: string
     phoneNumber2: string
-    gender: any
+    gender
     admissionDate: string
     jobPosition: string
     birthday: string
-    maritalStatus: any
-    bloodType: any
-    company?: any
+    maritalStatus
+    bloodType
+    company?
     email: string
     isActive?: string
 }
 
 type props = {
-    datas?: any
+    datas?
     idUser?: string
     company?: string
 }
@@ -84,7 +84,7 @@ const VerUsers = () => {
 
     useEffect(() => {
         refetch()
-    }, [])
+    },)
 
     return (
         <>
@@ -171,7 +171,7 @@ const View = ({ datas }: props) => {
 
     const submit = () => {
         handleOpen()
-        let dataForm: dataPerson = {
+        const dataForm: dataPerson = {
             "identityNumber": identity,
             "firstName": firstName,
             "lastName": lastName,
@@ -348,7 +348,7 @@ const View = ({ datas }: props) => {
                             <Select
                                 label="Seleccione el tipo de documento"
                                 onChange={(e) => {
-                                    const document_value: any = e.target.value
+                                    const document_value = e.target.value
                                     setDocument(document_value)
                                 }}
                                 value={document}
@@ -386,7 +386,7 @@ const View = ({ datas }: props) => {
                             <Select
                                 label="Seleccione su genero"
                                 onChange={(e) => {
-                                    const gender_value: any = e.target.value
+                                    const gender_value= e.target.value
                                     setGenderV(gender_value)
                                 }}
                                 value={genderV}
@@ -413,7 +413,7 @@ const View = ({ datas }: props) => {
                             <Select
                                 label="Seleccione su tipo de sangre"
                                 onChange={(e) => {
-                                    const blood: any = e.target.value
+                                    const blood = e.target.value
                                     setBlood(blood)
                                 }}
                                 value={blood}
@@ -440,7 +440,7 @@ const View = ({ datas }: props) => {
                             <Select
                                 label="Seleccione su estado civil"
                                 onChange={(e) => {
-                                    const marital_value: any = e.target.value
+                                    const marital_value = e.target.value
                                     setMaritalStatus(marital_value)
                                 }}
                                 value={maritalStatus}
@@ -566,7 +566,7 @@ const View = ({ datas }: props) => {
                             <Select
                                 label="Seleccione su cargo"
                                 onChange={(e) => {
-                                    const job_position: any = e.target.value
+                                    const job_position = e.target.value
                                     setJopPosition("" + job_position)
                                 }}
                                 value={jopPosition}
@@ -607,7 +607,7 @@ const View = ({ datas }: props) => {
                             <Select
                                 label="Estado"
                                 onChange={(e) => {
-                                    const active: any = e.target.value
+                                    const active = e.target.value
                                     setIsActive(active)
                                 }}
                                 value={isActive}
