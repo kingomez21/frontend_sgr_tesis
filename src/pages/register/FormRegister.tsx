@@ -70,9 +70,10 @@ const RegisterForm = () => {
     const [email, setEmail] = useState("")
     const [direction, setDirection] = useState("")
     const [barrio, setBarrio] = useState("")
-    const [company, setCompany] = useState(2)
+    const [company, setCompany] = useState("1")
     const [jopPosition, setJopPosition] = useState("2")
     const [admissionDate, setAdmissionDate] = useState("")
+    console.log(data)
 
     const back = () => {
         return navigate(-1)
@@ -420,6 +421,7 @@ const RegisterForm = () => {
                             label="Seleccione la empresa"
                             onChange={(e) => {
                                 const company_value: any = e.target.value
+                                console.log(company_value)
                                 setCompany(company_value)
                             }}
                             value={company}
