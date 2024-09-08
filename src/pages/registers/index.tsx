@@ -1,7 +1,6 @@
 import { Box, Button, Paper, Stack, Typography } from "@mui/material"
 import { useContextUserAuth } from "../../store"
 import { useEffect } from "react"
-import { getPermission } from "../../hooks/getPermission"
 import { Route, Routes, useNavigate } from "react-router-dom"
 import FormAppointment from "./FormAppointment"
 import FormRoute from "./FormRoute"
@@ -10,6 +9,7 @@ import FormClassification from "./FormClassification"
 import CompleteRegister from "./CompleteRegister"
 import RegisterProvider from "./context/RegisterProvider"
 import FormRawMaterial from "./FormRawMaterial"
+import GetPermission from "../../hooks/GetPermission"
 //import { DocumentNode } from "graphql"
 
 const Registers = () => {
@@ -17,7 +17,7 @@ const Registers = () => {
     const navigate = useNavigate()
     const setTitle = useContextUserAuth((state) => state.setTitle)
     //const permissions = useContextUserAuth((state) => state.permissions)
-    const isOk = getPermission("modulo registro")
+    const isOk = GetPermission("modulo registro")
 
     useEffect(() => {
         setTitle("GESTION DE REGISTROS")

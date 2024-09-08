@@ -2,7 +2,6 @@ import { Box, Button, CircularProgress, Grid, Stack, TextField, Typography } fro
 import PrintIcon from "@mui/icons-material/Print";
 import { useEffect, useState } from "react"
 import { useContextUserAuth } from "../../store"
-import { getPermission } from "../../hooks/getPermission"
 import dayjs from "dayjs"
 import { gql, useQuery } from "@apollo/client"
 import PieGraphics from "./graphics/PieGraphics"
@@ -10,12 +9,13 @@ import BarGraphics from "./graphics/BarGraphics"
 import { Bar, Rectangle } from "recharts"
 import DataLoading from "../../components/DataLoading"
 import getUri from "../../hooks/getUri";
+import GetPermission from "../../hooks/GetPermission";
 
 const Reports = () => {
 
     const setTitle = useContextUserAuth((state) => state.setTitle)
     const dataUser = useContextUserAuth((state) => state.data)
-    const isOk = getPermission("modulo reporte")
+    const isOk = GetPermission("modulo reporte")
 
     const [status, setStatus] = useState(false)
 
