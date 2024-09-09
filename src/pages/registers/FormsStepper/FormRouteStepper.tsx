@@ -1,5 +1,5 @@
 import { Box, Stack, TextField, Typography } from "@mui/material"
-import useRegisterContext from "./context/useRegisterContext"
+import useRegisterContext from "../context/useRegisterContext"
 import { useState } from "react"
 
 const FormRouteStepper = () => {

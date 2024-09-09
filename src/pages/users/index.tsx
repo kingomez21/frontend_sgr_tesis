@@ -11,9 +11,9 @@ import VerClientProvider from "./VerClientProvider"
 import VerUsers from "./VerUsers"
 import AsignPermission from "./AsignPermission"
 import { DocumentNode, gql, useQuery } from "@apollo/client"
-import { getPermission } from "../../hooks/getPermission";
 import SearchIcon from '@mui/icons-material/Search';
 import Fuse from "fuse.js";
+import GetPermission from "../../hooks/GetPermission";
 
 const GET_COUNTS_CLIENTS_PROVIDERS = gql`
 query getCounts{
@@ -42,9 +42,8 @@ const Users = () => {
     const navigate = useNavigate()
     const setTitle = useContextUserAuth((state) => state.setTitle)
     const data = useContextUserAuth((state) => state.data)
-    //const permissions = useContextUserAuth((state) => state.permissions)
 
-    const isOk = getPermission("modulo usuario")
+    const isOk = GetPermission("modulo usuario")
 
     useEffect(() => {
         setTitle("GESTION DE USUARIOS")
@@ -105,8 +104,8 @@ const Users = () => {
 }
 
 const GET_DATA_CLIENTS_PROVIDER = gql`
-query getAllDataClientProvider{
-    getAllDataClientProvider{
+query getAllDataClientProvider($idCompany: String){
+    getAllDataClientProvider(idCompany: $idCompany){
         id
         identity
         idType
@@ -130,7 +129,11 @@ const optionsFuse = {
 const DataLisClientProvider = () => {
 
     const token = useContextUserAuth((state) => state.token)
+    const dataUser = useContextUserAuth((state) => state.data)
     const { data, loading, refetch } = useQuery(GET_DATA_CLIENTS_PROVIDER, {
+        variables: {
+            idCompany: `${dataUser.idCompany.id}`
+        },
         context: {
             headers: {
                 "Authorization": `JWT ${token}` 

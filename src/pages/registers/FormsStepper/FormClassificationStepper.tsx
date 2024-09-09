@@ -1,10 +1,10 @@
-import { Box, FormControl, InputLabel, Select, Stack, TextField, Typography } from "@mui/material"
-import useRegisterContext from "./context/useRegisterContext"
+import { Box, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
 import { useState } from "react"
+import useRegisterContext from "../context/useRegisterContext"
 
 const FormClassificationStepper = () => {
 
-    const { dataRegisterClassification, setRegisterClassification } = useRegisterContext()
+    const { dataRegisterClassification, setRegisterClassification, dataUsers, dataProcedureType } = useRegisterContext()
     const [formData, setFormData] = useState({
         rawMaterialType: '1',
         userInfo: '1',
@@ -31,14 +31,22 @@ const FormClassificationStepper = () => {
                             required
                             fullWidth
                         >
-                            <InputLabel>Seleccione la información del usuario</InputLabel>
+                            <InputLabel>Seleccione el empleado encargado de la clasificacion</InputLabel>
                             <Select
-                            label="Seleccione la información del usuario"
-                            name="userInfo"
-                            onChange={handleChange}
-                            value={formData.userInfo}
+                                label="Seleccione el empleado encargado de la clasificacion"
+                                name="userInfo"
+                                onChange={handleChange}
+                                value={formData.userInfo}
                             >
-                                
+                                {dataUsers?.map((v) => (
+                                    <MenuItem
+                                        key={v.id}
+                                        value={v.id}
+                                    >
+                                        {v.idPerson.identityNumber} - {v.idPerson.firstName} {v.idPerson.lastName}
+                                    </MenuItem>
+                                ))}
+
                             </Select>
                         </FormControl>
                     </Stack>
@@ -53,11 +61,21 @@ const FormClassificationStepper = () => {
                         >
                             <InputLabel>Seleccione el tipo de procedimiento</InputLabel>
                             <Select
-                            label="Seleccione el tipo de procedimiento"
-                            name="procedureType"
-                            onChange={handleChange}
-                            value={formData.procedureType}
+                                label="Seleccione el tipo de procedimiento"
+                                name="procedureType"
+                                onChange={handleChange}
+                                value={formData.procedureType}
                             >
+
+                                {dataProcedureType?.map((v) => (
+                                    <MenuItem
+                                        key={v.id}
+                                        value={v.id}
+                                    >
+                                        {v.id} - {v.procedureName}
+                                    </MenuItem>
+                                ))}
+
                             </Select>
                         </FormControl>
                         <TextField

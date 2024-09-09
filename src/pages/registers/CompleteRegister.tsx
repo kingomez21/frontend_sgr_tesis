@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -8,19 +7,20 @@ import Typography from '@mui/material/Typography';
 import { Dialog, DialogContent, DialogTitle, Stack } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
-import FormAppointmentStepper from './FormAppointmentStepper';
-import FormRouteStepper from './FormRouteStepper';
-import FormGatheringStepper from './FormGatheringStepper';
-import FormClassificationStepper from './FormClassificationStepper';
-import FormRawMaterialStepper from './FormRawMaterialStepper';
+import FormAppointmentStepper from './FormsStepper/FormAppointmentStepper';
+import FormRouteStepper from './FormsStepper/FormRouteStepper';
+import FormGatheringStepper from './FormsStepper/FormGatheringStepper';
+import FormRawMaterialStepper from './FormsStepper/FormRawMaterialStepper';
+import FormClassificationStepper from './FormsStepper/FormClassificationStepper';
 import useRegisterContext from './context/useRegisterContext';
+import { useState } from 'react';
 
-const steps = ['Cita', 'Ruta', 'Recolección', 'Materia prima', 'Clasificación'];
+const steps = ['Cita', 'Ruta', 'Recolección', 'Materia Prima', 'Clasificación'];
 const componentsForms = [<FormAppointmentStepper/>, <FormRouteStepper/>, <FormGatheringStepper/>, <FormRawMaterialStepper/>, <FormClassificationStepper/>]
 
 export default function CompleteRegister() {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set<number>());
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set<number>());
   const navigate = useNavigate()
 
   const { dataRegisterAppointment, dataRegisterRoute, dataRegisterGathering, dataRegisterRawMaterial, dataRegisterClassification } = useRegisterContext()
@@ -76,7 +76,7 @@ export default function CompleteRegister() {
             })}
           </Stepper>
           {activeStep === steps.length ? (
-            <React.Fragment>
+            <>
               <Typography sx={{ mt: 2, mb: 1 }}>
                 El registro se ha completado exitosamente
               </Typography>
@@ -84,9 +84,9 @@ export default function CompleteRegister() {
                 <Box sx={{ flex: '1 1 auto' }} />
                 <Button onClick={handleReset}>AÑADIR OTRO REGISTRO +</Button>
               </Box>
-            </React.Fragment>
+            </>
           ) : (
-            <React.Fragment>
+            <>
               {componentsForms[activeStep]}
               <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                 <Button
@@ -102,7 +102,7 @@ export default function CompleteRegister() {
                   {activeStep === steps.length - 1 ? <Button onClick={() => submit()}>TERMINAR REGISTRO</Button> : 'SIGUIENTE →'}
                 </Button>
               </Box>
-            </React.Fragment>
+            </>
           )}
         </Box>
       </DialogContent>

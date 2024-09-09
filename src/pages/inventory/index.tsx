@@ -2,7 +2,6 @@ import { Box, Button, Paper, Stack, Typography } from "@mui/material"
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useContextUserAuth } from "../../store"
 import { useEffect } from "react"
-import { getPermission } from "../../hooks/getPermission"
 import { InventoryProvider, useInventoryContext } from "./Icontext"
 import { Route, Routes, useNavigate } from "react-router-dom"
 import ListClassifications from "./ListClassifications"
@@ -11,11 +10,12 @@ import ViewListCompletedClassificated from "./ViewListCompletedClassificated";
 import ViewListLoteSell from "./ViewListLoteSell";
 import ViewClassification from "./ViewClassification";
 import ViewLoteSell from "./ViewLoteSell";
+import GetPermission from "../../hooks/GetPermission";
 
 const Inventory = () => {
 
     const setTitle = useContextUserAuth((state) => state.setTitle)
-    const isOk = getPermission("modulo inventario")
+    const isOk = GetPermission("modulo inventario")
     
 
     useEffect(() => {

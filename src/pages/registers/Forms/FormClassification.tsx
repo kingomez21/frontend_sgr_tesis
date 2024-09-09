@@ -1,59 +1,15 @@
-import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, Select, Stack, TextField, Typography } from "@mui/material"
+import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom"
-//import { useState } from "react";
-//import { useContextUserAuth } from "../../store";
-//import { gql, useMutation } from "@apollo/client";
-//import Message from "../../components/Message";
+import useRegisterContext from "../context/useRegisterContext";
 
 const FormClassification = () => {
 
     const navigate = useNavigate()
-    //const data = useContextUserAuth((state) => state.data)
-    //const [createClient,] = useMutation(CREATE_CLIENT)
-
-    /*const handleClose = () => {
-        setOpen(false);
-    }
-
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
-    const submit = () => {
-        handleOpen()
-        const dataForm: inputClient = {
-            idTypeClient: `${typeClient}`,
-            idCompany: data.idCompany ? data.idCompany.id : "1",
-            fullName,
-            nit,
-            address,
-            place,
-            cellphone,
-            email
-           
-        }
-        //console.log(dataForm)
-        createClient({
-            variables: {
-                input: dataForm
-            }
-        })
-        .then( (data) => {
-            setMsg(data.data.createClient.message)
-            setTimeout( () => handleClose(), 6000)
-        } )
-        .catch( () => {
-            setStatusErr(true)
-            setMsg("Ocurrio un error inesperado")
-            setTimeout( () => handleClose(), 6000)
-        } )
-        
-    } */
+    const {dataUsers, dataProcedureType} = useRegisterContext()
 
     return (
         <Dialog open fullScreen>
-            {/*<Message band={open} message={msg} status={statusErr ? false : true} /> */}
             <DialogTitle>
                 <Stack direction="row" spacing={2} padding={2} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
@@ -70,8 +26,8 @@ const FormClassification = () => {
                             required
                             fullWidth
                         >
-                            <InputLabel>Seleccione el tipo de materia prima</InputLabel>
-                            <Select   
+                            <InputLabel>Seleccione la materia prima a clasificar</InputLabel>
+                            <Select
                             >
                             </Select>
                         </FormControl>
@@ -79,8 +35,19 @@ const FormClassification = () => {
                             required
                             fullWidth
                         >
-                            <InputLabel>Seleccione la información del usuario</InputLabel>
-                            <Select>
+                            <InputLabel>Seleccione el empleado encargado de la clasificacion</InputLabel>
+                            <Select
+                                label="Seleccione el empleado encargado de la clasificacion"
+                            >
+
+                                {dataUsers?.map((v) => (
+                                    <MenuItem
+                                        key={v.id}
+                                        value={v.id}
+                                    >
+                                        {v.idPerson.identityNumber} - {v.idPerson.firstName} {v.idPerson.lastName}
+                                    </MenuItem>
+                                ))}
 
                             </Select>
                         </FormControl>
@@ -90,13 +57,22 @@ const FormClassification = () => {
                     <br />
 
                     <Stack direction="row" spacing={2}>
-                    <FormControl
+                        <FormControl
                             required
                             fullWidth
                         >
                             <InputLabel>Seleccione el tipo de procedimiento</InputLabel>
-                            <Select>
-
+                            <Select
+                                label="Seleccione el tipo de procedimiento"
+                            >
+                            {dataProcedureType?.map((v) => (
+                                    <MenuItem
+                                        key={v.id}
+                                        value={v.id}
+                                    >
+                                        {v.id} - {v.procedureName}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                         <TextField
@@ -110,7 +86,7 @@ const FormClassification = () => {
                     <br />
                     <br />
                     <Stack justifyContent="center" direction="row">
-                        <Button fullWidth size="medium" variant="contained" onClick={() => navigate('crear-ruta') }>
+                        <Button fullWidth size="medium" variant="contained" onClick={() => navigate('crear-ruta')}>
                             <Typography>GUARDAR CLASIFICACIÓN</Typography>
                         </Button>
                     </Stack>

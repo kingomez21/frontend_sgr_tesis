@@ -1,5 +1,5 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
-import useRegisterContext from "./context/useRegisterContext"
+import useRegisterContext from "../context/useRegisterContext"
 import { useState } from "react"
 import { gql, useQuery } from "@apollo/client"
 
