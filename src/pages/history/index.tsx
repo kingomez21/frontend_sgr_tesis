@@ -1,7 +1,6 @@
 import { Box, IconButton, InputAdornment, Stack, TextField, Typography } from "@mui/material"
 import { useContextUserAuth } from "../../store"
 import { useEffect, useState } from "react"
-import { getPermission } from "../../hooks/getPermission"
 import HistoryProvider from "./context/HistoryProvider"
 import SearchIcon from '@mui/icons-material/Search';
 import useHistoryContext from "./context/useHistoryContext"
@@ -9,10 +8,11 @@ import ListClassificationsHistory from "./ListClassificationsHistory"
 import Fuse from "fuse.js"
 import { Route, Routes } from "react-router-dom"
 import ViewHistoryClassifications from "./ViewHistoryClassifications"
+import GetPermission from "../../hooks/GetPermission";
 
 const History = () => {
     const setTitle = useContextUserAuth((state) => state.setTitle)
-    const isOk = getPermission("modulo historial")
+    const isOk = GetPermission("modulo historial")
 
     useEffect(() => {
         setTitle("GESTION DE HISTORIAL")

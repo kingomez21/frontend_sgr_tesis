@@ -1,45 +1,22 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
-import useRegisterContext from "./context/useRegisterContext";
+import useRegisterContext from "../context/useRegisterContext";
 import { useState } from "react";
-import { gql, useQuery } from "@apollo/client";
-
-const GET_PROVIDERS = gql`
-query getAllProviders{
-  getAllProviders{
-    id
-    fullName
-  }
-}`
-
-const Provider = [{
-    id: "1",
-    name: 'JuanUseful'
-}, {
-    id: "2",
-    name: 'SebasMono'
-}, {
-    id: "3",
-    name: 'CarlitosBonitoYGordito'
-}
-]
 
 const FormAppointmentStepper = () => {
 
-    const { dataRegisterAppointment, setRegisterAppointment } = useRegisterContext()
+    const { dataRegisterAppointment, setRegisterAppointment, dataProviders } = useRegisterContext()
     const [formData, setFormData] = useState({
         provider: '1',
         dateAppointment: '',
         placeAppointment: ''
     });
 
-    const data = useQuery(GET_PROVIDERS)
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
         setRegisterAppointment(formData)
         console.log(dataRegisterAppointment)
-    };
+    }
 
     return (
         <Box>
@@ -60,13 +37,13 @@ const FormAppointmentStepper = () => {
                                 onChange={handleChange}
                                 value={formData.provider}
                             >
-                                {data.loading ? <MenuItem disabled> Cargando.. </MenuItem> : (
-                                    data?.data.getAllProviders?.map((v) => (
+                                {dataProviders.length <= 0 ? <MenuItem disabled> Cargando.. </MenuItem> : (
+                                    dataProviders?.map((v) => (
                                         <MenuItem
                                             key={v.id}
                                             value={v.id}
                                         >
-                                            {v.fullName}
+                                            {v.nit} - {v.fullName}
                                         </MenuItem>
                                     ))
                                 )}

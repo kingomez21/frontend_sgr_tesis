@@ -27,7 +27,7 @@ type props = {
   namePermission: string
 }
 
-export const getPermission = (nameModulePermission: string) => {
+const GetPermission = (nameModulePermission: string) => {
 
   const dataP = useContextUserAuth((state) => state.data)
   const { data, loading, refetch } = useQuery(GET_PERMISSIONS_USER, {
@@ -53,3 +53,4 @@ const PermissionsView = ({dataPermissions, namePermission}: props) => {
   return result
 }
 
+export default GetPermission

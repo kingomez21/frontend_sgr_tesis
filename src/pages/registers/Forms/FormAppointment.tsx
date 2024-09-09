@@ -1,69 +1,18 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom"
-import useRegisterContext from "./context/useRegisterContext";
-import { RegisterAppointment } from "./RegisterTypes";
+import useRegisterContext from "../context/useRegisterContext";
+import { RegisterAppointment } from "../RegisterTypes";
 import { useState } from "react";
-//import { useState } from "react";
-//import { useContextUserAuth } from "../../store";
-//import { gql, useMutation } from "@apollo/client";
-//import Message from "../../components/Message";
-//import { Label } from "@mui/icons-material";
-
-const Provider = [{
-    id: "1",
-    name: 'JuanUseful'
-}, {
-    id: "2",
-    name: 'SebasMono'
-}, {
-    id: "3",
-    name: 'CarlitosBonitoYGordito'
-}  
-]
-
-/*type inputClient = {
-    idProvider: string
-    idCompany: string
-    fullName: string
-    nit: string
-    address: string
-    email?: string
-    cellphone?: string
-    place: string
-}
-
-const CREATE_CLIENT = gql`
-mutation CreateClient($input: InputClient){
-    createClient(client: $input){
-      message
-    }
-  }
-
-`*/
 
 const FormAppointment = () => {
 
     const navigate = useNavigate()
-    const {dataRegisterAppointment, setRegisterAppointment} = useRegisterContext()
-    //const data = useContextUserAuth((state) => state.data)
-    //const [createClient,] = useMutation(CREATE_CLIENT)
+    const {dataRegisterAppointment, setRegisterAppointment, dataProviders} = useRegisterContext()
 
     const [provider, setProvider] = useState("1")
     const [dateAppointment, setDateAppointment] = useState("")
     const [placeAppointment, setPlaceAppointment] = useState("")
-
-    //const [open, setOpen] = useState(false)
-    //const [msg, setMsg] = useState("")
-    //const [statusErr, setStatusErr] = useState(false)
-
-    /*const handleClose = () => {
-        setOpen(false);
-    }
-
-    const handleOpen = () => {
-        setOpen(true);
-    };*/
 
     const submit = () => {
         const registroCita: RegisterAppointment = {
@@ -73,35 +22,10 @@ const FormAppointment = () => {
         }
         setRegisterAppointment(registroCita)
         console.log(dataRegisterAppointment)
-        //handleOpen()
-        //const dataForm: inputClient = {
-            //idProvider: `${Provider}`,
-            //idCompany: data.idCompany ? data.idCompany.id : "1",
-            //dateAppointment,
-            //timeAppointment
-        //}
     }
-        //console.log(dataForm)
-        /*createClient({
-            variables: {
-                input: dataForm
-            }
-        })
-        .then( (data) => {
-            setMsg(data.data.createClient.message)
-            setTimeout( () => handleClose(), 6000)
-        } )
-        .catch( () => {
-            setStatusErr(true)
-            setMsg("Ocurrio un error inesperado")
-            setTimeout( () => handleClose(), 6000)
-        } )
-        
-    }*/
 
     return (
         <Dialog open fullScreen>
-            {/*<Message band={open} message={msg} status={statusErr ? false : true} /> */}
             <DialogTitle>
                 <Stack direction="row" spacing={2} padding={2} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
@@ -127,12 +51,12 @@ const FormAppointment = () => {
                                 }}
                                 value={provider}
                             >
-                                {Provider?.map((v) => (
+                                {dataProviders?.map((v) => (
                                     <MenuItem
                                         key={v.id}
                                         value={v.id}
                                     >
-                                        {v.name}
+                                        {v.nit} - {v.fullName}
                                     </MenuItem>
                                 ))}
                             </Select>
