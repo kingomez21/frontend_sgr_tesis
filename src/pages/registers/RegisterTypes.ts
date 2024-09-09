@@ -32,3 +32,27 @@ export type RegisterRawMaterial = {
     kgQuantity: number
     pricePerKg: number
 }
+
+export type dataProviders = {
+    id: string
+    fullName: string
+    nit: string
+    address: string
+    place: string
+}
+
+type idPerson = {
+    identityNumber: number
+    firstName: string
+    lastName: string
+}
+
+export type dataUsers = {
+    id: string
+    idPerson: idPerson
+}
+
+export type dataProcedureType = {
+    id: string
+    procedureName: string
+}
