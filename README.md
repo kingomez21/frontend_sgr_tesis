@@ -1,1 +1,0 @@
-# frontend_sgr_tesis
