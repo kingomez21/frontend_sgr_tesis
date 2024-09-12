@@ -37,7 +37,53 @@ query getProcedureTypes{
 }
 
 `
+const GET_APPOINTMENTS = gql`
+query getAllDate($isPending: Boolean){
+  getAllDate(isPending: $isPending){
+    id
+    idProvider{
+      id 
+      fullName
+    } 
+    meetDate
+    meetPlace
+    isPending
+  }
+}`
 
+const GET_ROUTES = gql`
+query getAllRoute($isPending: Boolean){
+  getAllRoute(isPending: $isPending){
+    id
+    idDate{
+      id
+      meetDate
+      meetPlace
+    }
+    initPlace
+    destinyPlace
+    isPending
+  }
+}`
+
+const GET_COLLECTIONS = gql`
+query getAllCollection($isPending: Boolean){
+  getAllCollection(isPending: $isPending){
+    id
+    idRoute{
+      id
+      initPlace
+      destinyPlace
+    }
+    materialsQuantity
+    spentMoney
+    idPayType{
+      id
+      platformName
+    }
+    isPending
+  }
+}`
 
 const RegisterProvider = ({children}) => {
 
@@ -67,11 +113,31 @@ const RegisterProvider = ({children}) => {
       }
     })
 
+    const dataAppointments = useQuery(GET_APPOINTMENTS, {
+      variables: {
+        isPending: true
+      },
+      fetchPolicy: "no-cache"
+    })
+
+    const dataRoutes = useQuery(GET_ROUTES, {
+      variables: {
+        isPending: true
+      }
+    })
+
+    const dataCollections = useQuery(GET_COLLECTIONS, {
+      variables: {
+        isPending: true
+      }
+    })
+
     const [registerAppointment, setRegisterAppointment] = useState(null)
     const [registerRoute, setRegisterRoute] = useState(null)
     const [registerGathering, setRegisterGathering] = useState(null)
     const [registerClassification, setRegisterClassification] = useState(null)
     const [registerRawMaterial, setRegisterRawMaterial] = useState(null)
+    const [updated, setUpdated] = useState(null)
 
     return (
         <RegisterContext.Provider
@@ -81,6 +147,11 @@ const RegisterProvider = ({children}) => {
             dataRegisterGathering: registerGathering,
             dataRegisterClassification: registerClassification,
             dataRegisterRawMaterial: registerRawMaterial,
+            appointments: dataAppointments.loading ? [] : dataAppointments.data.getAllDate,
+            routes: dataRoutes.loading ? [] : dataRoutes.data.getAllRoute,
+            collections: dataCollections.loading ? [] : dataCollections.data.getAllCollection,
+            updated,
+            setUpdated,
             setRegisterAppointment,
             setRegisterRoute,
             setRegisterGathering,

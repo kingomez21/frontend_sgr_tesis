@@ -2,26 +2,52 @@ import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabe
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom"
 import useRegisterContext from "../context/useRegisterContext";
-import { RegisterAppointment } from "../RegisterTypes";
 import { useState } from "react";
+import { gql, useMutation } from "@apollo/client";
+import { useContextUserAuth } from "../../../store";
+
+const CREATE_DATE = gql`
+mutation CreateDate($date: InputDate){
+  date: CreateDate(date: $date){
+    message
+  }
+}`
+
+type InputDate = {
+    provider: string
+    company: string
+    meetDate: string
+    meetPlace: string 
+}
 
 const FormAppointment = () => {
 
     const navigate = useNavigate()
-    const {dataRegisterAppointment, setRegisterAppointment, dataProviders} = useRegisterContext()
-
+    const {dataProviders} = useRegisterContext()
+    const dataUser = useContextUserAuth((state) => state.data)
+    const [date] = useMutation(CREATE_DATE)
     const [provider, setProvider] = useState("1")
     const [dateAppointment, setDateAppointment] = useState("")
     const [placeAppointment, setPlaceAppointment] = useState("")
 
     const submit = () => {
-        const registroCita: RegisterAppointment = {
+        const registroCita: InputDate = {
             provider,
-            dateAppointment,
-            placeAppointment
+            company: `${dataUser.idCompany.id}`,
+            meetDate: dateAppointment,
+            meetPlace: placeAppointment
         }
-        setRegisterAppointment(registroCita)
-        console.log(dataRegisterAppointment)
+        date({
+            variables: {
+                date: registroCita
+            }
+        })
+        .then((data) => {
+            alert(data.data.date.message)
+        })
+        .catch(() => {
+            alert("Error")
+        })
     }
 
     return (
