@@ -15,7 +15,6 @@ import useRegisterContext from "./context/useRegisterContext"
 import ListAppointments from "./Lists/ListAppointments"
 import ListRoutes from "./Lists/ListRoutes"
 import ListCollections from "./Lists/ListCollections"
-//import useRegisterContext from "./context/useRegisterContext"
 
 const Registers = () => {
 
@@ -167,7 +166,7 @@ const ViewListAppointments = () => {
     const { appointments } = useRegisterContext()
 
     return (
-        <ListAppointments data={appointments} />
+        <ListAppointments data={appointments.slice(0, 6)} />
     )
 }
 
@@ -176,7 +175,7 @@ const ViewListRoutes = () => {
     const { routes } = useRegisterContext()
 
     return (
-        <ListRoutes data={routes} />
+        <ListRoutes data={routes.slice(0, 6)} />
     )
 }
 
@@ -185,7 +184,7 @@ const ViewListCollections = () => {
     const { collections } = useRegisterContext()
 
     return (
-        <ListCollections data={collections} />
+        <ListCollections data={collections.slice(0, 6)} />
     )
 }
 

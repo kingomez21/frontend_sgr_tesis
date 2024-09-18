@@ -1,5 +1,5 @@
 import { createContext } from "react"
-import { Appointments, Collections, dataProcedureType, dataProviders, dataUsers, RegisterAppointment, RegisterClassification, RegisterGathering, RegisterRawMaterial, RegisterRoute, Routes } from "../RegisterTypes"
+import { Appointments, Collections, dataProcedureType, dataProviders, dataUsers, idPayType, RegisterAppointment, RegisterClassification, RegisterGathering, RegisterRawMaterial, RegisterRoute, Routes } from "../RegisterTypes"
 
 type RegisterContextType = {
     dataRegisterAppointment: RegisterAppointment
@@ -20,6 +20,7 @@ type RegisterContextType = {
     dataProviders: dataProviders[]
     dataUsers: dataUsers[]
     dataProcedureType: dataProcedureType[]
+    dataPayTypes: idPayType[]
 }
 
 const registerContext: RegisterContextType = {
@@ -34,7 +35,8 @@ const registerContext: RegisterContextType = {
     updated: "",
     dataProviders: null,
     dataUsers: null,
-    dataProcedureType: null
+    dataProcedureType: null,
+    dataPayTypes: null
 }
 
 

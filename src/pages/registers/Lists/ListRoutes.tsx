@@ -42,10 +42,9 @@ const ListRoutes = ({ data, viewStyle }: props) => {
                                     <ListItemText
                                         primary={`
                                                 La ruta del : ${value.idDate.meetDate} 
-                                                que va desde: ${value.initPlace.toUpperCase} hasta: ${value.destinyPlace.toUpperCase()}
+                                                que va desde: ${value.initPlace.toUpperCase()} hasta: ${value.destinyPlace.toUpperCase()}
                                             `}
                                         secondary={`FECHA: ${value.idDate.meetDate}`}
-                                    //secondary={value.idLoteSell.sold ? <CheckCircleOutlineIcon htmlColor="green"/> : <WatchLaterIcon /> }
                                     />
                                 </ListItemButton>
                             </ListItem>

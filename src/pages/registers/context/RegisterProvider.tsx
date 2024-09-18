@@ -85,6 +85,14 @@ query getAllCollection($isPending: Boolean){
   }
 }`
 
+const GET_PAY_TYPES = gql`
+query PayType{
+  getAllPayType{
+    id
+    platformName
+  }
+}`
+
 const RegisterProvider = ({children}) => {
 
     const dataUser = useContextUserAuth((state) => state.data)
@@ -123,14 +131,18 @@ const RegisterProvider = ({children}) => {
     const dataRoutes = useQuery(GET_ROUTES, {
       variables: {
         isPending: true
-      }
+      },
+      fetchPolicy: "no-cache"
     })
 
     const dataCollections = useQuery(GET_COLLECTIONS, {
       variables: {
         isPending: true
-      }
+      },
+      fetchPolicy: "no-cache"
     })
+
+    const dataPayType = useQuery(GET_PAY_TYPES)
 
     const [registerAppointment, setRegisterAppointment] = useState(null)
     const [registerRoute, setRegisterRoute] = useState(null)
@@ -160,6 +172,7 @@ const RegisterProvider = ({children}) => {
             dataProviders: providers.loading ? [] : providers.data.getAllProviders,
             dataUsers: dataUsers.loading ? [] : dataUsers.data.getAllUsers,
             dataProcedureType: dataProcedureType.loading ? [] : dataProcedureType.data.procedure,
+            dataPayTypes: dataPayType.loading ? [] : dataPayType.data.getAllPayType,
          }}>
             {children}
         </RegisterContext.Provider>
