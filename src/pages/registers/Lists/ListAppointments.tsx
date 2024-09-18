@@ -44,7 +44,6 @@ const ListAppointments = ({ data, viewStyle }: props) => {
                                                 - CITA: ${value.meetDate} - LUGAR: ${value.meetPlace.toUpperCase()}
                                             `}
                                         secondary={`FECHA: ${value.meetDate}`}
-                                    //secondary={value.idLoteSell.sold ? <CheckCircleOutlineIcon htmlColor="green"/> : <WatchLaterIcon /> }
                                     />
                                 </ListItemButton>
                             </ListItem>
