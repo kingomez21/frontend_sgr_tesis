@@ -45,8 +45,7 @@ const ListCollections = ({ data, viewStyle }: props) => {
                                                 Se tiene una cantidad de: ${value.materialsQuantity} y se gastó un total de: ${value.spentMoney}
                                                 pagado por: ${value.idPayType.platformName}
                                             `}
-                                        secondary={`FECHA: }`}
-                                    //secondary={value.idLoteSell.sold ? <CheckCircleOutlineIcon htmlColor="green"/> : <WatchLaterIcon /> }
+                                        secondary={`FECHA: `}
                                     />
                                 </ListItemButton>
                             </ListItem>

@@ -44,7 +44,7 @@ type idRoute = {
     destinyPlace: string
 }
 
-type idPayType = {
+export type idPayType = {
     id: string
     platformName: string
 }
