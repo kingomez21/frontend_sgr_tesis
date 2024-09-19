@@ -5,6 +5,7 @@ import { gql, useMutation } from "@apollo/client";
 import useRegisterContext from "../context/useRegisterContext";
 import { useState } from "react";
 import { useContextUserAuth } from "../../../store";
+import Message from "../../../components/Message";
 
 const CREATE_COLLECTION = gql`
 mutation CreateCollection($collection: InputCollection){
@@ -24,7 +25,7 @@ type InputCollection = {
 const FormGathering = () => {
 
     const navigate = useNavigate()
-    const { routes, dataPayTypes } = useRegisterContext()
+    const { routes, dataPayTypes, setUpdated } = useRegisterContext()
     const dataUser = useContextUserAuth((state) => state.data)
     const [collection] = useMutation(CREATE_COLLECTION)
     const [route, setRoute] = useState("2")
@@ -32,7 +33,20 @@ const FormGathering = () => {
     const [spentMoney, setSpentMoney] = useState(0)
     const [payType, setPayType] = useState("")
 
+    const [open, setOpen] = useState(false)
+    const [msg, setMsg] = useState("")
+    const [statusErr, setStatusErr] = useState(false)
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
     const submit = () => {
+        handleOpen()
         const registroRecoleccion: InputCollection = {
             route,
             company: `${dataUser.idCompany.id}`,
@@ -46,16 +60,20 @@ const FormGathering = () => {
             }
         })
             .then((data) => {
-                alert(data.data.collection.message)
+                setMsg(data.data.collection.message)
+                setUpdated(spentMoney)
             })
             .catch(() => {
-                alert("Error")
+                setStatusErr(true)
+                setMsg("Ocurrio un error inesperado")
+                setTimeout(() => handleClose(), 6000)
             })
     }
 
 
     return (
         <Dialog open fullScreen>
+            <Message band={open} message={msg} status={statusErr ? false : true} />
             <DialogTitle>
                 <Stack direction="row" spacing={2} padding={2} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
@@ -74,7 +92,7 @@ const FormGathering = () => {
                         >
                             <InputLabel>Seleccione la ruta para la recolección</InputLabel>
                             <Select
-                                label="Seleccione la ruta"
+                                label="Seleccione la ruta para la recolección"
                                 onChange={(e) => {
                                     const route = e.target.value
                                     setRoute(route)

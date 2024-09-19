@@ -15,6 +15,7 @@ import useRegisterContext from "./context/useRegisterContext"
 import ListAppointments from "./Lists/ListAppointments"
 import ListRoutes from "./Lists/ListRoutes"
 import ListCollections from "./Lists/ListCollections"
+import ListRawMaterials from "./Lists/ListRawMaterials"
 
 const Registers = () => {
 
@@ -107,7 +108,7 @@ const Registers = () => {
                     <Stack marginLeft={5} marginRight={5}>
 
                         <Stack justifyContent="space-between" direction="row">
-                            <Typography>AQUI - LISTADO DE MATERIA PRIMA</Typography>
+                            <Typography>LISTADO DE MATERIA PRIMA</Typography>
                             <Stack direction="row" spacing={2}>
                                 <Button sx={{ width: '216px' }} onClick={() => navigate('crear-materiaprima')} variant="contained" >
                                     <Typography> AÑADIR MATERIA PRIMA</Typography>
@@ -118,13 +119,14 @@ const Registers = () => {
                             </Stack>
                         </Stack>
                         <Paper sx={{ marginTop: 2 }}>
+                            <ViewListRawMaterials />
                         </Paper>
                     </Stack>
                     <br />
                     <br />
                     <Stack marginLeft={5} marginRight={5}>
                         <Stack justifyContent="space-between" direction="row">
-                            <Typography>AQUI - LISTADO DE CLASIFICACIÓN</Typography>
+                            <Typography>LISTADO DE CLASIFICACIÓN</Typography>
                             <Stack direction="row" spacing={2}>
                                 <Button sx={{ width: '216px' }} onClick={() => navigate('crear-clasificacion')} variant="contained" >
                                     <Typography> AÑADIR CLASIFICACIÓN</Typography>
@@ -166,7 +168,7 @@ const ViewListAppointments = () => {
     const { appointments } = useRegisterContext()
 
     return (
-        <ListAppointments data={appointments.slice(0, 6)} />
+        <ListAppointments data={appointments} />
     )
 }
 
@@ -175,7 +177,7 @@ const ViewListRoutes = () => {
     const { routes } = useRegisterContext()
 
     return (
-        <ListRoutes data={routes.slice(0, 6)} />
+        <ListRoutes data={routes} />
     )
 }
 
@@ -184,7 +186,16 @@ const ViewListCollections = () => {
     const { collections } = useRegisterContext()
 
     return (
-        <ListCollections data={collections.slice(0, 6)} />
+        <ListCollections data={collections} />
+    )
+}
+
+const ViewListRawMaterials = () => {
+
+    const { rawMaterials } = useRegisterContext()
+
+    return (
+        <ListRawMaterials data={rawMaterials} />
     )
 }
 

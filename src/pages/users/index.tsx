@@ -229,7 +229,7 @@ const DataListUsers = ({ idCompany }: propsListUsers) => {
                     sx={{ width: "50%", marginLeft: "1%" }}
                     type="text"
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Buscar proveedores o clientes"
+                    placeholder="Buscar usuario"
                     InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
