@@ -102,3 +102,25 @@ export type dataProcedureType = {
     id: string
     procedureName: string
 }
+
+type idMaterialType = {
+    name: string
+}
+
+type idCollection = {
+    id: string
+}
+
+export type dataRawMaterial = {
+    id: string
+    idMaterialType: idMaterialType
+    kgQuantity: number
+    materialPricePerKg: number
+    isPending: boolean
+    idCollection: idCollection
+}
+
+export type materialType = {
+    id: string
+    name: string
+}
