@@ -5,6 +5,7 @@ import { gql, useMutation } from "@apollo/client";
 import useRegisterContext from "../context/useRegisterContext";
 import { useContextUserAuth } from "../../../store";
 import { useState } from "react";
+import Message from "../../../components/Message";
 
 const CREATE_ROUTE = gql`
 mutation CreateRoute($route: InputRoute){
@@ -23,14 +24,27 @@ type InputRoute = {
 const FormRoute = () => {
 
     const navigate = useNavigate()
-    const { appointments } = useRegisterContext()
+    const { appointments, setUpdated } = useRegisterContext()
     const dataUser = useContextUserAuth((state) => state.data)
     const [route] = useMutation(CREATE_ROUTE)
     const [date, setDate] = useState("1")
     const [initPlace, setInitPlace] = useState("")
     const [destinyPlace, setDestinyPlace] = useState("")
 
+    const [open, setOpen] = useState(false)
+    const [msg, setMsg] = useState("")
+    const [statusErr, setStatusErr] = useState(false)
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
     const submit = () => {
+        handleOpen()
         const registroRuta: InputRoute = {
             date,
             company: `${dataUser.idCompany.id}`,
@@ -43,15 +57,20 @@ const FormRoute = () => {
             }
         })
             .then((data) => {
-                alert(data.data.route.message)
+                setMsg(data.data.route.message)
+                setTimeout(() => handleClose(), 6000)
+                setUpdated(initPlace + destinyPlace)
             })
             .catch(() => {
-                alert("Error")
+                setStatusErr(true)
+                setMsg("Ocurrio un error inesperado")
+                setTimeout(() => handleClose(), 6000)
             })
     }
 
     return (
         <Dialog open fullScreen>
+            <Message band={open} message={msg} status={statusErr ? false : true} />
             <DialogTitle>
                 <Stack direction="row" spacing={2} padding={2} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
@@ -70,7 +89,7 @@ const FormRoute = () => {
                         >
                             <InputLabel>Seleccione la cita de la ruta</InputLabel>
                             <Select
-                                label="Seleccione la cita"
+                                label="Seleccione la cita de la ruta"
                                 onChange={(e) => {
                                     const date = e.target.value
                                     setDate(date)
