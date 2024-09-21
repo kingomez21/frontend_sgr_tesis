@@ -1,19 +1,47 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useNavigate } from "react-router-dom"
-import { gql, useMutation } from "@apollo/client";
-import useRegisterContext from "../context/useRegisterContext";
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { gql, useQuery } from "@apollo/client";
 import { useContextUserAuth } from "../../../store";
-import Message from "../../../components/Message";
+import { Collections, Routes } from "../RegisterTypes";
+import { useState } from "react";
+import useRegisterContext from "../context/useRegisterContext";
 
-const CREATE_COLLECTION = gql`
-mutation CreateCollection($collection: InputCollection){
-  collection: CreateCollection(collection: $collection){
-    message
+const GET_ONE_COLLECTION = gql`
+query getOneCollection($pk: String){
+  getOneCollection(pk: $pk){
+    id
+    idRoute{
+      id
+      initPlace
+      destinyPlace
+    }
+    materialsQuantity
+    spentMoney
+    idPayType{
+      id
+      platformName
+    }
+    isPending
   }
-}`
+}
+`
 
+const GET_ALL_ROUTE_NO_PENDING = gql`
+query getAllRouteNoPending($idCompany: String){
+  getAllRouteNoPending(idCompany: $idCompany){
+    id
+    idDate{
+      id
+      meetDate
+      meetPlace
+    }
+    initPlace
+    destinyPlace
+    isPending
+  }
+}
+`
 type InputCollection = {
     route: string
     company: string
@@ -22,31 +50,47 @@ type InputCollection = {
     payType: string
 }
 
-const FormGathering = () => {
+const ViewFormGathering = () => {
+
+    const { id } = useParams()
+    const dataUser = useContextUserAuth((state) => state.data)
+
+    const dataGathering = useQuery(GET_ONE_COLLECTION, {
+        variables: {
+            pk: `${id}`
+        }
+    })
+
+    const dataRouteNoPending = useQuery(GET_ALL_ROUTE_NO_PENDING, {
+        variables: {
+            idCompany: `${dataUser.idCompany.id}`
+        }
+    })
+
+    return (
+        dataGathering.loading ? "Cargando..." :
+        <FormEditGathering id={id} data={dataGathering.data.getOneCollection} routes={dataRouteNoPending.loading ? [] : dataRouteNoPending.data.getAllRouteNoPending} />
+    )
+}
+
+type FormEditGatheringProps = {
+    id: string
+    data: Collections
+    routes: Routes[]
+}
+
+const FormEditGathering = ({id, data, routes}: FormEditGatheringProps) => {
 
     const navigate = useNavigate()
-    const { routes, dataPayTypes, setUpdated } = useRegisterContext()
+    const { dataPayTypes } = useRegisterContext()
     const dataUser = useContextUserAuth((state) => state.data)
-    const [collection] = useMutation(CREATE_COLLECTION)
-    const [route, setRoute] = useState("2")
-    const [materialsQuantity, setMaterialsQuantity] = useState(0)
-    const [spentMoney, setSpentMoney] = useState(0)
-    const [payType, setPayType] = useState("")
 
-    const [open, setOpen] = useState(false)
-    const [msg, setMsg] = useState("")
-    const [statusErr, setStatusErr] = useState(false)
+    const [route, setRoute] = useState(data.idRoute.id)
+    const [materialsQuantity, setMaterialsQuantity] = useState(data.materialsQuantity)
+    const [spentMoney, setSpentMoney] = useState(data.spentMoney)
+    const [payType, setPayType] = useState(data.idPayType.id)
 
-    const handleClose = () => {
-        setOpen(false);
-    }
-
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
-    const submit = () => {
-        handleOpen()
+    const submit = () =>{
         const registroRecoleccion: InputCollection = {
             route,
             company: `${dataUser.idCompany.id}`,
@@ -54,38 +98,22 @@ const FormGathering = () => {
             spentMoney,
             payType
         }
-        collection({
-            variables: {
-                collection: registroRecoleccion
-            }
-        })
-            .then((data) => {
-                setMsg(data.data.collection.message)
-                setUpdated(Math.floor(Math.random() * 100))
-            })
-            .catch(() => {
-                setStatusErr(true)
-                setMsg("Ocurrio un error inesperado")
-                setTimeout(() => handleClose(), 6000)
-            })
+        console.log(registroRecoleccion)
     }
 
-
     return (
-        <Dialog open fullScreen>
-            <Message band={open} message={msg} status={statusErr ? false : true} />
+        <Dialog scroll="paper" open sx={{ height: "auto" }} >
             <DialogTitle>
-                <Stack direction="row" spacing={2} padding={2} margin={2}>
+                <Stack direction="row" justifyContent="start" padding={1} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
-                    <Typography>CREACIÓN DE REGISTRO</Typography>
+                    <Typography justifyContent="center">ACTUALIZAR RECOLECCION # {id}</Typography>
                 </Stack>
-                <Typography marginLeft={4}>FORMULARIO DE CREACIÓN DE RECOLECCIÓN</Typography>
             </DialogTitle>
             <DialogContent>
                 <br />
                 <Box marginLeft={4} marginRight={4}>
 
-                    <Stack direction="row" spacing={2}>
+                <Stack direction="row" spacing={2}>
                         <FormControl
                             required
                             fullWidth
@@ -147,6 +175,7 @@ const FormGathering = () => {
                             onChange={(e) => {
                                 setMaterialsQuantity(parseInt(e.target.value))
                             }}
+                            value={materialsQuantity}
                         />
                         <TextField
                             placeholder="Ingrese el dinero gastado"
@@ -157,6 +186,7 @@ const FormGathering = () => {
                             onChange={(e) => {
                                 setSpentMoney(parseInt(e.target.value))
                             }}
+                            value={spentMoney}
                         />
                     </Stack>
                     <br />
@@ -166,11 +196,12 @@ const FormGathering = () => {
                             <Typography>GUARDAR RECOLECCIÓN</Typography>
                         </Button>
                     </Stack>
-                </Box>
 
+                </Box>
             </DialogContent>
+
         </Dialog>
     )
-}
+} 
 
-export default FormGathering
+export default ViewFormGathering

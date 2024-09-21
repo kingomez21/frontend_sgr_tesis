@@ -37,7 +37,7 @@ const ListRawMaterials = ({data, viewStyle}: dataProps) => {
 
                             >
                                 <ListItemButton
-                                    onClick={() => navigate(`recoleccion/${value.id}`)}
+                                    onClick={() => navigate(`editar-materiaprima/${value.id}`)}
                                 >
                                     <ListItemText
                                         primary={`
