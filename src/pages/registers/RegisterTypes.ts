@@ -125,3 +125,11 @@ export type materialType = {
     id: string
     name: string
 }
+
+export type Classifications = {
+    id: string
+    rawMaterial: string
+    userInfo: string
+    totalWeight: number
+    procedureType: string
+}
