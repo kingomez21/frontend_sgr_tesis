@@ -17,6 +17,10 @@ import ListAppointments from "./Lists/ListAppointments"
 import ListRoutes from "./Lists/ListRoutes"
 import ListCollections from "./Lists/ListCollections"
 import ListRawMaterials from "./Lists/ListRawMaterials"
+import ViewFormAppointment from "./Views/ViewFormAppointment"
+import ViewFormRoute from "./Views/ViewFormRoute"
+import ViewFormGathering from "./Views/ViewFormGathering"
+import ViewFormRawMaterial from "./Views/ViewFormRawMaterial"
 import Fuse from "fuse.js"
 
 const Registers = () => {
@@ -117,13 +121,13 @@ const Registers = () => {
                     <br />
                     <Routes>
                         <Route path="/crear-cita" element={<FormAppointment />} />
-                        <Route path="/listado-citas" />
+                        <Route path="/editar-cita/:id" element={<ViewFormAppointment />} />
                         <Route path="/crear-ruta" element={<FormRoute />} />
-                        <Route path="/listado-rutas" />
+                        <Route path="/editar-ruta/:id" element={<ViewFormRoute />} />
                         <Route path="/crear-recoleccion" element={<FormGathering />} />
-                        <Route path="/listado-recolecciones" />
+                        <Route path="/editar-recoleccion/:id" element={<ViewFormGathering />} />
                         <Route path="/crear-materiaprima" element={<FormRawMaterial />} />
-                        <Route path="/listado-materia-prima" />
+                        <Route path="/editar-materiaprima/:id" element={<ViewFormRawMaterial />} />
                         <Route path="/crear-clasificacion" element={<FormClassification />} />
                         <Route path="/listado-clasificaciones" />
                         <Route path="/crear-registro" element={<CompleteRegister />} />

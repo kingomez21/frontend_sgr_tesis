@@ -36,7 +36,7 @@ const ListAppointments = ({ data, viewStyle }: props) => {
 
                             >
                                 <ListItemButton
-                                    onClick={() => navigate(`cita/${value.id}`)}
+                                    onClick={() => navigate(`editar-cita/${value.id}`)}
                                 >
                                     <ListItemText
                                         primary={`

@@ -37,7 +37,7 @@ const ListRoutes = ({ data, viewStyle }: props) => {
 
                             >
                                 <ListItemButton
-                                    onClick={() => navigate(`ruta/${value.id}`)}
+                                    onClick={() => navigate(`editar-ruta/${value.id}`)}
                                 >
                                     <ListItemText
                                         primary={`
