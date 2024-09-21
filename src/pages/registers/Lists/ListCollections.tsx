@@ -37,7 +37,7 @@ const ListCollections = ({ data, viewStyle }: props) => {
 
                             >
                                 <ListItemButton
-                                    onClick={() => navigate(`recoleccion/${value.id}`)}
+                                    onClick={() => navigate(`editar-recoleccion/${value.id}`)}
                                 >
                                     <ListItemText
                                         primary={`

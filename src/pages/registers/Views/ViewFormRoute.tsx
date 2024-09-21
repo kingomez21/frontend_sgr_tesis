@@ -1,88 +1,112 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useNavigate } from "react-router-dom"
-import { gql, useMutation } from "@apollo/client";
-import useRegisterContext from "../context/useRegisterContext";
-import { useContextUserAuth } from "../../../store";
+import { gql, useQuery } from "@apollo/client"
+import { useNavigate, useParams } from "react-router-dom"
+import { Appointments, Routes } from "../RegisterTypes"
 import { useState } from "react";
-import Message from "../../../components/Message";
+import { useContextUserAuth } from "../../../store";
 
-const CREATE_ROUTE = gql`
-mutation CreateRoute($route: InputRoute){
-  route: CreateRoute(route: $route){
-    message
+
+const GET_ONE_ROUTE = gql`
+query getOneRoute($pk: String){
+  getOneRoute(pk: $pk){
+    id
+    idDate{
+      id
+      meetDate
+      meetPlace
+    }
+    initPlace
+    destinyPlace 
   }
-}`
+}
+`
+
+const GET_ALL_DATE_NO_PENDING = gql`
+query getAllDateNoPending($idCompany: String){
+  getAllDateNoPending(idCompany: $idCompany){
+    id
+    idProvider{
+      id 
+      fullName
+    } 
+    meetDate
+    meetPlace
+    isPending
+  }
+}
+`
 
 type InputRoute = {
     date: string
-    company: string
+    company?: string
     initPlace: string
     destinyPlace: string
 }
 
-const FormRoute = () => {
+const ViewFormRoute = () => {
+    
+    const {id} = useParams()
+    const dataUser = useContextUserAuth((state) => state.data)
+
+    const dataRoutes = useQuery(GET_ONE_ROUTE, {
+        variables: {
+            pk: `${id}`
+        }
+    })
+
+    const dataDateNoPending = useQuery(GET_ALL_DATE_NO_PENDING, {
+        variables: {
+            idCompany: `${dataUser.idCompany.id}`
+        }
+    })
+
+    return (
+        dataRoutes.loading ? 
+        "Cargando..." : 
+        <FormEditRoute id={id} data={dataRoutes.data.getOneRoute} appointments={dataDateNoPending.loading ? [] : dataDateNoPending.data.getAllDateNoPending}/>
+    )
+}
+
+type FormEditRouteProps = {
+    id: string
+    data: Routes
+    appointments?: Appointments[]
+}
+
+const FormEditRoute = ({id, data, appointments}: FormEditRouteProps) => {
 
     const navigate = useNavigate()
-    const { appointments, setUpdated } = useRegisterContext()
-    const dataUser = useContextUserAuth((state) => state.data)
-    const [route] = useMutation(CREATE_ROUTE)
-    const [date, setDate] = useState("1")
-    const [initPlace, setInitPlace] = useState("")
-    const [destinyPlace, setDestinyPlace] = useState("")
 
-    const [open, setOpen] = useState(false)
-    const [msg, setMsg] = useState("")
-    const [statusErr, setStatusErr] = useState(false)
-
-    const handleClose = () => {
-        setOpen(false);
-    }
-
-    const handleOpen = () => {
-        setOpen(true);
-    };
+    const [date, setDate] = useState(data.idDate.id)
+    const [initPlace, setInitPlace] = useState(data.initPlace)
+    const [destinyPlace, setDestinyPlace] = useState(data.destinyPlace)
 
     const submit = () => {
-        handleOpen()
+
         const registroRuta: InputRoute = {
             date,
-            company: `${dataUser.idCompany.id}`,
+            //company: `${dataUser.idCompany.id}`,
             initPlace,
             destinyPlace
         }
-        route({
-            variables: {
-                route: registroRuta
-            }
-        })
-            .then((data) => {
-                setMsg(data.data.route.message)
-                setTimeout(() => handleClose(), 6000)
-                setUpdated(Math.floor(Math.random() * 100))
-            })
-            .catch(() => {
-                setStatusErr(true)
-                setMsg("Ocurrio un error inesperado")
-                setTimeout(() => handleClose(), 6000)
-            })
+        console.log(registroRuta)
+        
+        return
     }
 
     return (
-        <Dialog open fullScreen>
-            <Message band={open} message={msg} status={statusErr ? false : true} />
+        <Dialog scroll="paper" open sx={{ height: "auto" }} >
             <DialogTitle>
-                <Stack direction="row" spacing={2} padding={2} margin={2}>
+                <Stack direction="row" justifyContent="start" padding={1} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
-                    <Typography>CREACIÓN DE REGISTRO</Typography>
+                    <Typography justifyContent="center">ACTUALIZAR RUTA # {id}</Typography>
                 </Stack>
-                <Typography marginLeft={4}>FORMULARIO DE CREACIÓN DE RUTA</Typography>
             </DialogTitle>
             <DialogContent>
                 <br />
                 <Box marginLeft={4} marginRight={4}>
-
-                    <Stack direction="row" spacing={2}>
+                <Stack direction="row" spacing={2}>
                         <FormControl
                             required
                             fullWidth
@@ -121,6 +145,7 @@ const FormRoute = () => {
                             onChange={(e) => {
                                 setInitPlace(e.target.value)
                             }}
+                            value={initPlace}
                         />
                         <TextField
                             placeholder="Ingrese el destino de la ruta"
@@ -131,6 +156,7 @@ const FormRoute = () => {
                             onChange={(e) => {
                                 setDestinyPlace(e.target.value)
                             }}
+                            value={destinyPlace}
                         />
                     </Stack>
                     <br />
@@ -141,10 +167,10 @@ const FormRoute = () => {
                         </Button>
                     </Stack>
                 </Box>
-
             </DialogContent>
+
         </Dialog>
     )
 }
 
-export default FormRoute
+export default ViewFormRoute

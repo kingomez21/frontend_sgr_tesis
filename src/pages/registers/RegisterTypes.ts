@@ -35,7 +35,7 @@ export type Routes = {
     idDate: idDate
     initPlace: string
     destinyPlace: string
-    isPending: boolean
+    isPending?: boolean
 }
 
 type idRoute = {
@@ -104,6 +104,7 @@ export type dataProcedureType = {
 }
 
 type idMaterialType = {
+    id?: string
     name: string
 }
 
