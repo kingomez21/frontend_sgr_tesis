@@ -9,7 +9,7 @@ import BarGraphics from "./graphics/BarGraphics"
 import { Bar, Rectangle } from "recharts"
 import DataLoading from "../../components/DataLoading"
 import getUri from "../../hooks/getUri";
-import GetPermission from "../../hooks/GetPermission";
+import GetPermission from "../../hooks/getPermission";
 
 const Reports = () => {
 

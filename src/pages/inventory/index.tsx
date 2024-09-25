@@ -10,7 +10,7 @@ import ViewListCompletedClassificated from "./ViewListCompletedClassificated";
 import ViewListLoteSell from "./ViewListLoteSell";
 import ViewClassification from "./ViewClassification";
 import ViewLoteSell from "./ViewLoteSell";
-import GetPermission from "../../hooks/GetPermission";
+import GetPermission from "../../hooks/getPermission";
 
 const Inventory = () => {
 

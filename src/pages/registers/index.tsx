@@ -6,7 +6,7 @@ import RefreshIcon from "@mui/icons-material/Refresh"
 import SearchIcon from '@mui/icons-material/Search';
 import CompleteRegister from "./CompleteRegister"
 import RegisterProvider from "./context/RegisterProvider"
-import GetPermission from "../../hooks/GetPermission"
+import GetPermission from "../../hooks/getPermission"
 import FormAppointment from "./Forms/FormAppointment"
 import FormRoute from "./Forms/FormRoute"
 import FormGathering from "./Forms/FormGathering"

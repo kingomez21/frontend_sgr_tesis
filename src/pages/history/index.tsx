@@ -8,7 +8,7 @@ import ListClassificationsHistory from "./ListClassificationsHistory"
 import Fuse from "fuse.js"
 import { Route, Routes } from "react-router-dom"
 import ViewHistoryClassifications from "./ViewHistoryClassifications"
-import GetPermission from "../../hooks/GetPermission";
+import GetPermission from "../../hooks/getPermission";
 
 const History = () => {
     const setTitle = useContextUserAuth((state) => state.setTitle)

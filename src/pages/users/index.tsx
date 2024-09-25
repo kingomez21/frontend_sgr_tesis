@@ -13,7 +13,7 @@ import AsignPermission from "./AsignPermission"
 import { DocumentNode, gql, useQuery } from "@apollo/client"
 import SearchIcon from '@mui/icons-material/Search';
 import Fuse from "fuse.js";
-import GetPermission from "../../hooks/GetPermission";
+import GetPermission from "../../hooks/getPermission";
 
 const GET_COUNTS_CLIENTS_PROVIDERS = gql`
 query getCounts{
