@@ -10,7 +10,7 @@ import ViewListCompletedClassificated from "./ViewListCompletedClassificated";
 import ViewListLoteSell from "./ViewListLoteSell";
 import ViewClassification from "./ViewClassification";
 import ViewLoteSell from "./ViewLoteSell";
-import GetPermission from "../../hooks/GetPermission";
+import GetPermission from "../../hooks/getPermission";
 
 const Inventory = () => {
 
@@ -56,7 +56,7 @@ const Inventory = () => {
                     <Route path="/listado-productos-stock/*" element={<ViewListCompletedClassificated type={2} title="LISTADO DE PRODUCTOS EN STOCK" />} />
                     <Route path="/listado-lotes/*" element={<ViewListLoteSell />} />
                     <Route path="/clasificacion/:id" element={<ViewClassification />} />
-                    <Route path="/lote/:id" element={<ViewLoteSell />} />
+                    <Route path="/lote/:id/*" element={<ViewLoteSell />} />
                 </Routes>
             </InventoryProvider>
         ) : (

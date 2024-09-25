@@ -10,9 +10,9 @@ type props = {
 const ListClassificationsHistory = ({ data }: props) => {
     const navigate = useNavigate()
     return (
-        <Paper sx={{ height: 550, justifyContent: "center", alignContent: "center" }}>
+        <Paper sx={{ height: '70%' }}>
             {data?.length > 0 ? (
-                <List component={Grid} container sx={{ overflow: 'auto', maxHeight: 550 }}>
+                <List component={Grid} container sx={{ overflow: 'auto', maxHeight: '70%' }}>
                     {
 
                         data?.map((value) => (

@@ -3,8 +3,9 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import useRegisterContext from "../context/useRegisterContext";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { Appointments } from "../RegisterTypes";
+import Message from "../../../components/Message";
 
 const GET_ONE_DATE = gql`
 query getOneDate($pk: String) {
@@ -20,21 +21,30 @@ query getOneDate($pk: String) {
 }
 `
 
+const UPDATE_DATE = gql`
+mutation UpdateDate($idDate: String, $dateUpdate: InputDate){
+  UpdateDate(idDate: $idDate, dateUpdate: $dateUpdate){
+    message
+  }
+}
+`
+
 type InputDate = {
     provider: string
     company?: string
     meetDate: string
-    meetPlace: string 
+    meetPlace: string
 }
 
 const ViewFormAppointment = () => {
 
     const { id } = useParams()
-    
+
     const dataDate = useQuery(GET_ONE_DATE, {
         variables: {
             pk: `${id}`
-        }
+        },
+        fetchPolicy: "no-cache"
     })
 
     return (
@@ -47,31 +57,57 @@ type formEditAppointmentProps = {
     data: Appointments
 }
 
-const FormEditAppointment = ({id, data}: formEditAppointmentProps) => {
+const FormEditAppointment = ({ id, data }: formEditAppointmentProps) => {
 
     const navigate = useNavigate()
-    const {dataProviders} = useRegisterContext()
-
+    const { dataProviders, setUpdated } = useRegisterContext()
+    const [dateUpdate] = useMutation(UPDATE_DATE)
     const [provider, setProvider] = useState(data.idProvider.id)
     const [dateAppointment, setDateAppointment] = useState(data.meetDate)
     const [placeAppointment, setPlaceAppointment] = useState(data.meetPlace)
 
-    const submit = () => {
+    const [open, setOpen] = useState(false)
+    const [msg, setMsg] = useState("")
+    const [statusErr, setStatusErr] = useState(false)
 
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const submit = () => {
+        handleOpen()
         const registroCita: InputDate = {
             provider,
             //company: `${dataUser.idCompany.id}`,
             meetDate: dateAppointment,
             meetPlace: placeAppointment
         }
-        console.log(registroCita)
-        
-        return
+        dateUpdate({
+            variables: {
+                idDate: id,
+                dateUpdate: registroCita
+            }
+        })
+        .then((data) => {
+            setMsg(data.data.UpdateDate.message)
+            setUpdated(Math.floor(Math.random() * 100))
+            setTimeout( () => handleClose(), 6000)
+        })
+        .catch(() => {
+            setStatusErr(true)
+            setMsg("Ocurrio un error inesperado")
+            setTimeout( () => handleClose(), 6000)
+        })
     }
 
 
     return (
         <Dialog scroll="paper" open sx={{ height: "auto" }} >
+            <Message band={open} message={msg} status={statusErr ? false : true} />
             <DialogTitle>
                 <Stack direction="row" justifyContent="start" padding={1} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
