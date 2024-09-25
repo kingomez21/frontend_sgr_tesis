@@ -45,7 +45,8 @@ const HistoryProvider = ({children}) => {
         {
             variables: {
                 idCompany: `${dataUser.idCompany.id}`
-            }
+            },
+            fetchPolicy: 'no-cache'
         }
     )
 

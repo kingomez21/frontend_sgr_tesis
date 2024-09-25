@@ -1,10 +1,12 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { gql, useQuery } from "@apollo/client"
+import { gql, useMutation, useQuery } from "@apollo/client"
 import { useNavigate, useParams } from "react-router-dom"
 import { Appointments, Routes } from "../RegisterTypes"
 import { useState } from "react";
 import { useContextUserAuth } from "../../../store";
+import Message from "../../../components/Message";
+import useRegisterContext from "../context/useRegisterContext";
 
 
 const GET_ONE_ROUTE = gql`
@@ -36,6 +38,13 @@ query getAllDateNoPending($idCompany: String){
   }
 }
 `
+const UPDATE_ROUTE = gql`
+mutation UpdateRoute($idRoute: String, $routeUpdate: InputRoute){
+  UpdateRoute(idRoute: $idRoute, routeUpdate: $routeUpdate){
+    message
+  }
+}
+`
 
 type InputRoute = {
     date: string
@@ -45,26 +54,28 @@ type InputRoute = {
 }
 
 const ViewFormRoute = () => {
-    
-    const {id} = useParams()
+
+    const { id } = useParams()
     const dataUser = useContextUserAuth((state) => state.data)
 
     const dataRoutes = useQuery(GET_ONE_ROUTE, {
         variables: {
             pk: `${id}`
-        }
+        },
+        fetchPolicy: "no-cache"
     })
 
     const dataDateNoPending = useQuery(GET_ALL_DATE_NO_PENDING, {
         variables: {
             idCompany: `${dataUser.idCompany.id}`
-        }
+        },
+        fetchPolicy: "no-cache"
     })
 
     return (
-        dataRoutes.loading ? 
-        "Cargando..." : 
-        <FormEditRoute id={id} data={dataRoutes.data.getOneRoute} appointments={dataDateNoPending.loading ? [] : dataDateNoPending.data.getAllDateNoPending}/>
+        dataRoutes.loading ?
+            "Cargando..." :
+            <FormEditRoute id={id} data={dataRoutes.data.getOneRoute} appointments={dataDateNoPending.loading ? [] : dataDateNoPending.data.getAllDateNoPending} />
     )
 }
 
@@ -74,29 +85,56 @@ type FormEditRouteProps = {
     appointments?: Appointments[]
 }
 
-const FormEditRoute = ({id, data, appointments}: FormEditRouteProps) => {
+const FormEditRoute = ({ id, data, appointments }: FormEditRouteProps) => {
 
     const navigate = useNavigate()
-
+    const {setUpdated} = useRegisterContext()
     const [date, setDate] = useState(data.idDate.id)
+    const [routeUpdate] = useMutation(UPDATE_ROUTE)
     const [initPlace, setInitPlace] = useState(data.initPlace)
     const [destinyPlace, setDestinyPlace] = useState(data.destinyPlace)
 
-    const submit = () => {
+    const [open, setOpen] = useState(false)
+    const [msg, setMsg] = useState("")
+    const [statusErr, setStatusErr] = useState(false)
 
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const submit = () => {
+        handleOpen()
         const registroRuta: InputRoute = {
             date,
             //company: `${dataUser.idCompany.id}`,
             initPlace,
             destinyPlace
         }
-        console.log(registroRuta)
-        
-        return
+        routeUpdate({
+            variables: {
+                idRoute: id,
+                routeUpdate: registroRuta
+            }
+        })
+        .then((data) => {
+            setMsg(data.data.UpdateRoute.message)
+            setUpdated(Math.floor(Math.random() * 100))
+            setTimeout( () => handleClose(), 6000)
+        })
+        .catch(() => {
+            setStatusErr(true)
+            setMsg("Ocurrio un error inesperado")
+            setTimeout( () => handleClose(), 6000)
+        })
     }
 
     return (
         <Dialog scroll="paper" open sx={{ height: "auto" }} >
+            <Message band={open} message={msg} status={statusErr ? false : true} />
             <DialogTitle>
                 <Stack direction="row" justifyContent="start" padding={1} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
@@ -106,7 +144,7 @@ const FormEditRoute = ({id, data, appointments}: FormEditRouteProps) => {
             <DialogContent>
                 <br />
                 <Box marginLeft={4} marginRight={4}>
-                <Stack direction="row" spacing={2}>
+                    <Stack direction="row" spacing={2}>
                         <FormControl
                             required
                             fullWidth

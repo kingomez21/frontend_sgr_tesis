@@ -288,8 +288,6 @@ const ViewListRawMaterials = () => {
 const ValidationClassification = () => {
     const { rawMaterials } = useRegisterContext()
     const navigate = useNavigate()
-    //const isNull = 
-    console.log(rawMaterials)
     return (
         <Button variant="contained" onClick={() => navigate('crear-clasificacion')} disabled={rawMaterials === null || rawMaterials.length === 0 ? true : false}>
             {rawMaterials === null || rawMaterials.length === 0 ? 

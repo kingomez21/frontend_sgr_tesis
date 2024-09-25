@@ -56,7 +56,7 @@ const Inventory = () => {
                     <Route path="/listado-productos-stock/*" element={<ViewListCompletedClassificated type={2} title="LISTADO DE PRODUCTOS EN STOCK" />} />
                     <Route path="/listado-lotes/*" element={<ViewListLoteSell />} />
                     <Route path="/clasificacion/:id" element={<ViewClassification />} />
-                    <Route path="/lote/:id" element={<ViewLoteSell />} />
+                    <Route path="/lote/:id/*" element={<ViewLoteSell />} />
                 </Routes>
             </InventoryProvider>
         ) : (
