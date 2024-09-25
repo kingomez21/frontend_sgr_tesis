@@ -1,11 +1,12 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useParams } from "react-router-dom"
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { Collections, dataRawMaterial } from "../RegisterTypes";
 import useRegisterContext from "../context/useRegisterContext";
 import { useState } from "react";
 import { useContextUserAuth } from "../../../store";
+import Message from "../../../components/Message";
 
 const GET_ONE_RAW_MATERIAL = gql`
 query getOneRawMaterial($pk: String){
@@ -45,10 +46,18 @@ query getAllCollectionNoPending($idCompany: String){
 }
 `
 
+const UPDATE_RAW_MATERIAL = gql`
+mutation UpdateRawMaterial($idRawMaterial: String, $updateRawMaterial: InputRawMaterial){
+  UpdateRawMaterial(idRawMaterial: $idRawMaterial, rawMaterialUpdate: $updateRawMaterial){
+    message
+  }
+}
+`
+
 type InputRawMaterial = {
     idCollection: string,
     idMaterialType: string,
-    idCompany: string,
+    idCompany?: string,
     kgQuantity: number,
     materialPricePerKg: number
 }
@@ -61,13 +70,15 @@ const ViewFormRawMaterial = () => {
     const dataRawMaterial = useQuery(GET_ONE_RAW_MATERIAL, {
         variables: {
             pk: `${id}`
-        }
+        },
+        fetchPolicy: "no-cache"
     })
 
     const dataCollectionNoPending = useQuery(GET_ALL_COLLECTION_NO_PENDING, {
         variables: {
             idCompany: `${dataUser.idCompany.id}`
-        }
+        },
+        fetchPolicy: "no-cache"
     })
 
     return (
@@ -89,32 +100,60 @@ type FormEditRawMaterial = {
 const FormEditRawMaterial = ({ id, data, collections }: FormEditRawMaterial) => {
 
     const navigate = useNavigate()
-    const { materialTypes } = useRegisterContext()
-    const dataUser = useContextUserAuth((state) => state.data)
-
+    const { materialTypes, setUpdated } = useRegisterContext()
+    //const dataUser = useContextUserAuth((state) => state.data)
+    const [rawMaterialUpdate] = useMutation(UPDATE_RAW_MATERIAL)
     const [idCollection, setIdCollection] = useState(data.idCollection.id)
     const [idMaterialType, setIdMaterialType] = useState(data.idMaterialType.id)
     const [kgQuantity, setKgQuantity] = useState(data.kgQuantity)
     const [materialPricePerKg, setMaterialPricePerKg] = useState(data.materialPricePerKg)
 
+    const [open, setOpen] = useState(false)
+    const [msg, setMsg] = useState("")
+    const [statusErr, setStatusErr] = useState(false)
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
     const submit = () => {
+        handleOpen()
         const form: InputRawMaterial = {
             idCollection,
             idMaterialType,
-            idCompany: `${dataUser.idCompany.id}`,
+            //idCompany: `${dataUser.idCompany.id}`,
             kgQuantity,
             materialPricePerKg
         }
-
-        console.log(form)
+        rawMaterialUpdate({
+            variables: {
+                idRawMaterial: id,
+                updateRawMaterial: form
+            }
+        })
+            .then((data) => {
+                setMsg(data.data.UpdateRawMaterial.message)
+                setUpdated(Math.floor(Math.random() * 100))
+                setTimeout(() => handleClose(), 6000)
+            })
+            .catch(() => {
+                setStatusErr(true)
+                setMsg("Ocurrio un error inesperado")
+                setTimeout(() => handleClose(), 6000)
+            })
     }
 
     return (
         <Dialog scroll="paper" open sx={{ height: "auto" }} >
+            <Message band={open} message={msg} status={statusErr ? false : true} />
             <DialogTitle>
                 <Stack direction="row" justifyContent="start" padding={1} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
-                    <Typography justifyContent="center">ACTUALIZAR MTERIA PRIMA # {id}</Typography>
+                    <Typography justifyContent="center">ACTUALIZAR MATERIA PRIMA # {id}</Typography>
                 </Stack>
             </DialogTitle>
             <DialogContent>
@@ -148,7 +187,7 @@ const FormEditRawMaterial = ({ id, data, collections }: FormEditRawMaterial) => 
 
                     </Stack>
                     <br />
-                    
+
                     <Stack direction="row" spacing={2}>
 
                         <FormControl

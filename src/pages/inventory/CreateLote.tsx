@@ -125,9 +125,9 @@ const ViewForm = ({ materialTypesObj }: propsViewForm) => {
                             required
                             fullWidth
                         >
-                            <InputLabel>Seleccione el tipo de Proveedor</InputLabel>
+                            <InputLabel>Seleccione el tipo de Materia Prima</InputLabel>
                             <Select
-                                label="Seleccione el tipo de documento"
+                                label="Seleccione el tipo de materia prima"
                                 onChange={(e) => {
                                     setMaterialType(e.target.value)
                                 }}
@@ -157,7 +157,7 @@ const ViewForm = ({ materialTypesObj }: propsViewForm) => {
                     <ViewListProducts data={aggProductsLote.filter((value) => value.idRawMaterial.idMaterialType.id === materialType)} typeFuntions={false} />
                     <br /><br />
                     <Stack direction="row" justifyContent="space-between">
-                        <Typography>LISTADO DE PRODUCTOS DE {materialTypesObj.find((value) => value.id === materialType).name.toUpperCase()}</Typography>
+                        <Typography>LISTADO DE PRODUCTOS DE {materialTypesObj?.find((value) => value.id === materialType)?.name?.toUpperCase()}</Typography>
                         <Typography>CANTIDAD: {stock.length}</Typography>
                     </Stack>
                     <ViewListProducts data={stock} typeFuntions={true} />
