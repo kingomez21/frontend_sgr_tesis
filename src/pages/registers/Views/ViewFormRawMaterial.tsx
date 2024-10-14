@@ -22,6 +22,10 @@ query getOneRawMaterial($pk: String){
     idCollection{
       id
     }
+    idProvider{
+        id
+        fullName
+    }
   }
 }
 `
@@ -55,11 +59,12 @@ mutation UpdateRawMaterial($idRawMaterial: String, $updateRawMaterial: InputRawM
 `
 
 type InputRawMaterial = {
-    idCollection: string,
-    idMaterialType: string,
-    idCompany?: string,
-    kgQuantity: number,
+    idCollection: string
+    idMaterialType: string
+    idCompany?: string
+    kgQuantity: number
     materialPricePerKg: number
+    idProvider: string
 }
 
 const ViewFormRawMaterial = () => {
@@ -100,13 +105,14 @@ type FormEditRawMaterial = {
 const FormEditRawMaterial = ({ id, data, collections }: FormEditRawMaterial) => {
 
     const navigate = useNavigate()
-    const { materialTypes, setUpdated } = useRegisterContext()
+    const { materialTypes, setUpdated, dataProviders } = useRegisterContext()
     //const dataUser = useContextUserAuth((state) => state.data)
     const [rawMaterialUpdate] = useMutation(UPDATE_RAW_MATERIAL)
-    const [idCollection, setIdCollection] = useState(data.idCollection.id)
+    const [idCollection, setIdCollection] = useState(data.idCollection?.id)
     const [idMaterialType, setIdMaterialType] = useState(data.idMaterialType.id)
     const [kgQuantity, setKgQuantity] = useState(data.kgQuantity)
     const [materialPricePerKg, setMaterialPricePerKg] = useState(data.materialPricePerKg)
+    const [provider, setProvider] = useState(data.idProvider?.id)
 
     const [open, setOpen] = useState(false)
     const [msg, setMsg] = useState("")
@@ -127,7 +133,8 @@ const FormEditRawMaterial = ({ id, data, collections }: FormEditRawMaterial) => 
             idMaterialType,
             //idCompany: `${dataUser.idCompany.id}`,
             kgQuantity,
-            materialPricePerKg
+            materialPricePerKg,
+            idProvider: provider
         }
         rawMaterialUpdate({
             variables: {
@@ -160,32 +167,62 @@ const FormEditRawMaterial = ({ id, data, collections }: FormEditRawMaterial) => 
                 <br />
                 <Box marginLeft={4} marginRight={4}>
 
-                    <Stack direction="row" spacing={2}>
-                        <FormControl
-                            required
-                            fullWidth
-                        >
-                            <InputLabel>Seleccione la Recolección</InputLabel>
-                            <Select
-                                label="Seleccione la Recolección"
-                                onChange={(e) => {
-                                    const collection = e.target.value
-                                    setIdCollection(collection)
-                                }}
-                                value={idCollection}
+                    {idCollection ? (
+                        <Stack direction="row" spacing={2}>
+                            <FormControl
+                                required
+                                fullWidth
                             >
-                                {collections?.map((v) => (
-                                    <MenuItem
-                                        key={v.id}
-                                        value={v.id}
-                                    >
-                                        Recoleccion #{v.id} - Cantidad: {v.materialsQuantity} - Dinero pagado: ${v.spentMoney}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                                <InputLabel>Seleccione la Recolección</InputLabel>
+                                <Select
+                                    label="Seleccione la Recolección"
+                                    onChange={(e) => {
+                                        const collection = e.target.value
+                                        setIdCollection(collection)
+                                    }}
+                                    value={idCollection}
+                                >
+                                    {collections?.map((v) => (
+                                        <MenuItem
+                                            key={v.id}
+                                            value={v.id}
+                                        >
+                                            Recoleccion #{v.id} - Cantidad: {v.materialsQuantity} - Dinero pagado: ${v.spentMoney}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
 
-                    </Stack>
+                        </Stack>
+                    ) : (
+                        <Stack direction="row" spacing={2}>
+                            <FormControl
+                                required
+                                fullWidth
+                            >
+                                <InputLabel>Seleccione el proveedor</InputLabel>
+                                <Select
+                                    label="Seleccione el proveedor"
+                                    onChange={(e) => {
+                                        const provider = e.target.value
+                                        setProvider(provider)
+                                    }}
+                                    value={provider}
+                                >
+                                    {dataProviders?.map((v) => (
+                                        <MenuItem
+                                            key={v.id}
+                                            value={v.id}
+                                        >
+                                            {v.nit} - {v.fullName} 
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+
+                        </Stack>
+                    )
+                    }
                     <br />
 
                     <Stack direction="row" spacing={2}>

@@ -7,7 +7,7 @@ export type RegisterAppointment = {
 
 type idProvider = {
     id: string
-    fullName: string
+    fullName?: string
 }
 
 export type Appointments = {
@@ -118,7 +118,8 @@ export type dataRawMaterial = {
     kgQuantity: number
     materialPricePerKg: number
     isPending: boolean
-    idCollection: idCollection
+    idCollection: idCollection,
+    idProvider: idProvider
 }
 
 export type materialType = {

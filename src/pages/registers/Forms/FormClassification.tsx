@@ -93,7 +93,7 @@ const FormClassification = () => {
                         >
                             <InputLabel>Seleccione la materia prima a clasificar</InputLabel>
                             <Select
-                                label="Seleccione la materia prima"
+                                label="Seleccione la materia prima a clasificar"
                                 onChange={(e) => {
                                     const rawMaterial = e.target.value
                                     setRawMaterial(rawMaterial)
@@ -105,7 +105,7 @@ const FormClassification = () => {
                                         key={v.id}
                                         value={v.id}
                                     >
-                                        {v.idMaterialType.name} - {v.kgQuantity} - {v.materialPricePerKg}
+                                       #{v.id} {v.idMaterialType.name} - {v.kgQuantity} Kg - $ {v.materialPricePerKg}
                                     </MenuItem>
                                 ))}
                             </Select>
