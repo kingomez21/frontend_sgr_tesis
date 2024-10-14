@@ -69,17 +69,11 @@ const FormRawMaterial = () => {
                                 ))}
                             </Select>
                         </FormControl>
-
                     </Stack>
-
                     <br />
                     <br />
                     <ViewListRawMaterialPerCollection idCollection={idCollection} collections={collections} />
-
-
                     <br />
-
-
                 </Box>
             </DialogContent>
         </Dialog>

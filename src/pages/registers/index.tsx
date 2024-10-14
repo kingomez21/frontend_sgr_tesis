@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { Route, Routes, useNavigate } from "react-router-dom"
 import RefreshIcon from "@mui/icons-material/Refresh"
 import SearchIcon from '@mui/icons-material/Search';
-import CompleteRegister from "./CompleteRegister"
+//import CompleteRegister from "./CompleteRegister"
 import RegisterProvider from "./context/RegisterProvider"
 import GetPermission from "../../hooks/getPermission"
 import FormAppointment from "./Forms/FormAppointment"
@@ -22,6 +22,7 @@ import ViewFormRoute from "./Views/ViewFormRoute"
 import ViewFormGathering from "./Views/ViewFormGathering"
 import ViewFormRawMaterial from "./Views/ViewFormRawMaterial"
 import Fuse from "fuse.js"
+import FormRegisterFast from "./FormRegisterFast"
 
 const Registers = () => {
 
@@ -46,7 +47,7 @@ const Registers = () => {
                     >
                         <Stack justifyContent="space-between" direction="row" spacing={2}>
                             <Button onClick={() => navigate('crear-registro')} variant="contained">
-                                <Typography>CREAR REGISTRO COMPLETO</Typography>
+                                <Typography>REGISTRO RAPIDO</Typography>
                             </Button>
                             <ValidationClassification />
                         </Stack>
@@ -130,7 +131,8 @@ const Registers = () => {
                         <Route path="/editar-materiaprima/:id" element={<ViewFormRawMaterial />} />
                         <Route path="/crear-clasificacion" element={<FormClassification />} />
                         <Route path="/listado-clasificaciones" />
-                        <Route path="/crear-registro" element={<CompleteRegister />} />
+                        {/* <Route path="/crear-registro" element={<CompleteRegister />} /> */}
+                        <Route path="/crear-registro" element={<FormRegisterFast />} />
                     </Routes>
                 </Box>
             </RegisterProvider >
