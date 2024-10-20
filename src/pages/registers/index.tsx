@@ -47,7 +47,7 @@ const Registers = () => {
                     >
                         <Stack justifyContent="space-between" direction="row" spacing={2}>
                             <Button onClick={() => navigate('crear-registro')} variant="contained">
-                                <Typography>REGISTRO RAPIDO</Typography>
+                                <Typography>REGISTRO RÁPIDO</Typography>
                             </Button>
                             <ValidationClassification />
                         </Stack>
