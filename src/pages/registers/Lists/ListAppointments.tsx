@@ -36,14 +36,13 @@ const ListAppointments = ({ data, viewStyle }: props) => {
 
                             >
                                 <ListItemButton
-                                    onClick={() => navigate(`cita/${value.id}`)}
+                                    onClick={() => navigate(`editar-cita/${value.id}`)}
                                 >
                                     <ListItemText
                                         primary={`
                                                 PROVEEDOR: ${value.idProvider.fullName.toUpperCase()} 
                                                 - CITA: ${value.meetDate} - LUGAR: ${value.meetPlace.toUpperCase()}
                                             `}
-                                        secondary={`FECHA: ${value.meetDate}`}
                                     />
                                 </ListItemButton>
                             </ListItem>

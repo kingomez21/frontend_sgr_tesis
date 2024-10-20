@@ -1,11 +1,12 @@
-import { Box, Button, Paper, Stack, Typography } from "@mui/material"
+import { Box, Button, IconButton, InputAdornment, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material"
 import { useContextUserAuth } from "../../store"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Route, Routes, useNavigate } from "react-router-dom"
-//import RefreshIcon from "@mui/icons-material/Refresh"
-import CompleteRegister from "./CompleteRegister"
+import RefreshIcon from "@mui/icons-material/Refresh"
+import SearchIcon from '@mui/icons-material/Search';
+//import CompleteRegister from "./CompleteRegister"
 import RegisterProvider from "./context/RegisterProvider"
-import GetPermission from "../../hooks/GetPermission"
+import GetPermission from "../../hooks/getPermission"
 import FormAppointment from "./Forms/FormAppointment"
 import FormRoute from "./Forms/FormRoute"
 import FormGathering from "./Forms/FormGathering"
@@ -15,6 +16,13 @@ import useRegisterContext from "./context/useRegisterContext"
 import ListAppointments from "./Lists/ListAppointments"
 import ListRoutes from "./Lists/ListRoutes"
 import ListCollections from "./Lists/ListCollections"
+import ListRawMaterials from "./Lists/ListRawMaterials"
+import ViewFormAppointment from "./Views/ViewFormAppointment"
+import ViewFormRoute from "./Views/ViewFormRoute"
+import ViewFormGathering from "./Views/ViewFormGathering"
+import ViewFormRawMaterial from "./Views/ViewFormRawMaterial"
+import Fuse from "fuse.js"
+import FormRegisterFast from "./FormRegisterFast"
 
 const Registers = () => {
 
@@ -37,10 +45,11 @@ const Registers = () => {
                         spacing={2}
                         marginTop={5}
                     >
-                        <Stack justifyContent="space-between" direction="row">
+                        <Stack justifyContent="space-between" direction="row" spacing={2}>
                             <Button onClick={() => navigate('crear-registro')} variant="contained">
-                                <Typography>CREAR REGISTRO COMPLETO</Typography>
+                                <Typography>REGISTRO RAPIDO</Typography>
                             </Button>
+                            <ValidationClassification />
                         </Stack>
                     </Stack>
                     <br />
@@ -50,13 +59,10 @@ const Registers = () => {
 
                     <Stack marginLeft={5} marginRight={5}>
                         <Stack justifyContent="space-between" direction="row">
-                            <Typography>LISTADO DE CITAS</Typography>
+                            <Typography>LISTADO DE CITAS - PENDIENTES</Typography>
                             <Stack direction="row" spacing={2}>
                                 <Button sx={{ width: '216px' }} onClick={() => navigate('crear-cita')} variant="contained" >
                                     <Typography> AÑADIR CITA </Typography>
-                                </Button>
-                                <Button variant="contained">
-                                    <Typography>VER LISTADO COMPLETO</Typography>
                                 </Button>
                             </Stack>
                         </Stack>
@@ -69,13 +75,10 @@ const Registers = () => {
                     <Stack marginLeft={5} marginRight={5}>
 
                         <Stack justifyContent="space-between" direction="row">
-                            <Typography>LISTADO DE RUTAS</Typography>
+                            <Typography>LISTADO DE RUTAS - PENDIENTES</Typography>
                             <Stack direction="row" spacing={2}>
                                 <Button sx={{ width: '216px' }} onClick={() => navigate('crear-ruta')} variant="contained" >
                                     <Typography> AÑADIR RUTA </Typography>
-                                </Button>
-                                <Button variant="contained">
-                                    <Typography>VER LISTADO COMPLETO</Typography>
                                 </Button>
                             </Stack>
                         </Stack>
@@ -88,13 +91,10 @@ const Registers = () => {
                     <Stack marginLeft={5} marginRight={5}>
 
                         <Stack justifyContent="space-between" direction="row">
-                            <Typography>LISTADO DE RECOLECCIONES</Typography>
+                            <Typography>LISTADO DE RECOLECCIONES - PENDIENTES</Typography>
                             <Stack direction="row" spacing={2}>
                                 <Button sx={{ width: '216px' }} onClick={() => navigate('crear-recoleccion')} variant="contained" >
                                     <Typography> AÑADIR RECOLECCIÓN</Typography>
-                                </Button>
-                                <Button variant="contained">
-                                    <Typography>VER LISTADO COMPLETO</Typography>
                                 </Button>
                             </Stack>
                         </Stack>
@@ -107,50 +107,32 @@ const Registers = () => {
                     <Stack marginLeft={5} marginRight={5}>
 
                         <Stack justifyContent="space-between" direction="row">
-                            <Typography>AQUI - LISTADO DE MATERIA PRIMA</Typography>
+                            <Typography>LISTADO DE MATERIAS PRIMAS - PENDIENTES</Typography>
                             <Stack direction="row" spacing={2}>
                                 <Button sx={{ width: '216px' }} onClick={() => navigate('crear-materiaprima')} variant="contained" >
                                     <Typography> AÑADIR MATERIA PRIMA</Typography>
                                 </Button>
-                                <Button variant="contained">
-                                    <Typography>VER LISTADO COMPLETO</Typography>
-                                </Button>
                             </Stack>
                         </Stack>
                         <Paper sx={{ marginTop: 2 }}>
-                        </Paper>
-                    </Stack>
-                    <br />
-                    <br />
-                    <Stack marginLeft={5} marginRight={5}>
-                        <Stack justifyContent="space-between" direction="row">
-                            <Typography>AQUI - LISTADO DE CLASIFICACIÓN</Typography>
-                            <Stack direction="row" spacing={2}>
-                                <Button sx={{ width: '216px' }} onClick={() => navigate('crear-clasificacion')} variant="contained" >
-                                    <Typography> AÑADIR CLASIFICACIÓN</Typography>
-                                </Button>
-                                <Button variant="contained">
-                                    <Typography>VER LISTADO COMPLETO</Typography>
-                                </Button>
-                            </Stack>
-                        </Stack>
-                        <Paper sx={{ marginTop: 2 }}>
+                            <ViewListRawMaterials />
                         </Paper>
                     </Stack>
                     <br />
                     <br />
                     <Routes>
                         <Route path="/crear-cita" element={<FormAppointment />} />
-                        <Route path="/listado-citas" />
+                        <Route path="/editar-cita/:id" element={<ViewFormAppointment />} />
                         <Route path="/crear-ruta" element={<FormRoute />} />
-                        <Route path="/listado-rutas" />
+                        <Route path="/editar-ruta/:id" element={<ViewFormRoute />} />
                         <Route path="/crear-recoleccion" element={<FormGathering />} />
-                        <Route path="/listado-recolecciones" />
+                        <Route path="/editar-recoleccion/:id" element={<ViewFormGathering />} />
                         <Route path="/crear-materiaprima" element={<FormRawMaterial />} />
-                        <Route path="/listado-materia-prima" />
+                        <Route path="/editar-materiaprima/:id" element={<ViewFormRawMaterial />} />
                         <Route path="/crear-clasificacion" element={<FormClassification />} />
                         <Route path="/listado-clasificaciones" />
-                        <Route path="/crear-registro" element={<CompleteRegister />} />
+                        {/* <Route path="/crear-registro" element={<CompleteRegister />} /> */}
+                        <Route path="/crear-registro" element={<FormRegisterFast />} />
                     </Routes>
                 </Box>
             </RegisterProvider >
@@ -161,30 +143,161 @@ const Registers = () => {
     )
 }
 
+const optionsFuseAppointment = {
+    includeScore: true,
+    keys: ['id', 'provider', 'meetDate', 'meetPlace']
+}
+
+const optionsFuseRoute = {
+    includeScore: true,
+    keys: ['id', 'idDate.meetDate', 'initPlace', 'destinyPlace']
+}
+
+const optionsFuseGathering = {
+    includeScore: true,
+    keys: ['id', 'idRoute.initPlace', 'idRoute.destinyPlace', 'materialsQuantity', 'spentMoney', 'idPayType.platformName']
+}
+
+const optionsFuseRawMaterial = {
+    includeScore: true,
+    keys: ['id', 'idCollection.id', 'idMaterialType.name', 'kgQuantity', 'materialPricePerKg']
+}
+
 const ViewListAppointments = () => {
 
     const { appointments } = useRegisterContext()
+    const [search, setSearch] = useState("")
+
+    const fuse = new Fuse(appointments, optionsFuseAppointment)
 
     return (
-        <ListAppointments data={appointments.slice(0, 6)} />
+        <Stack direction="column" justifyContent="space-between">
+            <Stack direction="row" justifyContent="space-between">
+                <TextField
+                    label="Buscador"
+                    sx={{ width: "50%", marginLeft: "1%" }}
+                    type="text"
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Buscar cita"
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <IconButton ><SearchIcon /></IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <Button size="large" startIcon={<RefreshIcon />} ></Button>
+            </Stack>
+            <ListAppointments data={(search === null || search === "") ? appointments : fuse.search(search).map((value) => value.item)} />
+        </Stack>
     )
 }
 
 const ViewListRoutes = () => {
 
     const { routes } = useRegisterContext()
+    const [search, setSearch] = useState("")
+
+    const fuse = new Fuse(routes, optionsFuseRoute)
 
     return (
-        <ListRoutes data={routes.slice(0, 6)} />
+        <Stack direction="column" justifyContent="space-between">
+            <Stack direction="row" justifyContent="space-between">
+                <TextField
+                    label="Buscador"
+                    sx={{ width: "50%", marginLeft: "1%" }}
+                    type="text"
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Buscar ruta"
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <IconButton ><SearchIcon /></IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <Button size="large" startIcon={<RefreshIcon />} ></Button>
+            </Stack>
+            <ListRoutes data={(search === null || search === "") ? routes : fuse.search(search).map((value) => value.item)} />
+        </Stack>
     )
 }
 
 const ViewListCollections = () => {
 
     const { collections } = useRegisterContext()
+    const [search, setSearch] = useState("")
+
+    const fuse = new Fuse(collections, optionsFuseGathering)
 
     return (
-        <ListCollections data={collections.slice(0, 6)} />
+        <Stack direction="column" justifyContent="space-between">
+            <Stack direction="row" justifyContent="space-between">
+                <TextField
+                    label="Buscador"
+                    sx={{ width: "50%", marginLeft: "1%" }}
+                    type="text"
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Buscar recolección"
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <IconButton ><SearchIcon /></IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <Button size="large" startIcon={<RefreshIcon />} ></Button>
+            </Stack>
+            <ListCollections data={(search === null || search === "") ? collections : fuse.search(search).map((value) => value.item)} />
+        </Stack>
+    )
+}
+
+const ViewListRawMaterials = () => {
+
+    const { rawMaterials } = useRegisterContext()
+    const [search, setSearch] = useState("")
+
+    const fuse = new Fuse(rawMaterials, optionsFuseRawMaterial)
+
+    return (
+        <Stack direction="column" justifyContent="space-between">
+            <Stack direction="row" justifyContent="space-between">
+                <TextField
+                    label="Buscador"
+                    sx={{ width: "50%", marginLeft: "1%" }}
+                    type="text"
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Buscar materia prima"
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <IconButton ><SearchIcon /></IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <Button size="large" startIcon={<RefreshIcon />} ></Button>
+            </Stack>
+            <ListRawMaterials data={(search === null || search === "") ? rawMaterials : fuse.search(search).map((value) => value.item)} />
+        </Stack>
+    )
+}
+
+const ValidationClassification = () => {
+    const { rawMaterials } = useRegisterContext()
+    const navigate = useNavigate()
+    return (
+        <Button variant="contained" onClick={() => navigate('crear-clasificacion')} disabled={rawMaterials === null || rawMaterials.length === 0 ? true : false}>
+            {rawMaterials === null || rawMaterials.length === 0 ? 
+            (<Tooltip title="Se habilitará cuando hayan Materias Primas disponibles" >
+                    <Typography>AÑADIR CLASIFICACIÓN</Typography>
+                </Tooltip>) 
+                : (<Typography>AÑADIR CLASIFICACIÓN</Typography>)}
+        </Button>
     )
 }
 

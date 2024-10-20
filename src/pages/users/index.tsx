@@ -13,7 +13,7 @@ import AsignPermission from "./AsignPermission"
 import { DocumentNode, gql, useQuery } from "@apollo/client"
 import SearchIcon from '@mui/icons-material/Search';
 import Fuse from "fuse.js";
-import GetPermission from "../../hooks/GetPermission";
+import GetPermission from "../../hooks/getPermission";
 
 const GET_COUNTS_CLIENTS_PROVIDERS = gql`
 query getCounts{
@@ -229,7 +229,7 @@ const DataListUsers = ({ idCompany }: propsListUsers) => {
                     sx={{ width: "50%", marginLeft: "1%" }}
                     type="text"
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Buscar proveedores o clientes"
+                    placeholder="Buscar usuario"
                     InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">

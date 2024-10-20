@@ -1,37 +1,40 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
+import Message from "../../components/Message"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { gql, useMutation } from "@apollo/client";
-import useRegisterContext from "../context/useRegisterContext";
-import { useState } from "react";
-import { useContextUserAuth } from "../../../store";
-import Message from "../../../components/Message";
+import useRegisterContext from "./context/useRegisterContext"
+import { gql, useMutation } from "@apollo/client"
+import { useContextUserAuth } from "../../store"
 
-const CREATE_COLLECTION = gql`
-mutation CreateCollection($collection: InputCollection){
-  collection: CreateCollection(collection: $collection){
+const CREATE_RAW_MATERIAL = gql`
+mutation createRawMaterial($material: InputRawMaterial){
+	CreateRawMaterial(material: $material){
     message
   }
 }`
 
-type InputCollection = {
-    route: string
-    company: string
-    materialsQuantity: number
-    spentMoney: number
-    payType: string
+type InputRawMaterial = {
+    idCollection?: string
+    idMaterialType: string
+    idCompany?: string
+    kgQuantity: number
+    materialPricePerKg: number
+    idProvider: string
 }
 
-const FormGathering = () => {
+const FormRegisterFast = () => {
 
     const navigate = useNavigate()
-    const { routes, dataPayTypes, setUpdated } = useRegisterContext()
     const dataUser = useContextUserAuth((state) => state.data)
-    const [collection] = useMutation(CREATE_COLLECTION)
-    const [route, setRoute] = useState("2")
-    const [materialsQuantity, setMaterialsQuantity] = useState(0)
-    const [spentMoney, setSpentMoney] = useState(0)
-    const [payType, setPayType] = useState("")
+
+    const [idMaterialType, setIdMaterialType] = useState("")
+    const [kgQuantity, setKgQuantity] = useState(0)
+    const [materialPricePerKg, setMaterialPricePerKg] = useState(0)
+    const [provider, setProvider] = useState("")
+
+    const { materialTypes, setUpdated, dataProviders } = useRegisterContext()
+    const [material] = useMutation(CREATE_RAW_MATERIAL)
 
     const [open, setOpen] = useState(false)
     const [msg, setMsg] = useState("")
@@ -47,20 +50,21 @@ const FormGathering = () => {
 
     const submit = () => {
         handleOpen()
-        const registroRecoleccion: InputCollection = {
-            route,
-            company: `${dataUser.idCompany.id}`,
-            materialsQuantity,
-            spentMoney,
-            payType
+        const form: InputRawMaterial = {
+            idMaterialType,
+            kgQuantity,
+            idCompany: `${dataUser.idCompany.id}`,
+            materialPricePerKg,
+            idProvider: provider
         }
-        collection({
+        material({
             variables: {
-                collection: registroRecoleccion
+                material: form
             }
         })
             .then((data) => {
-                setMsg(data.data.collection.message)
+                setMsg(data.data.CreateRawMaterial.message)
+                setTimeout(() => handleClose(), 3000)
                 setUpdated(Math.floor(Math.random() * 100))
             })
             .catch(() => {
@@ -72,14 +76,13 @@ const FormGathering = () => {
 
 
     return (
-        <Dialog open fullScreen>
+        <Dialog scroll="paper" open sx={{ height: "auto" }} >
             <Message band={open} message={msg} status={statusErr ? false : true} />
             <DialogTitle>
-                <Stack direction="row" spacing={2} padding={2} margin={2}>
+                <Stack direction="row" justifyContent="start" padding={1} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
-                    <Typography>CREACIÓN DE REGISTRO</Typography>
+                    <Typography justifyContent="center">REGISTRO RAPIDO DE MATERIA PRIMA</Typography>
                 </Stack>
-                <Typography marginLeft={4}>FORMULARIO DE CREACIÓN DE RECOLECCIÓN</Typography>
             </DialogTitle>
             <DialogContent>
                 <br />
@@ -90,44 +93,50 @@ const FormGathering = () => {
                             required
                             fullWidth
                         >
-                            <InputLabel>Seleccione la ruta para la recolección</InputLabel>
+                            <InputLabel>Seleccione el proveedor</InputLabel>
                             <Select
-                                label="Seleccione la ruta para la recolección"
+                                label="Seleccione el proveedor"
                                 onChange={(e) => {
-                                    const route = e.target.value
-                                    setRoute(route)
+                                    const provider = e.target.value
+                                    setProvider(provider)
                                 }}
-                                value={route}
+                                value={provider}
                             >
-                                {routes?.map((v) => (
+                                {dataProviders?.map((v) => (
                                     <MenuItem
                                         key={v.id}
                                         value={v.id}
                                     >
-                                        {v.initPlace} - {v.destinyPlace}
+                                        {v.nit} - {v.fullName}
                                     </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
+
+                    </Stack>
+                    <br />
+
+                    <Stack direction="row" spacing={2}>
+
                         <FormControl
                             required
                             fullWidth
                         >
-                            <InputLabel>Seleccione el tipo de pago</InputLabel>
+                            <InputLabel>Seleccione el tipo de material</InputLabel>
                             <Select
-                                label="Seleccione el tipo de pago"
+                                label="Seleccione el tipo de material"
                                 onChange={(e) => {
-                                    const payType = e.target.value
-                                    setPayType(payType)
+                                    const material: string = e.target.value
+                                    setIdMaterialType(material)
                                 }}
-                                value={payType}
+                                value={idMaterialType}
                             >
-                                {dataPayTypes?.map((v) => (
+                                {materialTypes?.map((v) => (
                                     <MenuItem
                                         key={v.id}
                                         value={v.id}
                                     >
-                                        {v.platformName}
+                                        {v.id} - {v.name}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -135,42 +144,42 @@ const FormGathering = () => {
                     </Stack>
 
                     <br />
-                    <br />
 
                     <Stack direction="row" spacing={2}>
                         <TextField
-                            placeholder="Ingrese la cantidad de material"
+                            placeholder="Ingrese la cantidad de kilogramos del material"
                             type="number"
-                            label="Cantidad de material"
+                            label="Kilogramos del material"
                             variant="outlined"
                             fullWidth
-                            onChange={(e) => {
-                                setMaterialsQuantity(parseInt(e.target.value))
-                            }}
+                            onChange={(e) => setKgQuantity(parseInt(e.target.value))}
+                            value={kgQuantity}
                         />
                         <TextField
-                            placeholder="Ingrese el dinero gastado"
+                            placeholder="Ingrese el precio por Kg del material"
                             type="number"
-                            label="Dinero gastado"
+                            label="Precio por Kg"
                             variant="outlined"
                             fullWidth
-                            onChange={(e) => {
-                                setSpentMoney(parseInt(e.target.value))
-                            }}
+                            onChange={(e) => setMaterialPricePerKg(parseInt(e.target.value))}
+                            value={materialPricePerKg}
                         />
                     </Stack>
                     <br />
                     <br />
+
+
                     <Stack justifyContent="center" direction="row">
                         <Button fullWidth size="medium" variant="contained" onClick={() => submit()} >
-                            <Typography>GUARDAR RECOLECCIÓN</Typography>
+                            <Typography>GUARDAR MATERIA PRIMA</Typography>
                         </Button>
                     </Stack>
-                </Box>
 
+                </Box>
             </DialogContent>
+
         </Dialog>
     )
 }
 
-export default FormGathering
+export default FormRegisterFast

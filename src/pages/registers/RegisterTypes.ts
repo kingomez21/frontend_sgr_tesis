@@ -7,7 +7,7 @@ export type RegisterAppointment = {
 
 type idProvider = {
     id: string
-    fullName: string
+    fullName?: string
 }
 
 export type Appointments = {
@@ -35,7 +35,7 @@ export type Routes = {
     idDate: idDate
     initPlace: string
     destinyPlace: string
-    isPending: boolean
+    isPending?: boolean
 }
 
 type idRoute = {
@@ -101,4 +101,36 @@ export type dataUsers = {
 export type dataProcedureType = {
     id: string
     procedureName: string
+}
+
+type idMaterialType = {
+    id?: string
+    name: string
+}
+
+type idCollection = {
+    id: string
+}
+
+export type dataRawMaterial = {
+    id: string
+    idMaterialType: idMaterialType
+    kgQuantity: number
+    materialPricePerKg: number
+    isPending: boolean
+    idCollection: idCollection,
+    idProvider: idProvider
+}
+
+export type materialType = {
+    id: string
+    name: string
+}
+
+export type Classifications = {
+    id: string
+    rawMaterial: string
+    userInfo: string
+    totalWeight: number
+    procedureType: string
 }

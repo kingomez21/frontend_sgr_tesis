@@ -1,18 +1,21 @@
-import { Grid, List, ListItem, ListItemButton, ListItemText, Paper } from "@mui/material"
-import { ClassificationsType } from "../inventory/Itypes"
+import { Grid, List, ListItem, ListItemButton, ListItemText, Stack } from "@mui/material"
 import { useNavigate } from "react-router-dom"
-import DataLoading from "../../components/DataLoading"
+import DataLoading from "../../../components/DataLoading"
+import { dataRawMaterial } from "../RegisterTypes"
 
-type props = {
-    data: ClassificationsType[]
+type dataProps = {
+    data: dataRawMaterial[]
+    viewStyle?: boolean
 }
 
-const ListClassificationsHistory = ({ data }: props) => {
+const ListRawMaterials = ({data, viewStyle}: dataProps) => {
+
     const navigate = useNavigate()
+
     return (
-        <Paper sx={{ height: '70%' }}>
+        <Stack direction="row" justifyContent="center" sx={{p:2}}>
             {data?.length > 0 ? (
-                <List component={Grid} container sx={{ overflow: 'auto', maxHeight: '70%' }}>
+                <List component={Grid} container sx={{ overflow: 'auto', maxHeight: 500 }}>
                     {
 
                         data?.map((value) => (
@@ -22,39 +25,38 @@ const ListClassificationsHistory = ({ data }: props) => {
                                 component={Grid}
                                 xs={12}
                                 md={6}
-                                sx={{
+                                sx={viewStyle || viewStyle !== undefined ? {
                                     "& > .MuiButtonBase-root": {
                                         border: 1,
                                         borderRadius: 1,
                                         borderColor: "divider",
                                         margin: "1%"
                                     },
-                                }}
+                                } : {}}
                                 disablePadding
 
                             >
                                 <ListItemButton
-                                    onClick={() => navigate(`clasificacion-historial/${value.id}`)}
+                                    onClick={() => navigate(`editar-materiaprima/${value.id}`)}
                                 >
                                     <ListItemText
                                         primary={`
-                                                #${value.id} - ${value.idRawMaterial.idMaterialType.name.toUpperCase()} - ${value.totalWeight} KG 
-                                                CLASIFICADO POR: ${value.idUserInfo.idPerson.firstName.toUpperCase()} ${value.idUserInfo.idPerson.lastName.toUpperCase()}
+                                                ID: ${value.id} TIPO DE MATERIA PRIMA: ${value.idMaterialType.name.toUpperCase()} PESO EN Kg: ${value.kgQuantity}
+                                                PRECIO POR Kg: ${value.materialPricePerKg}
                                             `}
-                                        secondary={`FECHA: ${new Date(value.createdAt).toLocaleDateString()}`}
                                     />
                                 </ListItemButton>
                             </ListItem>
                         ))
-
-
                     }
                 </List>
             ) : (
-                <DataLoading />
+                <Stack justifyContent="center" alignContent="center">
+                    <DataLoading />
+                </Stack>
             )}
-        </Paper>
+        </Stack>
     )
 }
 
-export default ListClassificationsHistory
+export default ListRawMaterials

@@ -1,35 +1,70 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useNavigate } from "react-router-dom"
-import useRegisterContext from "../context/useRegisterContext";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
-import { gql, useMutation } from "@apollo/client";
-import { useContextUserAuth } from "../../../store";
+import useRegisterContext from "../context/useRegisterContext";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { Appointments } from "../RegisterTypes";
 import Message from "../../../components/Message";
 
-const CREATE_DATE = gql`
-mutation CreateDate($date: InputDate){
-  date: CreateDate(date: $date){
+const GET_ONE_DATE = gql`
+query getOneDate($pk: String) {
+  getOneDate(pk: $pk){
+    id
+    idProvider{
+      id
+      fullName
+    }
+    meetDate
+    meetPlace
+  }
+}
+`
+
+const UPDATE_DATE = gql`
+mutation UpdateDate($idDate: String, $dateUpdate: InputDate){
+  UpdateDate(idDate: $idDate, dateUpdate: $dateUpdate){
     message
   }
-}`
+}
+`
 
 type InputDate = {
     provider: string
-    company: string
+    company?: string
     meetDate: string
-    meetPlace: string 
+    meetPlace: string
 }
 
-const FormAppointment = () => {
+const ViewFormAppointment = () => {
+
+    const { id } = useParams()
+
+    const dataDate = useQuery(GET_ONE_DATE, {
+        variables: {
+            pk: `${id}`
+        },
+        fetchPolicy: "no-cache"
+    })
+
+    return (
+        dataDate.loading ? "Cargando..." : <FormEditAppointment id={id} data={dataDate.data.getOneDate} />
+    )
+}
+
+type formEditAppointmentProps = {
+    id: string
+    data: Appointments
+}
+
+const FormEditAppointment = ({ id, data }: formEditAppointmentProps) => {
 
     const navigate = useNavigate()
-    const {dataProviders, setUpdated} = useRegisterContext()
-    const dataUser = useContextUserAuth((state) => state.data)
-    const [date] = useMutation(CREATE_DATE)
-    const [provider, setProvider] = useState("1")
-    const [dateAppointment, setDateAppointment] = useState("")
-    const [placeAppointment, setPlaceAppointment] = useState("")
+    const { dataProviders, setUpdated } = useRegisterContext()
+    const [dateUpdate] = useMutation(UPDATE_DATE)
+    const [provider, setProvider] = useState(data.idProvider.id)
+    const [dateAppointment, setDateAppointment] = useState(data.meetDate)
+    const [placeAppointment, setPlaceAppointment] = useState(data.meetPlace)
 
     const [open, setOpen] = useState(false)
     const [msg, setMsg] = useState("")
@@ -47,19 +82,20 @@ const FormAppointment = () => {
         handleOpen()
         const registroCita: InputDate = {
             provider,
-            company: `${dataUser.idCompany.id}`,
+            //company: `${dataUser.idCompany.id}`,
             meetDate: dateAppointment,
             meetPlace: placeAppointment
         }
-        date({
+        dateUpdate({
             variables: {
-                date: registroCita
+                idDate: id,
+                dateUpdate: registroCita
             }
         })
         .then((data) => {
-            setMsg(data.data.date.message)
-            setTimeout( () => handleClose(), 6000)
+            setMsg(data.data.UpdateDate.message)
             setUpdated(Math.floor(Math.random() * 100))
+            setTimeout( () => handleClose(), 6000)
         })
         .catch(() => {
             setStatusErr(true)
@@ -68,15 +104,15 @@ const FormAppointment = () => {
         })
     }
 
+
     return (
-        <Dialog open fullScreen>
+        <Dialog scroll="paper" open sx={{ height: "auto" }} >
             <Message band={open} message={msg} status={statusErr ? false : true} />
             <DialogTitle>
-                <Stack direction="row" spacing={2} padding={2} margin={2}>
+                <Stack direction="row" justifyContent="start" padding={1} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
-                    <Typography>CREACIÓN DE REGISTRO</Typography>
+                    <Typography justifyContent="center">ACTUALIZAR CITA # {id}</Typography>
                 </Stack>
-                <Typography marginLeft={4}>FORMULARIO DE CREACIÓN DE CITA</Typography>
             </DialogTitle>
             <DialogContent>
                 <br />
@@ -87,9 +123,9 @@ const FormAppointment = () => {
                             required
                             fullWidth
                         >
-                            <InputLabel>Seleccione el proveedor</InputLabel>
+                            <InputLabel>Seleccione el Proveedor</InputLabel>
                             <Select
-                                label="Seleccione el proveedor"
+                                label="Seleccione el Proveedor"
                                 onChange={(e) => {
                                     const provider = e.target.value
                                     setProvider(provider)
@@ -120,6 +156,7 @@ const FormAppointment = () => {
                             onChange={(e) => {
                                 setDateAppointment(e.target.value)
                             }}
+                            value={dateAppointment}
                         />
                         <TextField
                             placeholder="Ingrese el lugar de la reunión"
@@ -130,6 +167,7 @@ const FormAppointment = () => {
                             onChange={(e) => {
                                 setPlaceAppointment(e.target.value)
                             }}
+                            value={placeAppointment}
                         />
                     </Stack>
                     <br />
@@ -140,10 +178,10 @@ const FormAppointment = () => {
                         </Button>
                     </Stack>
                 </Box>
-
             </DialogContent>
+
         </Dialog>
     )
 }
 
-export default FormAppointment
+export default ViewFormAppointment

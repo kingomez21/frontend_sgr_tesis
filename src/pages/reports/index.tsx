@@ -9,7 +9,7 @@ import BarGraphics from "./graphics/BarGraphics"
 import { Bar, Rectangle } from "recharts"
 import DataLoading from "../../components/DataLoading"
 import getUri from "../../hooks/getUri";
-import GetPermission from "../../hooks/GetPermission";
+import GetPermission from "../../hooks/getPermission";
 
 const Reports = () => {
 
@@ -43,7 +43,7 @@ const Reports = () => {
     }
 
     useEffect(() => {
-        setTitle("GESTION DE REPORTES")
+        setTitle("GESTIÓN DE REPORTES")
     },)
     return (
         isOk ? (
@@ -55,7 +55,7 @@ const Reports = () => {
                         ) : (
                             <PrintIcon />
                         )}>
-                        <Typography>{status ? "CARGANDO.." : "DESCARGAR EXCEL"}</Typography>
+                        <Typography>{status ? "CARGANDO..." : "DESCARGAR EXCEL"}</Typography>
                     </Button>
                     <Stack direction="row" spacing={2}>
                         <TextField
@@ -143,7 +143,7 @@ const ViewEmployes = () => {
         }
     })
     return (
-        data.loading ? <DataLoading /> : <PieGraphics data={data.data.state} title="ESTADO DE LOS EMPLEDOS" />
+        data.loading ? <DataLoading /> : <PieGraphics data={data.data.state} title="ESTADO DE LOS EMPLEADOS" />
 
     )
 }

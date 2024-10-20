@@ -17,6 +17,15 @@ query getOneClassification($id: String, $idCompany: String){
       }
       kgQuantity
       materialPricePerKg
+      idProvider {
+          nit
+          fullName
+          address
+          place
+          cellphone
+          email
+          isActive
+        }
       coleccion: idCollection{
         id
         materialsQuantity
@@ -147,38 +156,38 @@ const View = ({ id, data }: props) => {
           <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
         </Stack>
         <Stack direction="row" justifyContent="center">
-          <Typography >INFORMACION DE HISTORIAL</Typography>
+          <Typography >INFORMACIÓN DE HISTORIAL</Typography>
         </Stack>
 
       </DialogTitle>
       <DialogContent>
         <br />
         <Box marginLeft={5} marginRight={5}>
-          <Typography>INFORMACION DE CLASIFICACION</Typography>
+          <Typography>INFORMACIÓN DE CLASIFICACIÓN</Typography>
           <br />
           <Stack direction="row" spacing={2}>
             <TextField
-              placeholder="N° de Clasificacion"
+              placeholder="N° de clasificación"
               type="text"
-              label="N° de Clasificacion"
+              label="N° de clasificación"
               variant="outlined"
               fullWidth
               value={id}
               disabled
             />
             <TextField
-              placeholder="Nombre Material"
+              placeholder="Nombre del material"
               type="text"
-              label="Nombre Material"
+              label="Nombre del material"
               variant="outlined"
               fullWidth
               value={data.materiaPrima.idMaterialType.name.toUpperCase()}
               disabled
             />
             <TextField
-              placeholder="Peso en KG"
+              placeholder="Peso en Kg"
               type="number"
-              label="Peso en KG"
+              label="Peso en Kg"
               variant="outlined"
               fullWidth
               value={data.totalWeight}
@@ -187,180 +196,258 @@ const View = ({ id, data }: props) => {
           </Stack>
           <br />
 
-          <Typography>INFORMACION DEL PROVEEDOR</Typography>
-          <br />
-          <Stack direction="row" spacing={2}>
-            <TextField
-              type="text"
-              label="NIT del proveedor"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.proveedor.nit}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="Nombre del proveedor"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.proveedor.fullName}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="Direccion de residencia"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.proveedor.address}
-              disabled
-            />
 
-          </Stack>
+          {
+            data.materiaPrima?.coleccion ? (
+              <>
+                <Typography>INFORMACION DEL PROVEEDOR</Typography>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="NIT del proveedor"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.proveedor.nit}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Nombre del proveedor"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.proveedor.fullName}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Direccion de residencia"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.proveedor.address}
+                    disabled
+                  />
+
+                </Stack>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="Ciudad de residencia"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.proveedor.place}
+                    disabled
+                  />
+                  <TextField
+                    type="email"
+                    label="Correo Electronico"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.proveedor.email !== null ? data.materiaPrima.coleccion.ruta.cita.proveedor.email : ""}
+                    disabled
+                  />
+                </Stack>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="Estado del Proveedor"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.proveedor.isActive ? "ACTIVO" : "INACTIVO"}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="N° de Celular"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.proveedor.cellphone !== null ? data.materiaPrima.coleccion.ruta.cita.proveedor.cellphone : ""}
+                    disabled
+                  />
+                </Stack>
+                <br />
+                <Typography>INFORMACION CITA</Typography>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    placeholder="Fecha de encuentro"
+                    type="text"
+                    label="Fecha de encuentro"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.meetDate}
+                    disabled
+                  />
+                  <TextField
+                    placeholder="Lugar de encuentro"
+                    type="text"
+                    label="Lugar de encuentro"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.meetPlace}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Fecha de Registro"
+                    variant="outlined"
+                    fullWidth
+                    value={new Date(data.materiaPrima.coleccion.ruta.cita.createdAt).toLocaleDateString()}
+                    disabled
+                  />
+                </Stack>
+                <br />
+                <Typography>INFORMACION DE RUTA</Typography>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="email"
+                    label="Lugar de Inicio"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.initPlace}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Lugar de destino"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.destinyPlace}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Fecha de Registro"
+                    variant="outlined"
+                    fullWidth
+                    value={new Date(data.materiaPrima.coleccion.ruta.createdAt).toLocaleDateString()}
+                    disabled
+                  />
+                </Stack>
+                <br />
+                <Typography>INFORMACION DE RECOLECCION</Typography>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="Cantidad de Materia Prima Comprada"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.materialsQuantity}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Tipo de pago"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.idPayType.platformName}
+                    disabled
+                  />
+                </Stack>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="Total de Compra"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.spentMoney}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Fecha de Registro"
+                    variant="outlined"
+                    fullWidth
+                    value={new Date(data.materiaPrima.coleccion.createdAt).toLocaleDateString()}
+                    disabled
+                  />
+                </Stack>
+              </>
+            ) : (
+              <>
+                <Typography>INFORMACION DEL PROVEEDOR</Typography>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="NIT del proveedor"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.idProvider.nit}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Nombre del proveedor"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.idProvider.fullName}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Direccion de residencia"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.idProvider.address}
+                    disabled
+                  />
+
+                </Stack>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="Ciudad de residencia"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.idProvider.place}
+                    disabled
+                  />
+                  <TextField
+                    type="email"
+                    label="Correo Electronico"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.idProvider.email !== null ? data.materiaPrima.idProvider.email : ""}
+                    disabled
+                  />
+                </Stack>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="Estado del Proveedor"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.idProvider.isActive ? "ACTIVO" : "INACTIVO"}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="N° de Celular"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.idProvider.cellphone !== null ? data.materiaPrima.idProvider.cellphone : ""}
+                    disabled
+                  />
+                </Stack>
+              </>
+            )
+          }
+          
+          <br />
+          <Typography>INFORMACIÓN DE MATERIA PRIMA RECOLECTADA</Typography>
           <br />
           <Stack direction="row" spacing={2}>
             <TextField
               type="text"
-              label="Ciudad de residencia"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.proveedor.place}
-              disabled
-            />
-            <TextField
-              type="email"
-              label="Correo Electronico"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.proveedor.email !== null ? data.materiaPrima.coleccion.ruta.cita.proveedor.email : "" }
-              disabled
-            />
-          </Stack>
-          <br />
-          <Stack direction="row" spacing={2}>
-            <TextField
-              type="text"
-              label="Estado del Proveedor"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.proveedor.isActive ? "ACTIVO" : "INACTIVO"}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="N° de Celular"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.proveedor.cellphone !== null ? data.materiaPrima.coleccion.ruta.cita.proveedor.cellphone : "" }
-              disabled
-            />
-          </Stack>
-          <br />
-          <Typography>INFORMACION CITA</Typography>
-          <br />
-          <Stack direction="row" spacing={2}>
-            <TextField
-              placeholder="Fecha de encuentro"
-              type="text"
-              label="Fecha de encuentro"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.meetDate}
-              disabled
-            />
-            <TextField
-              placeholder="Lugar de encuentro"
-              type="text"
-              label="Lugar de encuentro"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.meetPlace}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="Fecha de Registro"
-              variant="outlined"
-              fullWidth
-              value={new Date(data.materiaPrima.coleccion.ruta.cita.createdAt).toLocaleDateString()}
-              disabled
-            />
-          </Stack>
-          <br />
-          <Typography>INFORMACION DE RUTA</Typography>
-          <br />
-          <Stack direction="row" spacing={2}>
-            <TextField
-              type="email"
-              label="Lugar de Inicio"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.initPlace}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="Lugar de destino"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.destinyPlace}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="Fecha de Registro"
-              variant="outlined"
-              fullWidth
-              value={new Date(data.materiaPrima.coleccion.ruta.createdAt).toLocaleDateString()}
-              disabled
-            />
-          </Stack>
-          <br />
-          <Typography>INFORMACION DE RECOLECCION</Typography>
-          <br />
-          <Stack direction="row" spacing={2}>
-            <TextField
-              type="text"
-              label="Cantidad de Materia Prima Comprada"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.materialsQuantity}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="Tipo de pago"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.idPayType.platformName}
-              disabled
-            />
-          </Stack>
-          <br />
-          <Stack direction="row" spacing={2}>
-            <TextField
-              type="text"
-              label="Total de Compra"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.spentMoney}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="Fecha de Registro"
-              variant="outlined"
-              fullWidth
-              value={new Date(data.materiaPrima.coleccion.createdAt).toLocaleDateString()}
-              disabled
-            />
-          </Stack>
-          <br />
-          <Typography>INFORMACION DE MATERIA PRIMA RECOLECTADA</Typography>
-          <br />
-          <Stack direction="row" spacing={2}>
-            <TextField
-              type="text"
-              label="Tipo de Materia Prima"
+              label="Tipo de materia prima"
               variant="outlined"
               fullWidth
               value={data.materiaPrima.idMaterialType.name}
@@ -368,7 +455,7 @@ const View = ({ id, data }: props) => {
             />
             <TextField
               type="text"
-              label="Cantidad de Kg en Materia Prima"
+              label="Cantidad de Kg en materia prima"
               variant="outlined"
               fullWidth
               value={data.materiaPrima.kgQuantity}
@@ -376,7 +463,7 @@ const View = ({ id, data }: props) => {
             />
             <TextField
               type="text"
-              label="Precio por Kg en Materia Prima"
+              label="Precio por Kg en materia prima"
               variant="outlined"
               fullWidth
               value={data.materiaPrima.materialPricePerKg}
@@ -384,12 +471,12 @@ const View = ({ id, data }: props) => {
             />
           </Stack>
           <br />
-          <Typography>INFORMACION DE LA PERSONA RESPONSABLE DE LA CLASIFICACION DE LA MATERIA PRIMA</Typography>
+          <Typography>INFORMACIÓN DE LA PERSONA RESPONSABLE DE LA CLASIFICACIÓN DE LA MATERIA PRIMA</Typography>
           <br />
           <Stack direction="row" spacing={2}>
             <TextField
               type="number"
-              label="Identificacion"
+              label="Identificación"
               variant="outlined"
               fullWidth
               value={data.usuario.persona.identityNumber}
@@ -397,7 +484,7 @@ const View = ({ id, data }: props) => {
             />
             <TextField
               type="text"
-              label="Tipo de Identificacion"
+              label="Tipo de identificación"
               variant="outlined"
               fullWidth
               value={data.usuario.persona.documentType}
@@ -405,7 +492,7 @@ const View = ({ id, data }: props) => {
             />
             <TextField
               type="text"
-              label="Nombre Completo"
+              label="Nombre completo"
               variant="outlined"
               fullWidth
               value={`${data.usuario.persona.firstName} ${data.usuario.persona.lastName}`}
@@ -416,7 +503,7 @@ const View = ({ id, data }: props) => {
           <Stack direction="row" spacing={2}>
             <TextField
               type="text"
-              label="Direccion de Residencia"
+              label="Dirección de residencia"
               variant="outlined"
               fullWidth
               value={data.usuario.persona.homeAddress}
@@ -424,7 +511,7 @@ const View = ({ id, data }: props) => {
             />
             <TextField
               type="text"
-              label="N° de Celular"
+              label="N° de celular"
               variant="outlined"
               fullWidth
               value={data.usuario.persona.phoneNumber1}
@@ -432,7 +519,7 @@ const View = ({ id, data }: props) => {
             />
             <TextField
               type="text"
-              label="N° de Celular"
+              label="N° de celular"
               variant="outlined"
               fullWidth
               value={data.usuario.persona.phoneNumber2}
@@ -443,7 +530,7 @@ const View = ({ id, data }: props) => {
           <Stack direction="row" spacing={2}>
             <TextField
               type="text"
-              label="Barrio de Residencia"
+              label="Barrio de residencia"
               variant="outlined"
               fullWidth
               value={data.usuario.persona.neighborhood}
@@ -451,7 +538,7 @@ const View = ({ id, data }: props) => {
             />
             <TextField
               type="text"
-              label="Genero"
+              label="Género"
               variant="outlined"
               fullWidth
               value={data.usuario.persona.gender}
@@ -459,7 +546,7 @@ const View = ({ id, data }: props) => {
             />
             <TextField
               type="text"
-              label="Tipo de Sangre"
+              label="Tipo de sangre"
               variant="outlined"
               fullWidth
               value={data.usuario.persona.bloodType}
@@ -470,7 +557,7 @@ const View = ({ id, data }: props) => {
           <Stack direction="row" spacing={2}>
             <TextField
               type="text"
-              label="Estado Civil"
+              label="Estado civil"
               variant="outlined"
               fullWidth
               value={data.usuario.persona.maritalStatus}
@@ -490,7 +577,7 @@ const View = ({ id, data }: props) => {
           <Stack direction="row" spacing={2}>
             <TextField
               type="text"
-              label="Fecha de Nacimiento"
+              label="Fecha de nacimiento"
               variant="outlined"
               fullWidth
               value={data.usuario.persona.birthday}
@@ -498,7 +585,7 @@ const View = ({ id, data }: props) => {
             />
             <TextField
               type="text"
-              label="Fecha de Admision"
+              label="Fecha de admisión"
               variant="outlined"
               fullWidth
               value={data.usuario.persona.admissionDate}
@@ -506,7 +593,7 @@ const View = ({ id, data }: props) => {
             />
             <TextField
               type="text"
-              label="Fecha de Registro"
+              label="Fecha de registro"
               variant="outlined"
               fullWidth
               value={new Date(data.usuario.persona.createdAt).toLocaleDateString()}
@@ -524,7 +611,7 @@ const View = ({ id, data }: props) => {
                     <TextField
 
                       type="text"
-                      label="Nombre del Modulo"
+                      label="Nombre del módulo"
                       variant="outlined"
                       fullWidth
                       value={value.nameView}
@@ -549,7 +636,7 @@ const View = ({ id, data }: props) => {
           {
             data.lote !== null ? (
               <>
-                <Typography>INFORMACION DE LOTE DE VENTA</Typography>
+                <Typography>INFORMACIÓN DE LOTE DE VENTA</Typography>
                 <br />
                 <Stack direction="row" spacing={2} >
                   <TextField
@@ -562,7 +649,7 @@ const View = ({ id, data }: props) => {
                   />
                   <TextField
                     type="text"
-                    label="Tipo de Lote"
+                    label="Tipo de lote"
                     variant="outlined"
                     fullWidth
                     value={data.lote.idMaterialType.name}
@@ -570,7 +657,7 @@ const View = ({ id, data }: props) => {
                   />
                   <TextField
                     type="text"
-                    label="Cantidad de Productos en el Lote"
+                    label="Cantidad de productos en el Lote"
                     variant="outlined"
                     fullWidth
                     value={data.lote.productsQuantity}
@@ -581,7 +668,7 @@ const View = ({ id, data }: props) => {
                 <Stack direction="row" spacing={2} >
                   <TextField
                     type="text"
-                    label="Peso Total del Lote"
+                    label="Peso total del lote"
                     variant="outlined"
                     fullWidth
                     value={data.lote.totalWeightLote}
@@ -600,13 +687,13 @@ const View = ({ id, data }: props) => {
                 {
                   data.lote.venta !== null && data.lote.venta.length > 0 ? (
                     <>
-                      <Typography>INFORMACION DE VENTA</Typography>
+                      <Typography>INFORMACIÓN DE VENTA</Typography>
                       <br />
                       {data.lote.venta.map((value, index) => (
                         <Stack direction="row" spacing={2} key={index} >
                           <TextField
                             type="text"
-                            label="N° de Venta"
+                            label="N° de venta"
                             variant="outlined"
                             fullWidth
                             value={value.id}
@@ -614,7 +701,7 @@ const View = ({ id, data }: props) => {
                           />
                           <TextField
                             type="text"
-                            label="Tipo de Pago"
+                            label="Tipo de pago"
                             variant="outlined"
                             fullWidth
                             value={value.idPayType.platformName}
@@ -622,7 +709,7 @@ const View = ({ id, data }: props) => {
                           />
                           <TextField
                             type="text"
-                            label="Precio por Kg de Venta"
+                            label="Precio por Kg de venta"
                             variant="outlined"
                             fullWidth
                             value={value.productPricePerKg}
@@ -630,7 +717,7 @@ const View = ({ id, data }: props) => {
                           />
                           <TextField
                             type="text"
-                            label="Precio de Venta"
+                            label="Precio de venta"
                             variant="outlined"
                             fullWidth
                             value={value.totalPrice}
@@ -640,7 +727,7 @@ const View = ({ id, data }: props) => {
                       ))
                       }
                       <br />
-                      <Typography>INFORMACION DEL CLIENTE</Typography>
+                      <Typography>INFORMACIÓN DEL CLIENTE</Typography>
                       <br />
                       <Stack direction="row" spacing={2}>
                         <TextField
@@ -653,7 +740,7 @@ const View = ({ id, data }: props) => {
                         />
                         <TextField
                           type="text"
-                          label="Nombre Completo"
+                          label="Nombre completo"
                           variant="outlined"
                           fullWidth
                           value={data.lote.venta[0].cliente.fullName}
@@ -661,7 +748,7 @@ const View = ({ id, data }: props) => {
                         />
                         <TextField
                           type="text"
-                          label="Direccion de Residencia"
+                          label="Dirección de residencia"
                           variant="outlined"
                           fullWidth
                           value={data.lote.venta[0].cliente.address}
@@ -672,7 +759,7 @@ const View = ({ id, data }: props) => {
                       <Stack direction="row" spacing={2}>
                         <TextField
                           type="text"
-                          label="Ciudad de Residencia"
+                          label="Ciudad de residencia"
                           variant="outlined"
                           fullWidth
                           value={data.lote.venta[0].cliente.place}
@@ -680,7 +767,7 @@ const View = ({ id, data }: props) => {
                         />
                         <TextField
                           type="text"
-                          label="Correo Electronico"
+                          label="Correo electrónico"
                           variant="outlined"
                           fullWidth
                           value={data.lote.venta[0].cliente.email !== null ? data.lote.venta[0].cliente.email : ""}
@@ -689,23 +776,24 @@ const View = ({ id, data }: props) => {
                       </Stack>
                       <br />
                       <Stack direction="row" spacing={2}>
-                          <TextField
-                            type="text"
-                            label="Estado del Cliente"
-                            variant="outlined"
-                            fullWidth
-                            value={data.lote.venta[0].cliente.isActive ? "ACTIVO" : "INACTIVO"}
-                            disabled
-                          />
-                          <TextField
-                            type="text"
-                            label="N° de Celular"
-                            variant="outlined"
-                            fullWidth
-                            value={data.lote.venta[0].cliente.cellphone !== null ? data.lote.venta[0].cliente.cellphone : ""}
-                            disabled
-                          />
-                        </Stack>
+
+                        <TextField
+                          type="text"
+                          label="Estado del Cliente"
+                          variant="outlined"
+                          fullWidth
+                          value={data.lote.venta[0].cliente.isActive ? "ACTIVO" : "INACTIVO"}
+                          disabled
+                        />
+                        <TextField
+                          type="text"
+                          label="N° de Celular"
+                          variant="outlined"
+                          fullWidth
+                          value={data.lote.venta[0].cliente.cellphone !== null ? data.lote.venta[0].cliente.cellphone : ""}
+                          disabled
+                        />
+                      </Stack>
 
                     </>
                   ) : (<></>)

@@ -37,14 +37,13 @@ const ListRoutes = ({ data, viewStyle }: props) => {
 
                             >
                                 <ListItemButton
-                                    onClick={() => navigate(`ruta/${value.id}`)}
+                                    onClick={() => navigate(`editar-ruta/${value.id}`)}
                                 >
                                     <ListItemText
                                         primary={`
-                                                La ruta del : ${value.idDate.meetDate} 
-                                                que va desde: ${value.initPlace.toUpperCase()} hasta: ${value.destinyPlace.toUpperCase()}
+                                                LA RUTA DEL: ${value.idDate.meetDate} 
+                                                QUE VA DESDE: ${value.initPlace.toUpperCase()} HASTA: ${value.destinyPlace.toUpperCase()}
                                             `}
-                                        secondary={`FECHA: ${value.idDate.meetDate}`}
                                     />
                                 </ListItemButton>
                             </ListItem>

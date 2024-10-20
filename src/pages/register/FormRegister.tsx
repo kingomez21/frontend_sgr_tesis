@@ -136,7 +136,7 @@ const RegisterForm = () => {
                 component="section" sx={{ p: 2 }}
             >
                 <Typography>
-                    INFORMACION PERSONAL
+                    INFORMACIÓN PERSONAL
                 </Typography>
                 <br />
                 <Stack
@@ -146,9 +146,9 @@ const RegisterForm = () => {
                     spacing={4}
                 >
                     <TextField
-                        placeholder="Ingrese su numero de identificacion"
+                        placeholder="Ingrese su numero de identificación"
                         type="number"
-                        label="No. de Identificacion"
+                        label="No. de identificación"
                         variant="outlined"
                         required
                         fullWidth
@@ -157,9 +157,9 @@ const RegisterForm = () => {
                         }}
                     />
                     <TextField
-                        placeholder="Ingre su nombre completo"
+                        placeholder="Ingrese su nombre completo"
                         type="text"
-                        label="Nombre Completo"
+                        label="Nombre completo"
                         variant="outlined"
                         required
                         fullWidth
@@ -168,7 +168,7 @@ const RegisterForm = () => {
                         }}
                     />
                     <TextField
-                        placeholder="Ingre sus apellidos"
+                        placeholder="Ingrese sus apellidos"
                         type="text"
                         label="Apellidos"
                         variant="outlined"
@@ -188,9 +188,9 @@ const RegisterForm = () => {
                     spacing={4}
                 >
                     <TextField
-                        placeholder="Ingrese numero celular"
+                        placeholder="Ingrese número de celular"
                         type="text"
-                        label="Numero Celular"
+                        label="Numero de celular"
                         required
                         variant="outlined"
                         fullWidth
@@ -199,9 +199,9 @@ const RegisterForm = () => {
                         }}
                     />
                     <TextField
-                        placeholder="Ingrese numero de telefono fijo"
+                        placeholder="Ingrese su número de teléfono fijo"
                         type="text"
-                        label="Telefono"
+                        label="Teléfono"
                         variant="outlined"
                         fullWidth
                         onChange={(e) => {
@@ -248,9 +248,9 @@ const RegisterForm = () => {
                         required
                         fullWidth
                     >
-                        <InputLabel>Seleccione su genero</InputLabel>
+                        <InputLabel>Seleccione su género</InputLabel>
                         <Select
-                            label="Seleccione su genero"
+                            label="Seleccione su género"
                             onChange={(e) => {
                                 const gender_value = e.target.value 
                                 setGenderV(gender_value)
@@ -345,9 +345,9 @@ const RegisterForm = () => {
                         }}
                     />
                     <TextField
-                        placeholder="Ingrese su correo electronico"
+                        placeholder="Ingrese su correo electrónico"
                         type="email"
-                        label="Correo Electronico"
+                        label="Correo electrónico"
                         variant="outlined"
                         required
                         fullWidth
@@ -363,7 +363,7 @@ const RegisterForm = () => {
                 component="section" sx={{ p: 2 }}
             >
                 <Typography>
-                    INFORMACION DE RESIDENCIA
+                    INFORMACIÓN DE RESIDENCIA
                 </Typography>
                 <br />
                 <Stack
@@ -373,9 +373,9 @@ const RegisterForm = () => {
                     spacing={4}
                 >
                     <TextField
-                        placeholder="Ingrese su direccion de residensia"
+                        placeholder="Ingrese su dirección de residencia"
                         type="text"
-                        label="Direccion de residencia"
+                        label="Dirección de residencia"
                         variant="outlined"
                         required
                         fullWidth
@@ -402,7 +402,7 @@ const RegisterForm = () => {
                 component="section" sx={{ p: 2 }}
             >
                 <Typography>
-                    INFORMACION DE EMPRESA
+                    INFORMACIÓN DE EMPRESA
                 </Typography>
                 <br />
                 <Stack
@@ -446,7 +446,7 @@ const RegisterForm = () => {
                     >
                         <InputLabel>Seleccione su cargo</InputLabel>
                         <Select
-                            label="Seleccione su estado civil"
+                            label="Seleccione su cargo"
                             onChange={(e) => {
                                 const job_position = e.target.value
                                 setJopPosition(""+job_position)
@@ -484,7 +484,7 @@ const RegisterForm = () => {
             <br />
             <br />
             <Button fullWidth variant="contained" onClick={() => submit()}>
-                Guardar Informacion
+                Guardar Información
             </Button>
         </Paper>
     )

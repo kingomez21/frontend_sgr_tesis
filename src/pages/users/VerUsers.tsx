@@ -236,7 +236,7 @@ const View = ({ datas }: props) => {
                 <Stack direction="row" justifyContent="space-between" spacing={2} padding={2} margin={2}>
                     <Stack direction="row" >
                         <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
-                        <Typography>INFORMACION DE {firstName.toUpperCase()} {lastName.toUpperCase()} - {datas.getUser.isActive ? "ACTIVO" : "DESPEDIDO"}</Typography>
+                        <Typography>INFORMACIÓN DE {firstName.toUpperCase()} {lastName.toUpperCase()} - {datas.getUser.isActive ? "ACTIVO" : "DESPEDIDO"}</Typography>
                     </Stack>
                     <Button variant="contained" color="error" onClick={() => delete_user()}>
                         Eliminar
@@ -252,7 +252,7 @@ const View = ({ datas }: props) => {
                         marginLeft={1}
                     >
                         <Typography>
-                            INFORMACION PERSONAL
+                            INFORMACIÓN PERSONAL
                         </Typography>
                     </Stack>
                     <br />
@@ -265,9 +265,9 @@ const View = ({ datas }: props) => {
                         marginLeft={1}
                     >
                         <TextField
-                            placeholder="Ingrese su numero de identificacion"
+                            placeholder="Ingrese su numero de identificación"
                             type="number"
-                            label="No. de Identificacion"
+                            label="No. de identificación"
                             variant="outlined"
                             required
                             fullWidth
@@ -280,7 +280,7 @@ const View = ({ datas }: props) => {
                         <TextField
                             placeholder="Ingrese su nombre"
                             type="text"
-                            label="Nombre Completo"
+                            label="Nombre completo"
                             variant="outlined"
                             required
                             fullWidth
@@ -291,7 +291,7 @@ const View = ({ datas }: props) => {
                             disabled={!editable}
                         />
                         <TextField
-                            placeholder="Ingre sus apellidos"
+                            placeholder="Ingrese sus apellidos"
                             type="text"
                             label="Apellidos"
                             variant="outlined"
@@ -315,9 +315,9 @@ const View = ({ datas }: props) => {
                         marginLeft={1}
                     >
                         <TextField
-                            placeholder="Ingrese numero celular"
+                            placeholder="Ingrese número celular"
                             type="text"
-                            label="Numero Celular"
+                            label="Número de celular"
                             required
                             variant="outlined"
                             fullWidth
@@ -328,9 +328,9 @@ const View = ({ datas }: props) => {
                             disabled={!editable}
                         />
                         <TextField
-                            placeholder="Ingrese numero de telefono fijo"
+                            placeholder="Ingrese numero de teléfono fijo"
                             type="text"
-                            label="Telefono"
+                            label="Teléfono"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -382,9 +382,9 @@ const View = ({ datas }: props) => {
                             required
                             fullWidth
                         >
-                            <InputLabel>Seleccione su genero</InputLabel>
+                            <InputLabel>Seleccione su género</InputLabel>
                             <Select
-                                label="Seleccione su genero"
+                                label="Seleccione su género"
                                 onChange={(e) => {
                                     const gender_value= e.target.value
                                     setGenderV(gender_value)
@@ -486,9 +486,9 @@ const View = ({ datas }: props) => {
                             disabled={!editable}
                         />
                         <TextField
-                            placeholder="Ingrese su correo electronico"
+                            placeholder="Ingrese su correo electrónico"
                             type="email"
-                            label="Correo Electronico"
+                            label="Correo electrónico"
                             variant="outlined"
                             required
                             fullWidth
@@ -506,7 +506,7 @@ const View = ({ datas }: props) => {
                     component="section" sx={{ p: 2 }}
                 >
                     <Typography>
-                        INFORMACION DE RESIDENCIA
+                        INFORMACIÓN DE RESIDENCIA
                     </Typography>
                     <br />
                     <Stack
@@ -516,9 +516,9 @@ const View = ({ datas }: props) => {
                         spacing={4}
                     >
                         <TextField
-                            placeholder="Ingrese su direccion de residensia"
+                            placeholder="Ingrese su dirección de residencia"
                             type="text"
-                            label="Direccion de residencia"
+                            label="Dirección de residencia"
                             variant="outlined"
                             required
                             fullWidth
@@ -549,7 +549,7 @@ const View = ({ datas }: props) => {
                     component="section" sx={{ p: 2 }}
                 >
                     <Typography>
-                        INFORMACION DE EMPRESA
+                        INFORMACIÓN DE EMPRESA
                     </Typography>
                     <br />
                     <Stack
@@ -636,11 +636,11 @@ const View = ({ datas }: props) => {
                     <Stack justifyContent="center">
                         {editable ? (
                             <Button size="medium" variant="contained" onClick={() => submit()}>
-                                <Typography>GUARDAR INFORMACION</Typography>
+                                <Typography>GUARDAR INFORMACIÓN</Typography>
                             </Button>
                         ) : (
                             <Button size="medium" variant="contained" onClick={() => handlerEdit()}>
-                                <Typography>EDITAR INFORMACION</Typography>
+                                <Typography>EDITAR INFORMACIÓN</Typography>
                             </Button>
                         )}
 
