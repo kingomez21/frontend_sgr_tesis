@@ -48,6 +48,7 @@ type idRawMaterial = {
     kgQuantity: number
     materialPricePerKg: number
     coleccion: idCollection
+    idProvider?: idProvider
 }
 
 type idPerson = {

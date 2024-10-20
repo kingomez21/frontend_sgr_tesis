@@ -17,6 +17,15 @@ query getOneClassification($id: String, $idCompany: String){
       }
       kgQuantity
       materialPricePerKg
+      idProvider {
+          nit
+          fullName
+          address
+          place
+          cellphone
+          email
+          isActive
+        }
       coleccion: idCollection{
         id
         materialsQuantity
@@ -187,173 +196,251 @@ const View = ({ id, data }: props) => {
           </Stack>
           <br />
 
-          <Typography>INFORMACIÓN DEL PROVEEDOR</Typography>
-          <br />
-          <Stack direction="row" spacing={2}>
-            <TextField
-              type="text"
-              label="NIT del proveedor"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.proveedor.nit}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="Nombre del proveedor"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.proveedor.fullName}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="Dirección de residencia"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.proveedor.address}
-              disabled
-            />
 
-          </Stack>
-          <br />
-          <Stack direction="row" spacing={2}>
-            <TextField
-              type="text"
-              label="Ciudad de residencia"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.proveedor.place}
-              disabled
-            />
-            <TextField
-              type="email"
-              label="Correo electrónico"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.proveedor.email !== null ? data.materiaPrima.coleccion.ruta.cita.proveedor.email : "" }
-              disabled
-            />
-          </Stack>
-          <br />
-          <Stack direction="row" spacing={2}>
-            <TextField
-              type="text"
-              label="Estado del proveedor"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.proveedor.isActive ? "ACTIVO" : "INACTIVO"}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="N° de celular"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.proveedor.cellphone !== null ? data.materiaPrima.coleccion.ruta.cita.proveedor.cellphone : "" }
-              disabled
-            />
-          </Stack>
-          <br />
-          <Typography>INFORMACIÓN CITA</Typography>
-          <br />
-          <Stack direction="row" spacing={2}>
-            <TextField
-              placeholder="Fecha de encuentro"
-              type="text"
-              label="Fecha de encuentro"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.meetDate}
-              disabled
-            />
-            <TextField
-              placeholder="Lugar de encuentro"
-              type="text"
-              label="Lugar de encuentro"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.cita.meetPlace}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="Fecha de registro"
-              variant="outlined"
-              fullWidth
-              value={new Date(data.materiaPrima.coleccion.ruta.cita.createdAt).toLocaleDateString()}
-              disabled
-            />
-          </Stack>
-          <br />
-          <Typography>INFORMACIÓN DE RUTA</Typography>
-          <br />
-          <Stack direction="row" spacing={2}>
-            <TextField
-              type="email"
-              label="Lugar de inicio"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.initPlace}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="Lugar de destino"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.ruta.destinyPlace}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="Fecha de registro"
-              variant="outlined"
-              fullWidth
-              value={new Date(data.materiaPrima.coleccion.ruta.createdAt).toLocaleDateString()}
-              disabled
-            />
-          </Stack>
-          <br />
-          <Typography>INFORMACIÓN DE RECOLECCIÓN</Typography>
-          <br />
-          <Stack direction="row" spacing={2}>
-            <TextField
-              type="text"
-              label="Cantidad de materia prima comprada"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.materialsQuantity}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="Tipo de pago"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.idPayType.platformName}
-              disabled
-            />
-          </Stack>
-          <br />
-          <Stack direction="row" spacing={2}>
-            <TextField
-              type="text"
-              label="Total de compra"
-              variant="outlined"
-              fullWidth
-              value={data.materiaPrima.coleccion.spentMoney}
-              disabled
-            />
-            <TextField
-              type="text"
-              label="Fecha de registro"
-              variant="outlined"
-              fullWidth
-              value={new Date(data.materiaPrima.coleccion.createdAt).toLocaleDateString()}
-              disabled
-            />
-          </Stack>
+          {
+            data.materiaPrima?.coleccion ? (
+              <>
+                <Typography>INFORMACION DEL PROVEEDOR</Typography>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="NIT del proveedor"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.proveedor.nit}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Nombre del proveedor"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.proveedor.fullName}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Direccion de residencia"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.proveedor.address}
+                    disabled
+                  />
+
+                </Stack>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="Ciudad de residencia"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.proveedor.place}
+                    disabled
+                  />
+                  <TextField
+                    type="email"
+                    label="Correo Electronico"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.proveedor.email !== null ? data.materiaPrima.coleccion.ruta.cita.proveedor.email : ""}
+                    disabled
+                  />
+                </Stack>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="Estado del Proveedor"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.proveedor.isActive ? "ACTIVO" : "INACTIVO"}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="N° de Celular"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.proveedor.cellphone !== null ? data.materiaPrima.coleccion.ruta.cita.proveedor.cellphone : ""}
+                    disabled
+                  />
+                </Stack>
+                <br />
+                <Typography>INFORMACION CITA</Typography>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    placeholder="Fecha de encuentro"
+                    type="text"
+                    label="Fecha de encuentro"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.meetDate}
+                    disabled
+                  />
+                  <TextField
+                    placeholder="Lugar de encuentro"
+                    type="text"
+                    label="Lugar de encuentro"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.cita.meetPlace}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Fecha de Registro"
+                    variant="outlined"
+                    fullWidth
+                    value={new Date(data.materiaPrima.coleccion.ruta.cita.createdAt).toLocaleDateString()}
+                    disabled
+                  />
+                </Stack>
+                <br />
+                <Typography>INFORMACION DE RUTA</Typography>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="email"
+                    label="Lugar de Inicio"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.initPlace}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Lugar de destino"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.ruta.destinyPlace}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Fecha de Registro"
+                    variant="outlined"
+                    fullWidth
+                    value={new Date(data.materiaPrima.coleccion.ruta.createdAt).toLocaleDateString()}
+                    disabled
+                  />
+                </Stack>
+                <br />
+                <Typography>INFORMACION DE RECOLECCION</Typography>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="Cantidad de Materia Prima Comprada"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.materialsQuantity}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Tipo de pago"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.idPayType.platformName}
+                    disabled
+                  />
+                </Stack>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="Total de Compra"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.coleccion.spentMoney}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Fecha de Registro"
+                    variant="outlined"
+                    fullWidth
+                    value={new Date(data.materiaPrima.coleccion.createdAt).toLocaleDateString()}
+                    disabled
+                  />
+                </Stack>
+              </>
+            ) : (
+              <>
+                <Typography>INFORMACION DEL PROVEEDOR</Typography>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="NIT del proveedor"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.idProvider.nit}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Nombre del proveedor"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.idProvider.fullName}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="Direccion de residencia"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.idProvider.address}
+                    disabled
+                  />
+
+                </Stack>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="Ciudad de residencia"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.idProvider.place}
+                    disabled
+                  />
+                  <TextField
+                    type="email"
+                    label="Correo Electronico"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.idProvider.email !== null ? data.materiaPrima.idProvider.email : ""}
+                    disabled
+                  />
+                </Stack>
+                <br />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    type="text"
+                    label="Estado del Proveedor"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.idProvider.isActive ? "ACTIVO" : "INACTIVO"}
+                    disabled
+                  />
+                  <TextField
+                    type="text"
+                    label="N° de Celular"
+                    variant="outlined"
+                    fullWidth
+                    value={data.materiaPrima.idProvider.cellphone !== null ? data.materiaPrima.idProvider.cellphone : ""}
+                    disabled
+                  />
+                </Stack>
+              </>
+            )
+          }
+          
           <br />
           <Typography>INFORMACIÓN DE MATERIA PRIMA RECOLECTADA</Typography>
           <br />
@@ -689,23 +776,24 @@ const View = ({ id, data }: props) => {
                       </Stack>
                       <br />
                       <Stack direction="row" spacing={2}>
-                          <TextField
-                            type="text"
-                            label="Estado del cliente"
-                            variant="outlined"
-                            fullWidth
-                            value={data.lote.venta[0].cliente.isActive ? "ACTIVO" : "INACTIVO"}
-                            disabled
-                          />
-                          <TextField
-                            type="text"
-                            label="N° de celular"
-                            variant="outlined"
-                            fullWidth
-                            value={data.lote.venta[0].cliente.cellphone !== null ? data.lote.venta[0].cliente.cellphone : ""}
-                            disabled
-                          />
-                        </Stack>
+
+                        <TextField
+                          type="text"
+                          label="Estado del Cliente"
+                          variant="outlined"
+                          fullWidth
+                          value={data.lote.venta[0].cliente.isActive ? "ACTIVO" : "INACTIVO"}
+                          disabled
+                        />
+                        <TextField
+                          type="text"
+                          label="N° de Celular"
+                          variant="outlined"
+                          fullWidth
+                          value={data.lote.venta[0].cliente.cellphone !== null ? data.lote.venta[0].cliente.cellphone : ""}
+                          disabled
+                        />
+                      </Stack>
 
                     </>
                   ) : (<></>)
