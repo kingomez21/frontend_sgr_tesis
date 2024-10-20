@@ -170,7 +170,7 @@ const ViewInformation = ({ data, idCompany }: propsInformation) => {
                 <Stack direction="row" spacing={2} padding={2} margin={2} justifyContent="space-between">
                     <Stack direction="row">
                         <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
-                        <Typography>INFORMACION DE LOTE #{data.id}</Typography>
+                        <Typography>INFORMACIÓN DE LOTE #{data.id}</Typography>
                     </Stack>
                     <Button variant="contained" onClick={() => navigate('crear-venta')} disabled={sold === true ? true : false}>
                         <Typography>CREAR VENTA</Typography>
@@ -182,18 +182,18 @@ const ViewInformation = ({ data, idCompany }: propsInformation) => {
                 <Box marginLeft={4} marginRight={4}>
                     <Stack direction="row" spacing={2}>
                         <TextField
-                            placeholder="Tipo de Material"
+                            placeholder="Tipo de material"
                             type="text"
-                            label="Tipo de Material"
+                            label="Tipo de material"
                             variant="outlined"
                             fullWidth
                             disabled={true}
                             value={name}
                         />
                         <TextField
-                            placeholder="Cantidad de Productos"
+                            placeholder="Cantidad de productos"
                             type="number"
-                            label="Cantidad de Productos"
+                            label="Cantidad de productos"
                             variant="outlined"
                             fullWidth
                             disabled={true}
@@ -203,9 +203,9 @@ const ViewInformation = ({ data, idCompany }: propsInformation) => {
                     <br />
                     <Stack direction="row" spacing={2}>
                         <TextField
-                            placeholder="Total en KG"
+                            placeholder="Total en Kg"
                             type="number"
-                            label="Total en KG"
+                            label="Total en Kg"
                             variant="outlined"
                             fullWidth
                             disabled={true}
@@ -224,7 +224,7 @@ const ViewInformation = ({ data, idCompany }: propsInformation) => {
                     <br /><br />
                     {sold ? (
                         <>
-                            <Typography>INFORMACION DE VENTA</Typography>
+                            <Typography>INFORMACIÓN DE VENTA</Typography>
                             <br />
                             <Stack direction="row" spacing={2}>
                                 <TextField
@@ -246,9 +246,9 @@ const ViewInformation = ({ data, idCompany }: propsInformation) => {
                                     value={data.sell[0].client.fullName}
                                 />
                                 <TextField
-                                    placeholder="Direccion de residencia"
+                                    placeholder="Dirección de residencia"
                                     type="text"
-                                    label="Direccion de residencia"
+                                    label="Dirección de residencia"
                                     variant="outlined"
                                     fullWidth
                                     disabled={true}
@@ -276,9 +276,9 @@ const ViewInformation = ({ data, idCompany }: propsInformation) => {
                                     value={data.sell[0]?.client.cellphone === null ? "" : data.sell[0]?.client.cellphone}
                                 />
                                 <TextField
-                                    placeholder="Correo electronico"
+                                    placeholder="Correo electrónico"
                                     type="text"
-                                    label="Correo electronico"
+                                    label="Correo electrónico"
                                     variant="outlined"
                                     fullWidth
                                     disabled={true}
@@ -309,9 +309,9 @@ const ViewInformation = ({ data, idCompany }: propsInformation) => {
                             <br />
                             <Stack direction="row" spacing={2}>
                                 <TextField
-                                    placeholder="Precio por KG"
+                                    placeholder="Precio por Kg"
                                     type="number"
-                                    label="Precio por KG"
+                                    label="Precio por Kg"
                                     variant="outlined"
                                     fullWidth
                                     disabled={true}
@@ -408,7 +408,7 @@ const FormCreateSell = ({ clients, paytypes, idCompany, idLote}: propsFormSell) 
         } )
         .catch( () => {
             setStatusErr(true)
-            setMsg("Ocurrio un error inesperado")
+            setMsg("Ocurrió un error inesperado")
             setTimeout( () => handleClose(), 6000)
         } )
     }
@@ -494,9 +494,9 @@ const FormCreateSell = ({ clients, paytypes, idCompany, idLote}: propsFormSell) 
                     <br />
                     <Stack direction="row" spacing={2}>
                         <TextField
-                            placeholder="Precio por KG"
+                            placeholder="Precio por Kg"
                             type="number"
-                            label="Precio por KG"
+                            label="Precio por Kg"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => setPerKG(parseInt(e.target.value))}
@@ -504,7 +504,7 @@ const FormCreateSell = ({ clients, paytypes, idCompany, idLote}: propsFormSell) 
                     </Stack>
                     <br />
                     <Button variant="contained" fullWidth onClick={() => submit()}>
-                        <Typography>GUARDAR INFORMACION</Typography>
+                        <Typography>GUARDAR INFORMACIÓN</Typography>
                     </Button>
                 </Box>
 

@@ -41,10 +41,9 @@ const ListRawMaterials = ({data, viewStyle}: dataProps) => {
                                 >
                                     <ListItemText
                                         primary={`
-                                                ID: ${value.id} Tipo de materia prima: ${value.idMaterialType.name} Peso en Kg: ${value.kgQuantity}
-                                                Precio por Kg: ${value.materialPricePerKg}
+                                                ID: ${value.id} TIPO DE MATERIA PRIMA: ${value.idMaterialType.name.toUpperCase()} PESO EN Kg: ${value.kgQuantity}
+                                                PRECIO POR Kg: ${value.materialPricePerKg}
                                             `}
-                                        secondary={`FECHA: `}
                                     />
                                 </ListItemButton>
                             </ListItem>

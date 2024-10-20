@@ -114,9 +114,9 @@ const FormClassification = () => {
                             required
                             fullWidth
                         >
-                            <InputLabel>Seleccione el empleado encargado de la clasificacion</InputLabel>
+                            <InputLabel>Seleccione el empleado encargado de la clasificación</InputLabel>
                             <Select
-                                label="Seleccione el empleado encargado de la clasificacion"
+                                label="Seleccione el empleado encargado de la clasificación"
                                 onChange={(e) => {
                                     const userInfo = e.target.value
                                     setUserInfo(userInfo)

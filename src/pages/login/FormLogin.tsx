@@ -56,7 +56,7 @@ const FormLogin = () => {
         })
             .catch(() => {
                 setOpenErr(true)
-                setMsgErr("Usuario o contraseña incorrectas")
+                setMsgErr("Usuario o contraseña incorrecta")
                 setTimeout(() => {
                     setOpenErr(false)
                 }, 5000)
@@ -85,7 +85,7 @@ const FormLogin = () => {
                 </Typography>
                 <br />
                 <TextField
-                    label="Correo Electronico"
+                    label="Correo electrónico"
                     variant="outlined"
                     type="email"
                     required={true}

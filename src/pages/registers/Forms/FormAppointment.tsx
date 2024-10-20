@@ -87,9 +87,9 @@ const FormAppointment = () => {
                             required
                             fullWidth
                         >
-                            <InputLabel>Seleccione el Proveedor</InputLabel>
+                            <InputLabel>Seleccione el proveedor</InputLabel>
                             <Select
-                                label="Seleccione el Proveedor"
+                                label="Seleccione el proveedor"
                                 onChange={(e) => {
                                     const provider = e.target.value
                                     setProvider(provider)

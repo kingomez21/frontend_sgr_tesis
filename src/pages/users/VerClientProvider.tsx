@@ -198,7 +198,7 @@ const View = ({data, types}: props) => {
             <DialogTitle>
                 <Stack direction="row" spacing={2} padding={2} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
-                    <Typography>INFORMACION DE {fullName.toUpperCase()}</Typography>
+                    <Typography>INFORMACIÓN DE {fullName.toUpperCase()}</Typography>
                 </Stack>
             </DialogTitle>
             <DialogContent>
@@ -212,7 +212,7 @@ const View = ({data, types}: props) => {
                         >
                             <InputLabel>Seleccione el tipo de cliente</InputLabel>
                             <Select
-                                label="Seleccione el tipo de documento"
+                                label="Seleccione el tipo de cliente"
                                 onChange={(e) => {
                                     const typeClient = e.target.value
                                     setType(typeClient)
@@ -233,7 +233,7 @@ const View = ({data, types}: props) => {
                         <TextField
                             placeholder="Ingrese su nombre completo"
                             type="text"
-                            label="Nombre Completo"
+                            label="Nombre completo"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -276,9 +276,9 @@ const View = ({data, types}: props) => {
 
                     <Stack direction="row" spacing={2}>
                         <TextField
-                            placeholder="Ingrese su direccion de residencia"
+                            placeholder="Ingrese su dirección de residencia"
                             type="text"
-                            label="Direccion"
+                            label="Dirección"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -303,7 +303,7 @@ const View = ({data, types}: props) => {
                         <TextField
                             placeholder="Ingrese su Nit"
                             type="text"
-                            label="Nit"
+                            label="NIT"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -320,7 +320,7 @@ const View = ({data, types}: props) => {
                         <TextField
                             placeholder="Ingrese su email"
                             type="email"
-                            label="Correo Electronico"
+                            label="Correo electrónico"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -330,9 +330,9 @@ const View = ({data, types}: props) => {
                             value={email}
                         />
                         <TextField
-                            placeholder="Ingrese el telefono celular"
+                            placeholder="Ingrese el teléfono celular"
                             type="text"
-                            label="Telefono"
+                            label="Teléfono"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -347,11 +347,11 @@ const View = ({data, types}: props) => {
                     <Stack justifyContent="center">
                         {editable ? (
                             <Button size="medium" variant="contained" onClick={() => submit()}>
-                            <Typography>GUARDAR INFORMACION</Typography>
+                            <Typography>GUARDAR INFORMACIÓN</Typography>
                         </Button>
                         ) : (
                             <Button size="medium" variant="contained" onClick={() => handlerEdit()}>
-                                <Typography>EDITAR INFORMACION</Typography>
+                                <Typography>EDITAR INFORMACIÓN</Typography>
                             </Button>
                         )}
                         
