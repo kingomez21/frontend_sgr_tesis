@@ -83,7 +83,7 @@ const FormClient = () => {
         } )
         .catch( () => {
             setStatusErr(true)
-            setMsg("Ocurrio un error inesperado")
+            setMsg("Ocurrió un error inesperado")
             setTimeout( () => handleClose(), 6000)
         } )
         
@@ -95,7 +95,7 @@ const FormClient = () => {
             <DialogTitle>
                 <Stack direction="row" spacing={2} padding={2} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
-                    <Typography>FORMULARIO CREACION DE CLIENTE</Typography>
+                    <Typography>FORMULARIO CREACIÓN DE CLIENTE</Typography>
                 </Stack>
             </DialogTitle>
             <DialogContent>
@@ -109,7 +109,7 @@ const FormClient = () => {
                         >
                             <InputLabel>Seleccione el tipo de cliente</InputLabel>
                             <Select
-                                label="Seleccione el tipo de documento"
+                                label="Seleccione el tipo de cliente"
                                 onChange={(e) => {
                                     const typeClient = e.target.value
                                     setTypeClient(typeClient)
@@ -129,7 +129,7 @@ const FormClient = () => {
                         <TextField
                             placeholder="Ingrese su nombre completo"
                             type="text"
-                            label="Nombre Completo"
+                            label="Nombre completo"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -143,9 +143,9 @@ const FormClient = () => {
 
                     <Stack direction="row" spacing={2}>
                         <TextField
-                            placeholder="Ingrese su direccion de residencia"
+                            placeholder="Ingrese su dirección de residencia"
                             type="text"
-                            label="Direccion"
+                            label="Dirección"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -165,7 +165,7 @@ const FormClient = () => {
                         <TextField
                             placeholder="Ingrese su NIT"
                             type="text"
-                            label="Nit"
+                            label="NIT"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -181,7 +181,7 @@ const FormClient = () => {
                         <TextField
                             placeholder="Ingrese su email"
                             type="email"
-                            label="Correo Electronico"
+                            label="Correo electrónico"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -189,9 +189,9 @@ const FormClient = () => {
                             }}
                         />
                         <TextField
-                            placeholder="Ingrese el telefono celular"
+                            placeholder="Ingrese el teléfono celular"
                             type="text"
-                            label="Telefono"
+                            label="Teléfono"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -203,7 +203,7 @@ const FormClient = () => {
                     <br />
                     <Stack justifyContent="center">
                         <Button size="medium" variant="contained" onClick={() => submit()}>
-                            <Typography>GUARDAR INFORMACION</Typography>
+                            <Typography>GUARDAR INFORMACIÓN</Typography>
                         </Button>
                     </Stack>
                 </Box>

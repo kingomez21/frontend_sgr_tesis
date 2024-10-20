@@ -79,7 +79,7 @@ const ViewInformation = ({ data }: propsInfo) => {
                 <Stack direction="row" spacing={2} padding={2} margin={2} justifyContent="space-between">
                     <Stack direction="row">
                         <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
-                        <Typography>INFORMACION DE {name.toUpperCase()} {totalW} KG</Typography>
+                        <Typography>INFORMACIÓN DE {name.toUpperCase()} {totalW} KG</Typography>
                     </Stack>
 
                 </Stack>
@@ -117,9 +117,9 @@ const ViewInformation = ({ data }: propsInfo) => {
                     <br />
                     <Stack direction="row" spacing={2}>
                         <TextField
-                            placeholder="Persona Encargada de la clasificacion"
+                            placeholder="Persona encargada de la clasificación"
                             type="text"
-                            label="Nombre Persona"
+                            label="Nombre de la persona"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -129,9 +129,9 @@ const ViewInformation = ({ data }: propsInfo) => {
                             value={person}
                         />
                         <TextField
-                            placeholder="Precio por KG"
+                            placeholder="Precio por Kg"
                             type="number"
-                            label="Precion por KG"
+                            label="Precio por Kg"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -144,13 +144,13 @@ const ViewInformation = ({ data }: propsInfo) => {
                     <br /><br />
                     { data.idLoteSell?.sold !== null && data.idLoteSell?.sold === true ? 
                      <>
-                    <Typography>INFORMACION DE LOTE DE VENTA</Typography>
+                    <Typography>INFORMACIÓN DE LOTE DE VENTA</Typography>
                     <br />
                     <Stack direction="row" spacing={2}>
                         <TextField
-                            placeholder="Numero de lote"
+                            placeholder="Número de lote"
                             type="text"
-                            label="Numero de lote"
+                            label="Número de lote"
                             variant="outlined"
                             fullWidth
                             /*onChange={(e) => {

@@ -43,7 +43,6 @@ const ListAppointments = ({ data, viewStyle }: props) => {
                                                 PROVEEDOR: ${value.idProvider.fullName.toUpperCase()} 
                                                 - CITA: ${value.meetDate} - LUGAR: ${value.meetPlace.toUpperCase()}
                                             `}
-                                        secondary={`FECHA: ${value.meetDate}`}
                                     />
                                 </ListItemButton>
                             </ListItem>

@@ -91,7 +91,7 @@ const FormProvider = () => {
             <DialogTitle>
                 <Stack direction="row" spacing={2} padding={2} margin={2}>
                     <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}></Button>
-                    <Typography>FORMULARIO CREACION DE PROVEEDOR</Typography>
+                    <Typography>FORMULARIO CREACIÓN DE PROVEEDOR</Typography>
                 </Stack>
             </DialogTitle>
             <DialogContent>
@@ -103,9 +103,9 @@ const FormProvider = () => {
                             required
                             fullWidth
                         >
-                            <InputLabel>Seleccione el tipo de Proveedor</InputLabel>
+                            <InputLabel>Seleccione el tipo de proveedor</InputLabel>
                             <Select
-                                label="Seleccione el tipo de documento"
+                                label="Seleccione el tipo de proveedor"
                                 onChange={(e) => {
                                     const typeClient = e.target.value
                                     setTypeProvider(typeClient)
@@ -125,7 +125,7 @@ const FormProvider = () => {
                         <TextField
                             placeholder="Ingrese su nombre completo"
                             type="text"
-                            label="Nombre Completo"
+                            label="Nombre completo"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -139,9 +139,9 @@ const FormProvider = () => {
 
                     <Stack direction="row" spacing={2}>
                         <TextField
-                            placeholder="Ingrese su direccion de residencia"
+                            placeholder="Ingrese su dirección de residencia"
                             type="text"
-                            label="Direccion"
+                            label="Dirección"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -161,7 +161,7 @@ const FormProvider = () => {
                         <TextField
                             placeholder="Ingrese su NIT"
                             type="text"
-                            label="Nit"
+                            label="NIT"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -177,7 +177,7 @@ const FormProvider = () => {
                         <TextField
                             placeholder="Ingrese su email"
                             type="email"
-                            label="Correo Electronico"
+                            label="Correo electrónico"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -185,9 +185,9 @@ const FormProvider = () => {
                             }}
                         />
                         <TextField
-                            placeholder="Ingrese el telefono celular"
+                            placeholder="Ingrese el teléfono celular"
                             type="text"
-                            label="Telefono"
+                            label="Teléfono"
                             variant="outlined"
                             fullWidth
                             onChange={(e) => {
@@ -199,7 +199,7 @@ const FormProvider = () => {
                     <br />
                     <Stack justifyContent="center">
                         <Button size="medium" variant="contained" onClick={() => submit()}>
-                            <Typography>GUARDAR INFORMACION</Typography>
+                            <Typography>GUARDAR INFORMACIÓN</Typography>
                         </Button>
                     </Stack>
                 </Box>

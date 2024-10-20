@@ -41,11 +41,10 @@ const ListCollections = ({ data, viewStyle }: props) => {
                                 >
                                     <ListItemText
                                         primary={`
-                                                La recolección de : ${value.idRoute.initPlace} - ${value.idRoute.destinyPlace} 
-                                                Se tiene una cantidad de: ${value.materialsQuantity} y se gastó un total de: ${value.spentMoney}
-                                                pagado por: ${value.idPayType.platformName}
+                                                LA RECOLECCIÓN DE: ${value.idRoute.initPlace.toUpperCase()} - ${value.idRoute.destinyPlace.toUpperCase()} 
+                                                SE TIENE UNA CANTIDAD DE: ${value.materialsQuantity} Y SE GASTÓ UN TOTAL DE: ${value.spentMoney}
+                                                PAGADO POR: ${value.idPayType.platformName.toUpperCase()}
                                             `}
-                                        secondary={`FECHA: `}
                                     />
                                 </ListItemButton>
                             </ListItem>
