@@ -16,13 +16,13 @@ import Fuse from "fuse.js";
 import GetPermission from "../../hooks/getPermission";
 
 const GET_COUNTS_CLIENTS_PROVIDERS = gql`
-query getCounts{
-    getCounts: getCountClient{
+query getCounts($idCompany: String){
+    getCounts: getCountClient(idCompany: $idCompany){
       totalCount
       countOne: countProvider
       countTwo: countClient
     }
-  }
+}
 
 `
 
@@ -70,7 +70,7 @@ const Users = () => {
                     totalCount: "CANTIDAD",
                     typeOne: "PROVEEDORES",
                     typeTwo: "CLIENTES"
-                }} query={GET_COUNTS_CLIENTS_PROVIDERS} />
+                }} query={GET_COUNTS_CLIENTS_PROVIDERS} variables={{variables: { idCompany: data !== null ? data.idCompany.id : "1" }}} />
                 <Stack marginLeft={5} marginRight={5}>
                     <Paper sx={{ marginTop: 2 }}>
                         <DataLisClientProvider />
