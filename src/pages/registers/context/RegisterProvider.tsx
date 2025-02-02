@@ -128,7 +128,8 @@ const RegisterProvider = ({children}) => {
     const providers = useQuery(GET_PROVIDERS, {
         variables: {
             idCompany: `${dataUser.idCompany.id}` 
-        }
+        },
+        fetchPolicy: "no-cache"
     })
 
     const dataUsers = useQuery(GET_ALL_USERS, {
